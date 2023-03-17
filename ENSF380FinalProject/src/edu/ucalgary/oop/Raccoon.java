@@ -6,4 +6,9 @@ public class Raccoon extends Animal {
     public Raccoon(String id, String name, boolean isOrphaned) {
         super(id, name, isOrphaned);
     }
+
+    @Override
+    public String getActiveTime() {
+        return ACTIVE_TIME;
+    };
 }

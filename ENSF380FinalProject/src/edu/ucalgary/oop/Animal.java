@@ -1,9 +1,15 @@
 package edu.ucalgary.oop;
 
 public abstract class Animal {
-    private String name;
     private String animalID;
+    private String name;
     private boolean isOrphaned;
+
+    public Animal(String id, String name, boolean isOrphaned) {
+        this.animalID = id;
+        this.name = name;
+        this.isOrphaned = isOrphaned;
+    }
 
     public String getName() {
         return this.name;
@@ -13,8 +19,7 @@ public abstract class Animal {
         return this.animalID;
     }
 
-    public String getActiveTime() {
-    }
+    public abstract String getActiveTime();
 
     public boolean getOrphanStatus() {
         return this.isOrphaned;

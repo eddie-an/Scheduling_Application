@@ -6,4 +6,9 @@ public class Fox extends Animal {
     public Fox(String id, String name, boolean isOrphaned) {
         super(id, name, isOrphaned);
     }
+
+    @Override
+    public String getActiveTime() {
+        return ACTIVE_TIME;
+    };
 }
