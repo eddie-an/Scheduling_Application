@@ -19,8 +19,7 @@ public class PrintLog {
                 schedule.write(c);
             }
 
-        } 
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Error writing to file " + fileName);
             e.printStackTrace();
         }
@@ -29,10 +28,9 @@ public class PrintLog {
             if (schedule != null) {
                 try {
                     schedule.close();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     System.out.println("Couldn't close file " + fileName);
-					e.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         }

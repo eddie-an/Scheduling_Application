@@ -11,24 +11,19 @@ public abstract class Animal {
         this.isOrphaned = isOrphaned;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
     public int getAnimalID() {
         return this.ANIMAL_ID;
     }
 
-    public abstract String getActiveTime();
+    public String getName() {
+        return this.name;
+    }
 
     public boolean getOrphanStatus() {
         return this.isOrphaned;
     }
-    
-//  Remove setAnimalID since animalID is final
-//     public void setAnimalID(String animalID) {
-//         this.ANIMAL_ID = animalID;
-//     }
+
+    public abstract String getActiveTime();
 
     public void setName(String name) {
         this.name = name;
