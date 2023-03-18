@@ -1,12 +1,12 @@
 package edu.ucalgary.oop;
 
 public abstract class Animal {
-    private String animalID;
+    private final int ANIMAL_ID;
     private String name;
     private boolean isOrphaned;
 
-    public Animal(String id, String name, boolean isOrphaned) {
-        this.animalID = id;
+    public Animal(int id, String name, boolean isOrphaned) {
+        this.ANIMAL_ID = id;
         this.name = name;
         this.isOrphaned = isOrphaned;
     }
@@ -15,8 +15,8 @@ public abstract class Animal {
         return this.name;
     }
 
-    public String getAnimalID() {
-        return this.animalID;
+    public int getAnimalID() {
+        return this.ANIMAL_ID;
     }
 
     public abstract String getActiveTime();
@@ -24,10 +24,11 @@ public abstract class Animal {
     public boolean getOrphanStatus() {
         return this.isOrphaned;
     }
-
-    public void setAnimalID(String animalID) {
-        this.animalID = animalID;
-    }
+    
+//  Remove setAnimalID since animalID is final
+//     public void setAnimalID(String animalID) {
+//         this.ANIMAL_ID = animalID;
+//     }
 
     public void setName(String name) {
         this.name = name;
