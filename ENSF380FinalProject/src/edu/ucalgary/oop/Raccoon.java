@@ -1,33 +1,68 @@
+/**
+@author     Group5
+@version    1.4
+@since      1.0
+*/
+
+/*
+ * Raccoon is a class which extends the Animal class and represents a raccoon.
+ * It has has a static field ACTIVE_TIME which is set to "nocturnal".
+*/
+
 package edu.ucalgary.oop;
 
 public class Raccoon extends Animal {
     private final static String ACTIVE_TIME = "nocturnal";
 
+    /**
+     * This is the constructor for the Raccoon class.
+     * @param id            The ID of the animal.
+     * @param name          The name of the animal.
+     * @param isOrphaned    Whether or not the animal is an orphan.
+     */
     public Raccoon(int id, String name, boolean isOrphaned) {
         super(id, name, isOrphaned);
     }
 
+    /**
+     * @return  The ID of the animal.
+     */
     public int getAnimalID() {
         return super.getAnimalID();
     }
 
+    /**
+     * @return  The name of the animal.
+     */
     public String getName() {
         return super.getName();
     }
 
+    /**
+     * @return  Whether or not the animal is an orphan.
+     */
     public boolean getOrphanStatus() {
         return super.getOrphanStatus();
     }
 
+    /**
+     * @return  The active time of the animal.
+     */
     @Override
     public String getActiveTime() {
         return ACTIVE_TIME;
     };
 
+    /**
+     * @param name  The name of the animal.
+     */
     public void setName(String name) {
         super.setName(name);
     }
 
+    /**
+     * @param isOrphaned    Whether or not the animal is an orphan.
+     */
     public void setOrphanStatus(boolean isOrphaned) {
         super.setOrphanStatus(isOrphaned);
     }
