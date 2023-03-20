@@ -1,8 +1,17 @@
+/**
+@author     Group5
+@version    1.4
+@since      1.0
+*/
+
+/*
+ * Task is a class which represents a task that a volunteer can do.
+ * VolunteerGeneric is a generic class which is used to bind a volunteer to a task.
+*/
+
 package edu.ucalgary.oop;
 
 import java.time.LocalDate;
-
-
 
 public class Task {
     private LocalDate startTime;
@@ -13,6 +22,15 @@ public class Task {
     private VolunteerGeneric<String, Integer> volunteerTwo;  // On - standby in case it needs to be used / accessed.
     private Animal animalTaskFor;
 
+    /**
+     * This is the constructor for the Task class.
+     * @param startTime     The start time of the task.
+     * @param prepTime      The preparation time of the task. Some tasks don't require preparation time.
+     * @param taskTime      The time it takes to complete the task.
+     * @param taskType      The type of task.
+     * @param volunteerId   The ID of the volunteer assigned to the task.
+     * @param animal        The animal the task is for.
+     */
     public Task(LocalDate startTime, int prepTime, int taskTime, String taskType, String volunteerId, Animal animal) {
         
             
@@ -34,26 +52,44 @@ public class Task {
 
     }
 
+    /**
+     * @return The start time of the task.
+     */
     public LocalDate getStartTime() {
         return this.startTime;
     }
 
+    /**
+     * @return The preparation time of the task.
+     */
     public int getPrepTime() {
         return this.prepTime;
     }
 
+    /**
+     * @return The time it takes to complete the task.
+     */
     public int getTaskTime() {
         return this.taskTime;
     }
 
+    /**
+     * @return The type of task.
+     */
     public String getTaskType() {
         return this.taskType;
     }
 
+    /**
+     * @return The volunteer assigned to the task.
+     */
     public Volunteer getAssignedVolunteer() {
         return this.assignedVolunteer;
     }
 
+    /**
+     * @return The animal the task is for.
+     */
     public Animal getAnimal() {
         return this.animalTaskFor;
     }
@@ -64,15 +100,26 @@ class VolunteerGeneric<K, T> {   // this class is binded strictly to the Task cl
     private K volunteerID;
     private T timeLeft;
     
+    /**
+     * This is the constructor for the VolunteerGeneric class.
+     * @param first     The ID of the volunteer.
+     * @param second    The time left for the volunteer.
+     */
     public VolunteerGeneric (K first, T second) {
         this.volunteerID = first;
         this.timeLeft = second;
     }
 
+    /**
+     * @return The time left for the volunteer.
+     */
     public T getTimeLeft(){
         return timeLeft;
     }
 
+    /**
+     * @return The ID of the volunteer.
+     */
     public K getVolunteerID() {
         return volunteerID;
     }
