@@ -15,9 +15,6 @@ public class Task {
 
     public Task(LocalDate startTime, int prepTime, int taskTime, String taskType, String volunteerId, Animal animal) {
         
-            
-          
-            
         //  The above would essentially re-direct the task class to another class which would handle initialization of all Task data members and second volunteer,
         //  although this method seems a bit redundant...
         
