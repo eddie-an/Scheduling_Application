@@ -164,4 +164,23 @@ public class Test {
         test.writeToSchedule("19:00\n*Rebandage leg wound (Slinky)");
         //not done
     }
+    
+    @Test
+    public void testTooManyEventsException() {
+        Porcupine newPorcupine = new Porcupine(69, "Jesus", false);
+        LocalDate date = LocalDate.now();
+        try{
+            Task newTask = new Task(date, 10, 55, "Cleaning Cage", "67", newPorcupine); 
+        }
+        catch(Exception e) {
+            if(e instanceof NotAnInt) {
+                System.out.println("Unable to sucessfully use the exception...");
+                System.exit(1);
+            }
+            else if (e instanceof ParseError) {
+                System.out.println("Parse error");
+                Systm.exit(1);
+            }
+        }
+ 
 }
