@@ -118,4 +118,50 @@ public class Test {
         assertEquals(expectedResult, result);
     }
 
+    @Test
+    public void testDBConnectionMade() {
+        FetchSQL test = new FetchSQL();
+        test.createConnection();
+
+        assertNotEquals(null, test.dbConnection)
+    }
+
+    @Test
+    public void testRetrieveTreatments() {
+        FetchSQL test = new FetchSQL();
+        test.createConnection();
+
+        ArrayList<ArrayList<String>> actualResult = test.treatmentInfo();
+
+        assertNotEquals(null, actualResult);
+    }
+
+    @Test
+    public void testRetrieveTasks() {
+        FetchSQL test = new FetchSQL();
+        test.createConnection();
+
+        ArrayList<ArrayList<String>> actualResult = test.taskInfo();
+
+        assertNotEquals(null, actualResult);
+
+    }
+
+    @Test
+    public void testRetrieveAnimals() {
+        FetchSQL test = new FetchSQL();
+        test.createConnection();
+
+        ArrayList<ArrayList<String>> actualResult = test.animalInfo();
+
+        assertNotEquals(null, actualResult);
+    }
+
+    @Test
+    public void testPrintLogWrites() {
+        PrintLog test = new PrintLog();
+
+        test.writeToSchedule("19:00\n*Rebandage leg wound (Slinky)");
+        //not done
+    }
 }
