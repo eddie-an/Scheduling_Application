@@ -197,5 +197,15 @@ public class Test {
              System.exit(1);
          }
      }
+    
+    @Test
+    public void testGenericObjectCreation() {
+        try {
+            newVolunteer = new VolunteerGeneric(123, 60);
+        }
+        catch(Exception e) {
+            System.out.print("Not able to instantiate a new volunteer");
+        }
+        
  
 }
