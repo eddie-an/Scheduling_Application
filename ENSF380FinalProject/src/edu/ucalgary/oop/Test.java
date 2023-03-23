@@ -118,12 +118,13 @@ public class Test {
         assertEquals(expectedResult, result);
     }
 
+
     @Test
     public void testDBConnectionMade() {
         FetchSQL test = new FetchSQL();
         test.createConnection();
 
-        assertNotEquals(null, test.dbConnection)
+        assertNotNull(test.dbConnection)
     }
 
     @Test
@@ -133,7 +134,7 @@ public class Test {
 
         ArrayList<ArrayList<String>> actualResult = test.treatmentInfo();
 
-        assertNotEquals(null, actualResult);
+        assertNotNull(actualResult);
     }
 
     @Test
@@ -143,7 +144,7 @@ public class Test {
 
         ArrayList<ArrayList<String>> actualResult = test.taskInfo();
 
-        assertNotEquals(null, actualResult);
+        assertNotNull(actualResult);
 
     }
 
@@ -154,16 +155,18 @@ public class Test {
 
         ArrayList<ArrayList<String>> actualResult = test.animalInfo();
 
-        assertNotEquals(null, actualResult);
+        assertNotNull(actualResult);
     }
 
     @Test
-    public void testPrintLogWrites() {
-        PrintLog test = new PrintLog();
+    public void testSinglyLinkedListAddNode() {
+        SinglyLinkedList test = new SinglyLinkedList();
 
-        test.writeToSchedule("19:00\n*Rebandage leg wound (Slinky)");
-        //not done
+        test.addNode(5);
+
+        assertNotNull(test.head);
     }
+
     
     @Test
     public void testTooManyEventsException() {
