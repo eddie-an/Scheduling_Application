@@ -185,5 +185,17 @@ public class Test {
                 Systm.exit(1);
             }
         }
+        
+     @Test
+     public void testGenericObjectCreation() {
+         try {
+             volunteerOne.getVolunteerID();
+             volunteerOne.getTimeLeft();
+         }
+         catch(Exception e) {
+             System.out.println("Was not able to retrieve the volunteer ID or the time left for the volunteer");
+             System.exit(1);
+         }
+     }
  
 }
