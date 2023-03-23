@@ -18,25 +18,26 @@ public class Task {
     private int prepTime;
     private int taskTime;
     private String taskType;
-    private VolunteerGeneric<String, Integer> volunteerOne;  // object binded to Task object
-    private VolunteerGeneric<String, Integer> volunteerTwo;  // On - standby in case it needs to be used / accessed.
+    private VolunteerGeneric<String, Integer> volunteerOne; // object binded to Task object
+    private VolunteerGeneric<String, Integer> volunteerTwo; // On - standby in case it needs to be used / accessed.
     private Animal animalTaskFor;
 
     /**
      * This is the constructor for the Task class.
-     * @param startTime     The start time of the task.
-     * @param prepTime      The preparation time of the task. Some tasks don't require preparation time.
-     * @param taskTime      The time it takes to complete the task.
-     * @param taskType      The type of task.
-     * @param volunteerId   The ID of the volunteer assigned to the task.
-     * @param animal        The animal the task is for.
+     * 
+     * @param startTime   The start time of the task.
+     * @param prepTime    The preparation time of the task. Some tasks don't require
+     *                    preparation time.
+     * @param taskTime    The time it takes to complete the task.
+     * @param taskType    The type of task.
+     * @param volunteerId The ID of the volunteer assigned to the task.
+     * @param animal      The animal the task is for.
      */
     public Task(LocalDate startTime, int prepTime, int taskTime, String taskType, String volunteerId, Animal animal) {
-        
-        //  The above would essentially re-direct the task class to another class which would handle initialization of all Task data members and second volunteer,
-        //  although this method seems a bit redundant...
-        
-        
+
+        // The above would essentially re-direct the task class to another class which
+        // would handle initialization of all Task data members and second volunteer,
+        // although this method seems a bit redundant...
 
         Integer tempInt = 60;
         this.startTime = startTime;
@@ -45,7 +46,6 @@ public class Task {
         this.taskType = taskType;
         this.volunteerOne = new VolunteerGeneric<String, Integer>(volunteerId, tempInt);
         this.animalTaskFor = animal;
-        
 
     }
 
@@ -80,8 +80,15 @@ public class Task {
     /**
      * @return The volunteer assigned to the task.
      */
-    public Volunteer getAssignedVolunteer() {
-        return this.assignedVolunteer;
+    public VolunteerGeneric<String, Integer> getPrimaryVolunteer() {
+        return this.volunteerOne;
+    }
+
+    /**
+     * @return The volunteer assigned to the task.
+     */
+    public VolunteerGeneric<String, Integer> getSecondaryVolunteer() {
+        return this.volunteerTwo;
     }
 
     /**
@@ -93,16 +100,18 @@ public class Task {
 
 }
 
-class VolunteerGeneric<K, T> {   // this class is binded strictly to the Task class, during all instances of Task.
+class VolunteerGeneric<K, T> { // this class is binded strictly to the Task class, during all instances of
+                               // Task.
     private K volunteerID;
     private T timeLeft;
-    
+
     /**
      * This is the constructor for the VolunteerGeneric class.
-     * @param first     The ID of the volunteer.
-     * @param second    The time left for the volunteer.
+     * 
+     * @param first  The ID of the volunteer.
+     * @param second The time left for the volunteer.
      */
-    public VolunteerGeneric (K first, T second) {
+    public VolunteerGeneric(K first, T second) {
         this.volunteerID = first;
         this.timeLeft = second;
     }
@@ -110,7 +119,7 @@ class VolunteerGeneric<K, T> {   // this class is binded strictly to the Task cl
     /**
      * @return The time left for the volunteer.
      */
-    public T getTimeLeft(){
+    public T getTimeLeft() {
         return timeLeft;
     }
 
@@ -120,6 +129,5 @@ class VolunteerGeneric<K, T> {   // this class is binded strictly to the Task cl
     public K getVolunteerID() {
         return volunteerID;
     }
-
 
 }
