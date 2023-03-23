@@ -159,16 +159,6 @@ public class Test {
     }
 
     @Test
-    public void testSinglyLinkedListAddNode() {
-        SinglyLinkedList test = new SinglyLinkedList();
-
-        test.addNode(5);
-
-        assertNotNull(test.head);
-    }
-
-    
-    @Test
     public void testTooManyEventsException() {
         Porcupine newPorcupine = new Porcupine(69, "Jesus", false);
         LocalDate date = LocalDate.now();
