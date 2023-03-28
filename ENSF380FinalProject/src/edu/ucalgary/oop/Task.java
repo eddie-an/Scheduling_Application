@@ -14,6 +14,7 @@ package edu.ucalgary.oop;
 import java.time.LocalDate;
 
 public class Task {
+    private final int TASK_ID;
     private LocalDate startTime;
     private int prepTime;
     private int taskTime;
@@ -25,6 +26,7 @@ public class Task {
     /**
      * This is the constructor for the Task class.
      * 
+     * @param TASK_ID     The ID of the task
      * @param startTime   The start time of the task.
      * @param prepTime    The preparation time of the task. Some tasks don't require
      *                    preparation time.
@@ -33,12 +35,14 @@ public class Task {
      * @param volunteerId The ID of the volunteer assigned to the task.
      * @param animal      The animal the task is for.
      */
-    public Task(LocalDate startTime, int prepTime, int taskTime, String taskType, String volunteerId, Animal animal) {
+    public Task(int TASK_ID, LocalDate startTime, int prepTime, int taskTime, String taskType, String volunteerId,
+            Animal animal) {
 
         // The above would essentially re-direct the task class to another class which
         // would handle initialization of all Task data members and second volunteer,
         // although this method seems a bit redundant...
 
+        this.TASK_ID = TASK_ID;
         Integer tempInt = 60;
         this.startTime = startTime;
         this.prepTime = prepTime;
@@ -47,6 +51,13 @@ public class Task {
         this.volunteerOne = new VolunteerGeneric<String, Integer>(volunteerId, tempInt);
         this.animalTaskFor = animal;
 
+    }
+
+    /**
+     * @return The id of the task.
+     */
+    public int getTaskID() {
+        return this.TASK_ID;
     }
 
     /**
@@ -119,7 +130,7 @@ class VolunteerGeneric<K, T> { // this class is binded strictly to the Task clas
     /**
      * @return The time left for the volunteer.
      */
-    
+
     public T getTimeLeft() {
         return timeLeft;
     }
