@@ -1,16 +1,101 @@
 package edu.ucalgary.oop;
 
+/**
+@author     Group5
+@version    1.0
+@since      1.0
+*/
+
+/*
+ * Main is the class that contains the main method. It is the entry point of the program.
+ * Main will have a GUI that will allow the user to interact with the program for these purposes:
+ *     - The program should also display all scheduling information and require a confirmation from the user for
+ *       each instance that the backup volunteer needs to be contacted.
+ * 
+ *     - Users should be provided with meaningful error messages appropriate to the audience
+ *       (end user, rather than programmer). Error messages must explain what was wrong and
+ *       how it can be corrected (e.g., "It was impossible to complete the schedule due to too
+ *       many events scheduled at 11 AM. Please shift some of the following activities:
+ *       rebandage head wound (Spike), administer antibiotics (Spike, Shadow)."
+ * 
+ *     - Users should be given the opportunity to correct their mistakes, and opportunities for
+ *       mistakes should be limited. 
+*/
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class FetchSQL {
+public class Main implements ActionListener {
 
     private Connection dbConnection;
     private ResultSet results;
-    private SinglyLinkedList storage = new SinglyLinkedList();
 
-    public FetchSQL() {
+    public static void main(String args[]) throws Exception {
 
+        EventQueue.invokeLater(() -> {
+            JFrame frame = new JFrame(" Example Wildlife Rescue Scheduler");
+            frame.setSize(400, 400);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            JPanel buttonsPanel = new JPanel();
+            JButton myButton = new JButton("Build Schedule Based On Database");
+
+            Main buttonListener = new Main();
+            myButton.addActionListener(buttonListener);
+            buttonsPanel.add(myButton);
+            frame.getContentPane().add(BorderLayout.NORTH, buttonsPanel);
+            frame.setVisible(true);
+
+        });
+
+        Main getTreatments = new Main();
+        getTreatments.createConnection();
+        ArrayList<ArrayList<String>> allAnimals = getTreatments.animalInfo();
+        ArrayList<ArrayList<String>> allTasks = getTreatments.taskInfo();
+        ArrayList<ArrayList<String>> allTreatments = getTreatments.TreatmentInfo();
+
+        CreateObjects(allAnimals, allTasks, allTreatments);
+
+        getTreatments.close();
+
+    }
+
+    public void actionPerformed(ActionEvent event) {
+
+        // Here call the method that will initiate the schedule building process
+        // Exceptions which require calling in a backup volunteer should be handled here
+
+        // add try block that calls the method that builds the schedule
+
+        // add catch block that confirms backup volunteer and makes changes accordingly
+        // to the schedule
+
+        JPanel backupPanel = new JPanel();
+        JButton backupButton = new JButton("Confirm Backup Volunteer");
+
+        backupButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                JOptionPane.showMessageDialog(null, "Backup volunteer confirmed");
+
+                // Remove the backup button from its parent container
+                backupPanel.remove(backupButton);
+                backupPanel.revalidate();
+                backupPanel.repaint();
+            }
+        });
+
+        backupPanel.add(backupButton);
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor((Component) event.getSource());
+        frame.getContentPane().add(BorderLayout.SOUTH, backupPanel);
+        frame.pack();
+
+        JButton myButton = (JButton) event.getSource();
+        myButton.setVisible(false);
     }
 
     public void createConnection() {
@@ -121,76 +206,9 @@ public class FetchSQL {
             ArrayList<ArrayList<String>> treatments) {
 
         for (int i = 0; i < treatments.size(); i++) {
-                
+
         }
 
-    }
-
-    public static void main(String args[]) {
-
-        FetchSQL getTreatments = new FetchSQL();
-        getTreatments.createConnection();
-        ArrayList<ArrayList<String>> allAnimals = getTreatments.animalInfo();
-        ArrayList<ArrayList<String>> allTasks = getTreatments.taskInfo();
-        ArrayList<ArrayList<String>> allTreatments = getTreatments.TreatmentInfo();
-
-        CreateObjects(allAnimals, allTasks, allTreatments);
-
-        getTreatments.close();
-
-    }
-
-}
-
-class SinglyLinkedList {
-    // Represent a node of the singly linked list
-    class Node {
-        int data;
-        Node next;
-
-        public Node(int data) {
-            this.data = data;
-            this.next = null;
-        }
-    }
-
-    // Represent the head and tail of the singly linked list
-    public Node head = null;
-    public Node tail = null;
-
-    // addNode() will add a new node to the list
-    public void addNode(int data) {
-        // Create a new node
-        Node newNode = new Node(data);
-
-        // Checks if the list is empty
-        if (head == null) {
-            // If list is empty, both head and tail will point to new node
-            head = newNode;
-            tail = newNode;
-        } else {
-            // newNode will be added after tail such that tail's next will point to newNode
-            tail.next = newNode;
-            // newNode will become new tail of the list
-            tail = newNode;
-        }
-    }
-
-    public void display() {
-        // Node current will point to head
-        Node current = head;
-
-        if (head == null) {
-            System.out.println("List is empty");
-            return;
-        }
-        System.out.println("Nodes of singly linked list: ");
-        while (current != null) {
-            // Prints each node by incrementing pointer
-            System.out.print(current.data + " ");
-            current = current.next;
-        }
-        System.out.println();
     }
 
 }
