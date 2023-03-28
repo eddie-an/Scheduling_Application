@@ -20,12 +20,22 @@ public class PrintLog {
     public PrintLog() {
 
     }
+    
+    public static String dataToString(HashMap<K, V> finalizedData) {
+        //add something here which retrieves the tasks for a corresponding hour and formats them into a string;
+        //something like this:
+//         19:00
+//         * Rebandage leg wound (Slinky)
+//         * Kit feeding (Annie, Oliver and Mowgli)
+//         * Feeding - porcupine (2: Spike, Javelin)
+        
+    }
 
     /**
      * This method writes to the schedule.txt file.
      * @param segment   The string segment to be written to the file. This segement must be formatted before being passed to this method.
      */
-    public void writeToSchedule(String segment) {
+    public static void writeToSchedule(String segment) {
         FileWriter schedule = null;
         String fileName = "schedule.txt";
         char[] charArray = segment.toCharArray();
