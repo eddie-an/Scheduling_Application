@@ -1,4 +1,13 @@
-* Main will have a GUI that will allow the user to interact with the program for these purposes:
+
+/**
+ @author     Group5
+ @version    1.0
+ @since      1.0
+ */
+
+/*
+ * Main is the class that contains the main method. It is the entry point of the program.
+ * Main will have a GUI that will allow the user to interact with the program for these purposes:
  *     - The program should also display all scheduling information and require a confirmation from the user for
  *       each instance that the backup volunteer needs to be contacted.
  *
@@ -156,23 +165,17 @@ public class Main implements ActionListener {
         }
     }
 
-    private static HashMap<Integer, String[]> fullArray = new HashMap<>();
+    private HashMap<String, ArrayList<String>> fullArray = new HashMap<>();
 
 
 
-    public static void CreateObjects(ArrayList<ArrayList<String>> treatments) {
+    public void CreateObjects(ArrayList<ArrayList<String>> treatments) {
         StringBuilder newBuilder = new StringBuilder();
-
-        for (int i = 0; i < treatments.size(); i++) {
-
-
-
-
-            String[] array = new String[treatments.get(i).size()];
-            for (int j = 0; j < treatments.get(i).size(); j++) {
-                array[j] = treatments.get(i).get
-            }
+        ArrayList<String> tmp = new ArrayList<String>();
+        ArrayList<String> tmp2 = new ArrayList<String>();
+        for (int i=0; i<treatments.size(); i++) {
+            tmp = treatments.get(i);
+            fullArray.put(tmp.get(7), tmp);
         }
-
     }
 
