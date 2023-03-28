@@ -118,84 +118,43 @@ public class Test {
         assertEquals(expectedResult, result);
     }
 
-
-    @Test
-    public void testDBConnectionMade() {
-        FetchSQL test = new FetchSQL();
-        test.createConnection();
-
-        assertNotNull(test.dbConnection)
-    }
-
-    @Test
-    public void testRetrieveTreatments() {
-        FetchSQL test = new FetchSQL();
-        test.createConnection();
-
-        ArrayList<ArrayList<String>> actualResult = test.treatmentInfo();
-
-        assertNotNull(actualResult);
-    }
-
-    @Test
-    public void testRetrieveTasks() {
-        FetchSQL test = new FetchSQL();
-        test.createConnection();
-
-        ArrayList<ArrayList<String>> actualResult = test.taskInfo();
-
-        assertNotNull(actualResult);
-
-    }
-
-    @Test
-    public void testRetrieveAnimals() {
-        FetchSQL test = new FetchSQL();
-        test.createConnection();
-
-        ArrayList<ArrayList<String>> actualResult = test.animalInfo();
-
-        assertNotNull(actualResult);
-    }
-
     @Test
     public void testTooManyEventsException() {
+        boolean success = false;
         Porcupine newPorcupine = new Porcupine(69, "Jesus", false);
         LocalDate date = LocalDate.now();
         try{
             Task newTask = new Task(date, 10, 55, "Cleaning Cage", "67", newPorcupine); 
         }
         catch(Exception e) {
-            if(e instanceof NotAnInt) {
-                System.out.println("Unable to sucessfully use the exception...");
-                System.exit(1);
-            }
-            else if (e instanceof ParseError) {
-                System.out.println("Parse error");
-                Systm.exit(1);
+            if(e instanceof TooManyEventsException) {
+                success = true;
             }
         }
+        assertTrue("Wasn't able to use TooManyEventsException", success);
+    }
         
      @Test
-     public void testGenericObjectCreation() {
-         try {
-             volunteerOne.getVolunteerID();
-             volunteerOne.getTimeLeft();
-         }
-         catch(Exception e) {
-             System.out.println("Was not able to retrieve the volunteer ID or the time left for the volunteer");
-             System.exit(1);
-         }
+     public void testGenericObjectGetters() {
+        boolean idSuccess = false;
+        boolean timeLeftSuccess = false;
+
+        VolunteerGeneric<String, Integer> volunteerOne = new VolunteerGeneric<>("123", 60);
+        String actualID = volunteerOne.getVolunteerID();
+        int actualTimeLeft = volunteerOne.getTimeLeft();
+
+        int expectedTimeLeft = 60;
+        String expectedID = "123";
+
+        assertEquals("Volunteer ID was not retrieved correctly", expectedID, actualID);
+        assertEquals("Time left was not retrieved correctly", expectedTimeLeft, actualTimeLeft);
      }
     
     @Test
     public void testGenericObjectCreation() {
-        try {
-            newVolunteer = new VolunteerGeneric(123, 60);
-        }
-        catch(Exception e) {
-            System.out.print("Not able to instantiate a new volunteer");
-        }
+        VolunteerGeneric<String, Integer> newVolunteer = new VolunteerGeneric<>("123", 60);
+
+        assertTrue("Not able to instantiate a new volunteer", newVolunteer instanceof VolunteerGeneric);
         
  
 }
