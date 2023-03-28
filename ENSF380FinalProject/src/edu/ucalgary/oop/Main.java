@@ -1,4 +1,5 @@
 
+
 /**
  @author     Group5
  @version    1.0
@@ -165,17 +166,14 @@ public class Main implements ActionListener {
         }
     }
 
-    private HashMap<String, ArrayList<String>> fullArray = new HashMap<>();
+    private static HashMap<String, ArrayList<String>> fullArray = new HashMap<>();
 
-
-
-    public void CreateObjects(ArrayList<ArrayList<String>> treatments) {
-        StringBuilder newBuilder = new StringBuilder();
+    public static void CreateObjects(ArrayList<ArrayList<String>> databaseAllRecords) {
         ArrayList<String> tmp = new ArrayList<String>();
-        ArrayList<String> tmp2 = new ArrayList<String>();
-        for (int i=0; i<treatments.size(); i++) {
-            tmp = treatments.get(i);
+        for (int i=0; i<databaseAllRecords.size(); i++) {
+            tmp = databaseAllRecords.get(i);
             fullArray.put(tmp.get(7), tmp);
         }
     }
 
+}
