@@ -1,26 +1,16 @@
-package edu.ucalgary.oop;
-
-/**
-@author     Group5
-@version    1.0
-@since      1.0
-*/
-
-/*
- * Main is the class that contains the main method. It is the entry point of the program.
- * Main will have a GUI that will allow the user to interact with the program for these purposes:
+* Main will have a GUI that will allow the user to interact with the program for these purposes:
  *     - The program should also display all scheduling information and require a confirmation from the user for
  *       each instance that the backup volunteer needs to be contacted.
- * 
+ *
  *     - Users should be provided with meaningful error messages appropriate to the audience
  *       (end user, rather than programmer). Error messages must explain what was wrong and
  *       how it can be corrected (e.g., "It was impossible to complete the schedule due to too
  *       many events scheduled at 11 AM. Please shift some of the following activities:
  *       rebandage head wound (Spike), administer antibiotics (Spike, Shadow)."
- * 
+ *
  *     - Users should be given the opportunity to correct their mistakes, and opportunities for
- *       mistakes should be limited. 
-*/
+ *       mistakes should be limited.
+ */
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,8 +18,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
+import java.io.*;
+import java.sql.Array;
+import java.util.regex.*;
+import java.util.*;
+import java.util.Arrays.*;
 
 public class Main implements ActionListener {
+
+    private ArrayList<ArrayList<ArrayList<String>>> fullArrayList = new ArrayList<ArrayList<ArrayList<String>>>();
 
     private Connection dbConnection;
     private ResultSet results;
@@ -54,11 +51,10 @@ public class Main implements ActionListener {
 
         Main getTreatments = new Main();
         getTreatments.createConnection();
-        ArrayList<ArrayList<String>> allAnimals = getTreatments.animalInfo();
-        ArrayList<ArrayList<String>> allTasks = getTreatments.taskInfo();
-        ArrayList<ArrayList<String>> allTreatments = getTreatments.TreatmentInfo();
 
-        CreateObjects(allAnimals, allTasks, allTreatments);
+        ArrayList<ArrayList<String>> TasksReadIn = getTreatments.TasksReadIn();
+
+        CreateObjects(TasksReadIn);
 
         getTreatments.close();
 
@@ -110,81 +106,39 @@ public class Main implements ActionListener {
 
     }
 
+
+
     // generic method to get animal id and information
-    public ArrayList<ArrayList<String>> animalInfo() {
 
-        // StringBuffer animals = new StringBuffer();
-        ArrayList<ArrayList<String>> animals = new ArrayList<ArrayList<String>>();
-        ArrayList<String> currAnimals = new ArrayList<String>();
 
-        try {
-            Statement myStmt = dbConnection.createStatement();
-            results = myStmt.executeQuery("SELECT * FROM ANIMALS");
 
-            while (results.next()) {
 
-                currAnimals.add(results.getString("AnimalId"));
-                currAnimals.add(results.getString("AnimalNickname"));
-                currAnimals.add(results.getString("AnimalSpecies"));
-
-                animals.add(currAnimals);
-                currAnimals.clear();
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-        return animals;
-    }
-
-    public ArrayList<ArrayList<String>> taskInfo() {
-        // StringBuffer tasks = new StringBuffer();
-        ArrayList<ArrayList<String>> tasks = new ArrayList<ArrayList<String>>();
-        ArrayList<String> currTasks = new ArrayList<String>();
-
-        try {
-            Statement myStmt = dbConnection.createStatement();
-            results = myStmt.executeQuery("SELECT * FROM TASKS");
-
-            while (results.next()) {
-
-                currTasks.add(results.getString("TaskID"));
-                currTasks.add(results.getString("Description"));
-                currTasks.add(results.getString("Duration"));
-                currTasks.add(results.getString("MaxWindow"));
-
-                tasks.add(currTasks);
-                currTasks.clear();
-
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-        return tasks;
-
-    }
-
-    public ArrayList<ArrayList<String>> TreatmentInfo() {
+    public ArrayList<ArrayList<String>> TasksReadIn() {
 
         ArrayList<ArrayList<String>> treatments = new ArrayList<ArrayList<String>>();
-        ArrayList<String> currTreatments = new ArrayList<String>();
+        ArrayList<String> curr = new ArrayList<String>();
 
         // StringBuffer treatments = new StringBuffer();
 
         try {
             Statement myStmt = dbConnection.createStatement();
-            results = myStmt.executeQuery("SELECT * FROM TREATMENTS");
+            results = myStmt.executeQuery("SELECT ANIMALS.*, TASKS.*, TREATMENTS.StartHour\n" +
+                    "FROM TREATMENTS\n" +
+                    "JOIN ANIMALS ON ANIMALS.AnimalID = TREATMENTS.AnimalID\n" +
+                    "JOIN TASKS ON TREATMENTS.TaskID = TASKS.TaskID\n" +
+                    "ORDER BY TREATMENTS.StartHour ASC;");
 
             while (results.next()) {
-
-                currTreatments.add(results.getString("AnimalID"));
-                currTreatments.add(results.getString("TaskID"));
-                currTreatments.add(results.getString("StartHour"));
-                treatments.add(currTreatments);
-                currTreatments.clear();
+                curr.add(results.getString("AnimalNickname"));
+                curr.add(results.getString("AnimalSpecies"));
+                curr.add(results.getString("Description"));
+                curr.add(results.getString("Duration"));
+                curr.add(results.getString("MaxWindow"));
+                curr.add(results.getString("AnimalID"));
+                curr.add(results.getString("TaskID"));
+                curr.add(results.getString("StartHour"));
+                treatments.add(curr);
+                curr.clear();
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -202,13 +156,23 @@ public class Main implements ActionListener {
         }
     }
 
-    public static void CreateObjects(ArrayList<ArrayList<String>> animals, ArrayList<ArrayList<String>> tasks,
-            ArrayList<ArrayList<String>> treatments) {
+    private static HashMap<Integer, String[]> fullArray = new HashMap<>();
+
+
+
+    public static void CreateObjects(ArrayList<ArrayList<String>> treatments) {
+        StringBuilder newBuilder = new StringBuilder();
 
         for (int i = 0; i < treatments.size(); i++) {
 
+
+
+
+            String[] array = new String[treatments.get(i).size()];
+            for (int j = 0; j < treatments.get(i).size(); j++) {
+                array[j] = treatments.get(i).get
+            }
         }
 
     }
 
-}
