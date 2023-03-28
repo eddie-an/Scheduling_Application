@@ -1,3 +1,5 @@
+package edu.ucalgary.oop;
+/* 
 * Main will have a GUI that will allow the user to interact with the program for these purposes:
  *     - The program should also display all scheduling information and require a confirmation from the user for
  *       each instance that the backup volunteer needs to be contacted.
@@ -106,12 +108,7 @@ public class Main implements ActionListener {
 
     }
 
-
-
     // generic method to get animal id and information
-
-
-
 
     public ArrayList<ArrayList<String>> TasksReadIn() {
 
@@ -158,15 +155,10 @@ public class Main implements ActionListener {
 
     private static HashMap<Integer, String[]> fullArray = new HashMap<>();
 
-
-
     public static void CreateObjects(ArrayList<ArrayList<String>> treatments) {
         StringBuilder newBuilder = new StringBuilder();
 
         for (int i = 0; i < treatments.size(); i++) {
-
-
-
 
             String[] array = new String[treatments.get(i).size()];
             for (int j = 0; j < treatments.get(i).size(); j++) {
@@ -175,4 +167,4 @@ public class Main implements ActionListener {
         }
 
     }
-
+}
