@@ -163,11 +163,38 @@ public class Main implements ActionListener {
     private static HashMap<String, ArrayList<String>> fullArray = new HashMap<>();
 
     public static void CreateObjects(ArrayList<ArrayList<String>> databaseAllRecords) {
+
         ArrayList<String> tmp = new ArrayList<String>();
-        for (int i = 0; i < databaseAllRecords.size(); i++) {
-            tmp = databaseAllRecords.get(i);
-            fullArray.put(tmp.get(7), tmp);
+        ArrayList<String> toInsert = new ArrayList<>();
+
+        tmp = databaseAllRecords.get(0);
+        String prevH = tmp.get(0);
+        toInsert.addAll(tmp.subList(0, 6));
+        String hour = "";
+
+        for (int i = 1; i < databaseAllRecords.size(); i++) {
+
+            hour = tmp.get(5);
+
+            if (hour != prevH) {
+                fullArray.put(hour, toInsert);
+                toInsert.clear();
+            }
+            toInsert.addAll(tmp.subList(0, 6));
+            prevH = hour;
+
         }
+
+        fullArray.put(hour, toInsert);
+
+    }
+
+    private static void createDemoSchedule() {
+        // iterate through the keys of the hashmap
+        // look at the tasks
+        // then apply the correct math to get the time of each task and if backup is
+        // required
+
     }
 
 }
