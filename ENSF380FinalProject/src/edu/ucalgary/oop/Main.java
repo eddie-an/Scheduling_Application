@@ -1,5 +1,4 @@
 
-
 /**
  @author     Group5
  @version    1.0
@@ -116,12 +115,7 @@ public class Main implements ActionListener {
 
     }
 
-
-
     // generic method to get animal id and information
-
-
-
 
     public ArrayList<ArrayList<String>> TasksReadIn() {
 
@@ -170,7 +164,7 @@ public class Main implements ActionListener {
 
     public static void CreateObjects(ArrayList<ArrayList<String>> databaseAllRecords) {
         ArrayList<String> tmp = new ArrayList<String>();
-        for (int i=0; i<databaseAllRecords.size(); i++) {
+        for (int i = 0; i < databaseAllRecords.size(); i++) {
             tmp = databaseAllRecords.get(i);
             fullArray.put(tmp.get(7), tmp);
         }
