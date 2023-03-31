@@ -1,13 +1,13 @@
 /**
-@author     Group5
-@version    1.4
-@since      1.0
-*/
+ @author     Group5
+ @version    1.4
+ @since      1.0
+ */
 
 /*
  * Coyote is a class which extends the Animal class and represents a coyote.
  * It has has a static field ACTIVE_TIME which is set to "crepescular".
-*/
+ */
 
 package edu.ucalgary.oop;
 
@@ -17,13 +17,13 @@ public class Coyote extends Animal {
 
     /**
      * This is the constructor for the Coyote class.
-     * 
+     *
      * @param id         The ID of the animal.
      * @param name       The name of the animal.
      * @param isOrphaned Whether or not the animal is an orphan.
      */
-    public Coyote(int id, String name, boolean isOrphaned) {
-        super(id, name, isOrphaned);
+    public Coyote(int id, String name, String nickName) {
+        super(id, name, nickName);
     }
 
     /**

@@ -1,13 +1,13 @@
 /**
-@author     Group5
-@version    1.4
-@since      1.0
-*/
+ @author     Group5
+ @version    1.4
+ @since      1.0
+ */
 
 /*
  * Animal is an abstract class for the subclasses Fox, Beaver, Porcupine, Coyote, Raccoon
  * with info about the Animal ID, animal name, and whether or not the animal is an orphan.
-*/
+ */
 
 package edu.ucalgary.oop;
 
@@ -15,19 +15,29 @@ public abstract class Animal {
     private final int ANIMAL_ID;
     private String name;
     private boolean isOrphaned;
+    private String nickName;
+
 
     /**
      * This is the constructor for the Animal class.
-     * 
+     *
      * @param id         The ID of the animal.
      * @param name       The name of the animal.
-     * @param isOrphaned Whether or not the animal is an orphan.
      */
-    public Animal(int id, String name, boolean isOrphaned) {
+    public Animal(int id, String name) {
         this.ANIMAL_ID = id;
         this.name = name;
-        this.isOrphaned = isOrphaned;
     }
+    // Come back to this constructor later... for the sake of abstraction haha...
+
+
+    public Animal(int id, String name, String nickName) {
+        this.ANIMAL_ID = id;
+        this.name = name;
+        this.nickName = nickName;
+    }
+
+
 
     /**
      * @return The ID of the animal.

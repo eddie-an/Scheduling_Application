@@ -1,13 +1,13 @@
 /**
-@author     Group5
-@version    1.0
-@since      1.0
-*/
+ @author     Group5
+ @version    1.0
+ @since      1.0
+ */
 
 /*
  * TooManyEventsException is a class which extends the Exception class and represents an exception
  * when the time it takes to complete a set of events exceeds the one hour time limit.
-*/
+ */
 
 package edu.ucalgary.oop;
 
