@@ -1,5 +1,4 @@
-
-
+package edu.ucalgary.oop;
 /**
  @author     Group5
  @version    1.0
@@ -27,6 +26,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.io.*;
 import java.sql.Array;
@@ -70,6 +70,12 @@ public class Main implements ActionListener {
 
     }
 
+    public Task helper(int TASK_ID, LocalDate startTime, int prepTime, int taskTime, String taskType, String volunteerId, Animal animal) {
+        Task newTaskObject = new Task(int TASK_ID, LocalDate startTime, int prepTime, int taskTime, String taskType, String volunteerId, Animal animal);
+        
+
+    }
+
     public void actionPerformed(ActionEvent event) {
 
         // Here call the method that will initiate the schedule building process
@@ -109,26 +115,21 @@ public class Main implements ActionListener {
         try {
             // this connection is going to be different for every user change the url user
             // and password for each user
-            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/treatment", "root", "Fuckemail");
+            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "Prospect7789$$$");
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
 
-
-
     // generic method to get animal id and information
-
-
-
 
     public ArrayList<ArrayList<String>> TasksReadIn() {
 
         ArrayList<ArrayList<String>> treatments = new ArrayList<ArrayList<String>>();
-        ArrayList<String> curr = new ArrayList<String>();
+        //StringBuffer catsAndOwners = new StringBuffer();
 
-        // StringBuffer treatments = new StringBuffer();
+        StringBuffer treatmentsReader = new StringBuffer();
 
         try {
             Statement myStmt = dbConnection.createStatement();
@@ -139,16 +140,10 @@ public class Main implements ActionListener {
                     "ORDER BY TREATMENTS.StartHour ASC;");
 
             while (results.next()) {
-                curr.add(results.getString("AnimalNickname"));
-                curr.add(results.getString("AnimalSpecies"));
-                curr.add(results.getString("Description"));
-                curr.add(results.getString("Duration"));
-                curr.add(results.getString("MaxWindow"));
-                curr.add(results.getString("AnimalID"));
-                curr.add(results.getString("TaskID"));
-                curr.add(results.getString("StartHour"));
-                treatments.add(curr);
-                curr.clear();
+                System.out.println("Results: " + results.getString("AnimalNickname") + ", " + results.getString("AnimalSpecies") + "\n");
+
+
+
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -169,11 +164,39 @@ public class Main implements ActionListener {
     private static HashMap<String, ArrayList<String>> fullArray = new HashMap<>();
 
     public static void CreateObjects(ArrayList<ArrayList<String>> databaseAllRecords) {
+
+        /*
         ArrayList<String> tmp = new ArrayList<String>();
-        for (int i=0; i<databaseAllRecords.size(); i++) {
-            tmp = databaseAllRecords.get(i);
-            fullArray.put(tmp.get(7), tmp);
+        ArrayList<String> toInsert = new ArrayList<>();
+
+        tmp = databaseAllRecords.get(0);
+        String prevH = tmp.get(0);
+        toInsert.addAll(tmp.subList(0, 6));
+        String hour = "";
+
+        for (int i = 1; i < databaseAllRecords.size(); i++) {
+
+            hour = tmp.get(5);
+
+            if (hour != prevH) {
+                fullArray.put(hour, toInsert);
+                toInsert.clear();
+            }
+            toInsert.addAll(tmp.subList(0, 6));
+            prevH = hour;
+
         }
+
+        fullArray.put(hour, toInsert);
+        */
+    }
+
+    private static void createDemoSchedule() {
+        // iterate through the keys of the hashmap
+        // look at the tasks
+        // then apply the correct math to get the time of each task and if backup is
+        // required
+
     }
 
 }
