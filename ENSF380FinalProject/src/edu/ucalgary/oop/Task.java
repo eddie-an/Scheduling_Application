@@ -19,6 +19,7 @@ public class Task {
     private int prepTime;
     private int taskTime;
     private String taskType;
+    private boolean extraVolunteer;
     private VolunteerGeneric<String, Integer> volunteerOne; // object binded to Task object
     private VolunteerGeneric<String, Integer> volunteerTwo; // On - standby in case it needs to be used / accessed.
     private Animal animalTaskFor;
