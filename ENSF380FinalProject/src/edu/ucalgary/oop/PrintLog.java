@@ -8,9 +8,11 @@
  * PrintLog is a class which writes to the schedule.txt file.
 */
 
-package edu.ucalgary.oop;
+package edu.ucalgary.oop.ENSF380FinalProject.src.edu.ucalgary.oop;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.util.*;
 
 public class PrintLog {
 
@@ -21,14 +23,34 @@ public class PrintLog {
 
     }
     
-    public static String dataToString(HashMap<K, V> finalizedData) {
-        //add something here which retrieves the tasks for a corresponding hour and formats them into a string;
-        //something like this:
-//         19:00
-//         * Rebandage leg wound (Slinky)
-//         * Kit feeding (Annie, Oliver and Mowgli)
-//         * Feeding - porcupine (2: Spike, Javelin)
-        
+    public static String dataToString(HashMap<Integer, ArrayList<Task>> finalizedData) {
+        StringBuilder str = new StringBuilder();
+        str.append("Schedule for ");
+        LocalDate today = LocalDate.now();
+        str.append(today.toString());
+        str.append("\n\n");
+
+        finalizedData.forEach((startHour, tasks) -> {
+            str.append(startHour);
+            str.append(":00 ");
+            if (tasks.get(0).getExtraVolunteer() == true) {
+                str.append("[+ backup volunteer]");
+            }
+            str.append("\n");
+            tasks.forEach((task)-> {
+                str.append("* ");
+                str.append(task.getTaskType());
+                str.append(" - ");
+                str.append(task.getAnimal().getSpecies());
+                str.append(" (");
+                str.append(task.getAnimal().getName());
+                str.append(")");
+                str.append("\n");
+            });
+            str.append("\n")
+        });
+        String returnVal = str.toString();
+        return returnVal;
     }
 
     /**
