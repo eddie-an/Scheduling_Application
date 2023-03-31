@@ -1,4 +1,4 @@
-
+package edu.ucalgary.oop;
 /**
  @author     Group5
  @version    1.0
@@ -26,6 +26,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.io.*;
 import java.sql.Array;
@@ -35,7 +36,9 @@ import java.util.Arrays.*;
 
 public class Main implements ActionListener {
 
-    private ArrayList<ArrayList<ArrayList<String>>> fullArrayList = new ArrayList<ArrayList<ArrayList<String>>>();
+
+
+    private HashMap<Integer, ArrayList<Task>> fullArray = new HashMap<>();
 
     private Connection dbConnection;
     private ResultSet results;
@@ -61,12 +64,18 @@ public class Main implements ActionListener {
         Main getTreatments = new Main();
         getTreatments.createConnection();
 
-        ArrayList<ArrayList<String>> TasksReadIn = getTreatments.TasksReadIn();
+        HashMap<Integer, ArrayList<Task>> TasksReadIn = getTreatments.TasksReadIn();
 
         CreateObjects(TasksReadIn);
 
         getTreatments.close();
 
+    }
+
+    /** Helper Method **/
+    public Task helper(int TASK_ID, int maxWindow, int prepTime, int taskTime, String taskType, Animal animal) {
+        Task newTaskObject = new Task(TASK_ID, maxWindow, prepTime, taskTime, taskType, animal);
+        return newTaskObject;
     }
 
     public void actionPerformed(ActionEvent event) {
@@ -115,11 +124,12 @@ public class Main implements ActionListener {
 
     }
 
-    // generic method to get animal id and information
+    /** This method reads-in and parses the data, and instantiates new Task objects accordingly **/
 
-    public ArrayList<ArrayList<String>> TasksReadIn() {
+    public HashMap<Integer, ArrayList<Task>> TasksReadIn() {
+        int key;
+        HashMap<Integer, ArrayList<Task>> fullArrayList = new HashMap<Integer, ArrayList<Task>>();
 
-        ArrayList<ArrayList<String>> treatments = new ArrayList<ArrayList<String>>();
         //StringBuffer catsAndOwners = new StringBuffer();
 
         StringBuffer treatmentsReader = new StringBuffer();
@@ -133,16 +143,35 @@ public class Main implements ActionListener {
                     "ORDER BY TREATMENTS.StartHour ASC;");
 
             while (results.next()) {
+                System.out.println("\n ---- \n");
+                Animal newAnimal = null;
+                String nickName = results.getString("AnimalNickname");
+                String typeOfAnimal = results.getString("AnimalSpecies");
+                Integer animalID = Integer.parseInt(results.getString("AnimalID"));
+                if(typeOfAnimal=="Beaver") {
+                    newAnimal = new Beaver(animalID, typeOfAnimal, nickName);
+                } else if (typeOfAnimal=="Raccoon") {
+                    newAnimal = new Raccoon(animalID, typeOfAnimal, nickName);
+                } else if (typeOfAnimal=="Fox") {
+                    newAnimal = new Fox(animalID, typeOfAnimal, nickName);
+                } else if (typeOfAnimal=="Coyote") {
+                    newAnimal = new Coyote(animalID, typeOfAnimal, nickName);
+                } else if (typeOfAnimal=="Porcupine") {
+                    newAnimal = new Porcupine(animalID, typeOfAnimal, nickName);
+                }
+                key = Integer.parseInt(results.getString("StartHour"));
+                Task instantiatedTask = helper(Integer.parseInt(results.getString("TaskID")), Integer.parseInt(results.getString("StartHour")) , Integer.parseInt(results.getString("MaxWindow")),
+                        Integer.parseInt(results.getString("Duration")), results.getString("Description"), newAnimal);
                 System.out.println("Results: " + results.getString("AnimalNickname") + ", " + results.getString("AnimalSpecies") + "\n");
-
-
+                ArrayList<Task> tempArrayList = this.fullArray.get(key);
+                this.fullArray.put(key, tempArrayList);
 
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
 
-        return treatments;
+        return fullArrayList;
     }
 
     public void close() {
@@ -154,10 +183,11 @@ public class Main implements ActionListener {
         }
     }
 
-    private static HashMap<String, ArrayList<String>> fullArray = new HashMap<>();
 
-    public static void CreateObjects(ArrayList<ArrayList<String>> databaseAllRecords) {
 
+    public static void CreateObjects(HashMap<Integer, ArrayList<Task>> databaseAllRecords) {
+
+        /*
         ArrayList<String> tmp = new ArrayList<String>();
         ArrayList<String> toInsert = new ArrayList<>();
 
@@ -180,7 +210,7 @@ public class Main implements ActionListener {
         }
 
         fullArray.put(hour, toInsert);
-
+        */
     }
 
     private static void createDemoSchedule() {
