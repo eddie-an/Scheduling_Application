@@ -26,8 +26,8 @@ public abstract class Animal {
     public Animal(int id, String name) {
         this.ANIMAL_ID = id;
         this.name = name;
+        this.isOrphaned = false; // animal is not an orphan by default
     }
-    // Come back to this constructor later... for the sake of abstraction haha...
 
     /**
      * @return The ID of the animal.
@@ -60,6 +60,9 @@ public abstract class Animal {
      */
     public abstract String getSpecies();
 
+    /**
+     * @param name The name of the animal.
+     */
     public void setName(String name) {
         this.name = name;
     }

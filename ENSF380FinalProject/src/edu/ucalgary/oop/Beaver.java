@@ -25,8 +25,6 @@ public class Beaver extends Animal {
         super(id, name);
     }
 
-    // Come back to this method later... to fix the boolean var.
-
 
     /**
      * @return The ID of the animal.

@@ -19,7 +19,7 @@ public class Task {
     private int maxWindow;
     private int duration;
     private String taskType;
-    private Animal animalTaskFor;
+    private Animal animal;
     private boolean extraVolunteerStatus;
 
 
@@ -33,23 +33,58 @@ public class Task {
      * @param animal    The animal that the task is for.
      */
     public Task(int TASK_ID, int startHour, int maxWindow, int duration, String taskType,
-                Animal animal) {
+                Animal animal) throws IllegalArgumentException{
 
-        // The above would essentially re-direct the task class to another class which
-        // would handle initialization of all Task data members and second volunteer,
-        // although this method seems a bit redundant...
-
+        if (startHour < 0 || startHour > 23)
+        {
+            throw new IllegalArgumentException();
+        }
         this.TASK_ID = TASK_ID;
-        this.maxWindow = maxWindow;
         this.startHour = startHour;
+        this.maxWindow = maxWindow;
         this.duration = duration;
         this.taskType = taskType;
-        this.animalTaskFor = animal;
-
+        this.animal = animal;
+        this.extraVolunteerStatus = false; // false by default
     }
 
     /**
-     * @param extraVolunteerStatus  The status of the extra volunteer.
+     * @param startHour The start time of the task.
+     */
+    public void setStartHour(int startHour) {
+        this.startHour = startHour;
+    }
+
+    /**
+     * @param maxWindow The max window of the task.
+     */
+    public void setMaxWindow(int maxWindow) {
+        this.maxWindow = maxWindow;
+    }
+
+    /**
+     * @param duration The time it takes to complete the task.
+     */
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    /**
+     * @param taskType The type of task being done.
+     */
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
+    }
+
+    /**
+     * @param animal The animal being taken care of.
+     */
+    public void setAnimal(Animal animal) {
+        this.animal = animal;
+    }
+
+    /**
+     * @param extraVolunteerStatus The status of the extra volunteer.
      */
     public void setExtraVolunteerStatus(boolean extraVolunteerStatus) {
         this.extraVolunteerStatus = extraVolunteerStatus;
@@ -102,7 +137,7 @@ public class Task {
      * @return The animal the task is for.
      */
     public Animal getAnimal() {
-        return this.animalTaskFor;
+        return this.animal;
     }
 
 }
