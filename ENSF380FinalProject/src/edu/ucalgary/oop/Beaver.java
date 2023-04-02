@@ -22,8 +22,8 @@ public class Beaver extends Animal {
      * @param name       The name of the animal.
      * @param isOrphaned Whether or not the animal is an orphan.
      */
-    public Beaver(int id, String name, String nickName) {
-        super(id, name, nickName);
+    public Beaver(int id, String name) {
+        super(id, name);
     }
 
     // Come back to this method later... to fix the boolean var.

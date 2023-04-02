@@ -22,8 +22,8 @@ public class Fox extends Animal {
      * @param name       The name of the animal.
      * @param isOrphaned Whether or not the animal is an orphan.
      */
-    public Fox(int id, String name, String nickName) {
-        super(id, name, nickName);
+    public Fox(int id, String name) {
+        super(id, name);
     }
 
     /**

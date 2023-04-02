@@ -22,8 +22,8 @@ public class Raccoon extends Animal {
      * @param name       The name of the animal.
      * @param nickName Whether or not the animal is an orphan.
      */
-    public Raccoon(int id, String name, String nickName) {
-        super(id, name, nickName);
+    public Raccoon(int id, String name) {
+        super(id, name);
     }
 
     /**

@@ -30,15 +30,6 @@ public abstract class Animal {
     }
     // Come back to this constructor later... for the sake of abstraction haha...
 
-
-    public Animal(int id, String name, String nickName) {
-        this.ANIMAL_ID = id;
-        this.name = name;
-        this.nickName = nickName;
-    }
-
-
-
     /**
      * @return The ID of the animal.
      */

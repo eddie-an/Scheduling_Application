@@ -36,7 +36,8 @@ import java.util.Arrays.*;
 
 public class Main implements ActionListener {
 
-    private HashMap<Integer, ArrayList<Task>> fullArray = new HashMap<>();
+    private static HashMap<Integer, ArrayList<Task>> databaseRecords = new HashMap<>();
+    private static ArrayList<Animal> animalList = new ArrayList<Animal>();
 
     private Connection dbConnection;
     private ResultSet results;
@@ -46,9 +47,10 @@ public class Main implements ActionListener {
         Main getTreatments = new Main();
         getTreatments.createConnection();
 
-        HashMap<Integer, ArrayList<Task>> TasksReadIn = getTreatments.TasksReadIn();
+        getTreatments.animalsReadIn();
+        getTreatments.TasksReadIn();
 
-        CreateObjects(TasksReadIn);
+        CreateObjects(databaseRecords);
 
         getTreatments.close();
 
@@ -122,10 +124,58 @@ public class Main implements ActionListener {
 
     }
 
+    public void animalsReadIn() {
+        StringBuffer treatmentsReader = new StringBuffer();
+
+        try {
+            Statement myStmt = dbConnection.createStatement();
+            results = myStmt.executeQuery("SELECT ANIMALS.*\n" +
+                    "FROM ANIMALS\n" +
+                    "ORDER BY ANIMALS.AnimalID ASC;");
+            while (results.next())
+            {
+                String nickName = results.getString("AnimalNickname");
+                String typeOfAnimal = results.getString("AnimalSpecies");
+                int animalID = results.getInt("AnimalID");
+                Animal newAnimal = null;
+                if(typeOfAnimal=="Beaver") {
+                    newAnimal = new Beaver(animalID, nickName);
+                } else if (typeOfAnimal=="Raccoon") {
+                    newAnimal= new Raccoon(animalID, nickName);
+                } else if (typeOfAnimal=="Fox") {
+                    newAnimal= new Fox(animalID, nickName);
+                } else if (typeOfAnimal=="Coyote") {
+                    newAnimal= new Coyote(animalID, nickName);
+                } else if (typeOfAnimal=="Porcupine") {
+                    newAnimal= new Porcupine(animalID, nickName);
+                }
+                animalList.add(newAnimal);
+
+            }
+            animalList.forEach((animal)-> {
+                System.out.println(animal);
+            });
+            /*
+            myStmt = dbConnection.createStatement();
+            results = myStmt.executeQuery("SELECT ANIMALS.*, TREATMENTS.TreatmentId\n" +
+                    "FROM ANIMALS\n" +
+                    "JOIN TREATMENTS ON ANIMALS.AnimalID = TREATMENTS.AnimalID\n" +
+                    "WHERE TreatmentId = 1;");
+
+            int animalID = results.getInt("AnimalID");
+            animalList.get(animalID - 1).setOrphanStatus(true);
+            */
+
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     /** This method reads-in and parses the data, and instantiates new Task objects accordingly **/
-    public HashMap<Integer, ArrayList<Task>> TasksReadIn() {
+    public void TasksReadIn() {
         int key;
-        HashMap<Integer, ArrayList<Task>> fullArrayList = new HashMap<Integer, ArrayList<Task>>();
 
         StringBuffer treatmentsReader = new StringBuffer();
 
@@ -142,31 +192,19 @@ public class Main implements ActionListener {
                 Animal newAnimal = null;
                 String nickName = results.getString("AnimalNickname");
                 String typeOfAnimal = results.getString("AnimalSpecies");
-                Integer animalID = Integer.parseInt(results.getString("AnimalID"));
-                if(typeOfAnimal=="Beaver") {
-                    newAnimal = new Beaver(animalID, typeOfAnimal, nickName);
-                } else if (typeOfAnimal=="Raccoon") {
-                    newAnimal = new Raccoon(animalID, typeOfAnimal, nickName);
-                } else if (typeOfAnimal=="Fox") {
-                    newAnimal = new Fox(animalID, typeOfAnimal, nickName);
-                } else if (typeOfAnimal=="Coyote") {
-                    newAnimal = new Coyote(animalID, typeOfAnimal, nickName);
-                } else if (typeOfAnimal=="Porcupine") {
-                    newAnimal = new Porcupine(animalID, typeOfAnimal, nickName);
-                }
+                int animalID = results.getInt("AnimalID");
+
                 key = Integer.parseInt(results.getString("StartHour"));
                 Task instantiatedTask = helper(Integer.parseInt(results.getString("TaskID")), Integer.parseInt(results.getString("StartHour")) , Integer.parseInt(results.getString("MaxWindow")),
                         Integer.parseInt(results.getString("Duration")), results.getString("Description"), newAnimal);
                 System.out.println("Results: " + results.getString("AnimalNickname") + ", " + results.getString("AnimalSpecies") + "\n");
-                ArrayList<Task> tempArrayList = this.fullArray.get(key);
-                this.fullArray.put(key, tempArrayList);
+                ArrayList<Task> tempArrayList = this.databaseRecords.get(key);
+                this.databaseRecords.put(key, tempArrayList);
 
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
-        return fullArrayList;
     }
 
     public void close() {
