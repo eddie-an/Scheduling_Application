@@ -58,8 +58,15 @@ public class Main implements ActionListener {
         // CreateObjects(databaseRecords);
 
         getTreatments.close();
-        addBackupVolunteer();
+
+
+        rearrangeTasks(0);
         String data = PrintLog.dataToString(databaseRecords);
+        System.out.println(data);
+
+
+        addBackupVolunteer();
+        data = PrintLog.dataToString(databaseRecords);
         System.out.println(data);
 
         EventQueue.invokeLater(() -> {
@@ -333,6 +340,71 @@ public class Main implements ActionListener {
 
         fullArray.put(hour, toInsert);
         */
+    }
+
+    public static void rearrangeTasks(int key) {
+        // iterate through the keys of the hashmap
+        // look at the tasks
+        // then apply the correct math to get the time of each task and if backup is
+        // required
+
+        // iterate through the keys of the hashmap
+        // check if the time is greater than 60
+        // if it is, move the task to the next hour
+        // if the next hour is not empty, check if the time is greater than 60
+        // if it is, move the task to the next hour
+
+        // NEEDS TO BE ABLE ACCOUNT FOR 22 -> 23 -> 0 
+        // NEEDS TO THROW AN EXCEPTION IF ALL HOURS WITHIN THE MAXWINDOW ARE FULL
+
+        ArrayList<Task> tasks = databaseRecords.get(key);
+        int totalTime = 0;
+
+        if(tasks != null) {
+
+            Iterator<Task> it = tasks.iterator();
+
+            while (it.hasNext()) {
+                Task task = it.next();
+                totalTime += task.getDuration();
+
+                if (totalTime > 60) {
+                    // what if it goes 22, 23, 24? should go 22, 23, 0, maybe modulo
+                    for(int j = task.getStartHour() + 1; j < task.getStartHour() + task.getMaxWindow(); j++) {
+                        if (databaseRecords.containsKey(j)) {
+                            ArrayList<Task> temp = databaseRecords.get(j);
+                            int time = 0;
+                            for(Task t : temp) {
+                                time += t.getDuration();
+                            }
+
+                            if (time + task.getDuration() <= 60) {
+                                temp.add(task);
+                                databaseRecords.put(j, temp);      
+                                break;
+                            }
+                        }
+                        else {
+                            ArrayList<Task> temp = new ArrayList<>();
+                            temp.add(task);
+                            databaseRecords.put(j, temp);
+                            break;
+                        }
+                    }
+                    tasks.remove(task);
+                    break;
+                }
+            }
+            databaseRecords.put(key, tasks);
+        }
+        
+        if (totalTime > 60 ) {
+            rearrangeTasks(key);
+        }
+        else if (key < 23) {
+            rearrangeTasks(key + 1);
+        }
+
     }
 
     /**
