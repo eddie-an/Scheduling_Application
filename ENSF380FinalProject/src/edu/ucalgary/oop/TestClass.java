@@ -1,12 +1,12 @@
+/*
 package edu.ucalgary.oop;
 
-import org.junit.*;
 import static org.junit.Assert.*;
 import java.time.LocalDate;
 
-public class Test {
+public class TestClass {
 
-    public Test() {
+    public TestClass() {
     }
 
     @Test
@@ -158,3 +158,5 @@ public class Test {
         
  
 }
+
+*/

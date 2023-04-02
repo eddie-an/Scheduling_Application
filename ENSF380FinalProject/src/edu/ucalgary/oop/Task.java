@@ -20,6 +20,7 @@ public class Task {
     private int taskTime;
     private String taskType;
     private Animal animalTaskFor;
+    private boolean extraVolunteerStatus;
 
     public Task(int TASK_ID, int startTime, int maxWindow, int taskTime, String taskType,
                 Animal animal) {
@@ -37,6 +38,10 @@ public class Task {
 
         this.animalTaskFor = animal;
 
+    }
+
+    public void setExtraVolunteerStatus(boolean extraVolunteerStatus) {
+        this.extraVolunteerStatus = extraVolunteerStatus;
     }
 
     /**
@@ -75,13 +80,11 @@ public class Task {
     }
 
     /**
-     * @return The volunteer assigned to the task.
+     * @return The status of extra volunteer
      */
-
-    /**
-     * @return The volunteer assigned to the task.
-     */
-
+    public boolean getExtraVolunteerStatus() {
+        return extraVolunteerStatus;
+    }
 
     /**
      * @return The animal the task is for.

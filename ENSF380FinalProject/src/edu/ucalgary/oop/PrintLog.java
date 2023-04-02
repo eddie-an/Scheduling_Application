@@ -8,7 +8,7 @@
  * PrintLog is a class which writes to the schedule.txt file.
 */
 
-package edu.ucalgary.oop.ENSF380FinalProject.src.edu.ucalgary.oop;
+package edu.ucalgary.oop;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -33,7 +33,7 @@ public class PrintLog {
         finalizedData.forEach((startHour, tasks) -> {
             str.append(startHour);
             str.append(":00 ");
-            if (tasks.get(0).getExtraVolunteer() == true) {
+            if (tasks.get(0).getExtraVolunteerStatus() == true) {
                 str.append("[+ backup volunteer]");
             }
             str.append("\n");
@@ -47,7 +47,7 @@ public class PrintLog {
                 str.append(")");
                 str.append("\n");
             });
-            str.append("\n")
+            str.append("\n");
         });
         String returnVal = str.toString();
         return returnVal;

@@ -36,14 +36,21 @@ import java.util.Arrays.*;
 
 public class Main implements ActionListener {
 
-
-
     private HashMap<Integer, ArrayList<Task>> fullArray = new HashMap<>();
 
     private Connection dbConnection;
     private ResultSet results;
 
     public static void main(String args[]) throws Exception {
+
+        Main getTreatments = new Main();
+        getTreatments.createConnection();
+
+        HashMap<Integer, ArrayList<Task>> TasksReadIn = getTreatments.TasksReadIn();
+
+        CreateObjects(TasksReadIn);
+
+        getTreatments.close();
 
         EventQueue.invokeLater(() -> {
             JFrame frame = new JFrame(" Example Wildlife Rescue Scheduler");
@@ -60,15 +67,6 @@ public class Main implements ActionListener {
             frame.setVisible(true);
 
         });
-
-        Main getTreatments = new Main();
-        getTreatments.createConnection();
-
-        HashMap<Integer, ArrayList<Task>> TasksReadIn = getTreatments.TasksReadIn();
-
-        CreateObjects(TasksReadIn);
-
-        getTreatments.close();
 
     }
 
@@ -117,7 +115,7 @@ public class Main implements ActionListener {
         try {
             // this connection is going to be different for every user change the url user
             // and password for each user
-            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "Prospect7789$$$");
+            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "SQL123456");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -125,12 +123,9 @@ public class Main implements ActionListener {
     }
 
     /** This method reads-in and parses the data, and instantiates new Task objects accordingly **/
-
     public HashMap<Integer, ArrayList<Task>> TasksReadIn() {
         int key;
         HashMap<Integer, ArrayList<Task>> fullArrayList = new HashMap<Integer, ArrayList<Task>>();
-
-        //StringBuffer catsAndOwners = new StringBuffer();
 
         StringBuffer treatmentsReader = new StringBuffer();
 
