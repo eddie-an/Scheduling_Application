@@ -23,6 +23,11 @@ public class PrintLog {
 
     }
     
+    /**
+     * This method formats the data to be written to the file from a HashMap of finalized data.
+     * @param finalizedData
+     * @return The formatted string to be written to the file.
+     */
     public static String dataToString(HashMap<Integer, ArrayList<Task>> finalizedData) {
         StringBuilder str = new StringBuilder();
         str.append("Schedule for ");

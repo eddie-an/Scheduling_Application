@@ -20,7 +20,6 @@ public class Coyote extends Animal {
      *
      * @param id         The ID of the animal.
      * @param name       The name of the animal.
-     * @param isOrphaned Whether or not the animal is an orphan.
      */
     public Coyote(int id, String name) {
         super(id, name);

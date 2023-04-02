@@ -20,7 +20,6 @@ public class Beaver extends Animal {
      *
      * @param id         The ID of the animal.
      * @param name       The name of the animal.
-     * @param isOrphaned Whether or not the animal is an orphan.
      */
     public Beaver(int id, String name) {
         super(id, name);

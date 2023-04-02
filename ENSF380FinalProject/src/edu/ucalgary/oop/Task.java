@@ -22,6 +22,16 @@ public class Task {
     private Animal animalTaskFor;
     private boolean extraVolunteerStatus;
 
+
+    /**
+     * Constructor for the Task class.
+     * @param TASK_ID   The ID of the task.
+     * @param startHour The start hour of the task.
+     * @param maxWindow The max window that the task can be completed in.
+     * @param duration  The time it takes to complete the task.
+     * @param taskType  The description of the task.
+     * @param animal    The animal that the task is for.
+     */
     public Task(int TASK_ID, int startHour, int maxWindow, int duration, String taskType,
                 Animal animal) {
 
@@ -38,6 +48,9 @@ public class Task {
 
     }
 
+    /**
+     * @param extraVolunteerStatus  The status of the extra volunteer.
+     */
     public void setExtraVolunteerStatus(boolean extraVolunteerStatus) {
         this.extraVolunteerStatus = extraVolunteerStatus;
     }

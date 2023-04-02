@@ -1,12 +1,12 @@
 package edu.ucalgary.oop;
 /**
  @author     Group5
- @version    1.0
+ @version    1.1
  @since      1.0
  */
 
 /*
- * Main is the class that contains the main method. It is the entry point of the program.
+ * Main is the class that contains the main method and establishes connection with the SQL database.
  * Main will have a GUI that will allow the user to interact with the program for these purposes:
  *     - The program should also display all scheduling information and require a confirmation from the user for
  *       each instance that the backup volunteer needs to be contacted.
@@ -42,6 +42,11 @@ public class Main implements ActionListener {
     private Connection dbConnection;
     private ResultSet results;
 
+    /**
+     * The main method which connects to the database and creates the GUI
+     * @param args
+     * @throws Exception
+     */
     public static void main(String args[]) throws Exception {
 
         Main getTreatments = new Main();
@@ -75,10 +80,13 @@ public class Main implements ActionListener {
     }
 
 
+    /**
+     * adds general feeding for non-orphaned animals, and cleaning tasks as well
+     */
+    public void addGeneralFeedingAndCleaning() {
     //TaskID = -1 for general feeding
     //TaskID = -2 for general cleaning
     //so it doesn't conflict with the actual taskID's in the database
-    public void addGeneralFeedingAndCleaning() {
         for(Animal animal : animalList) {
 
             Task cleaning = new Task(-2, 0, 24, animal.getSpecies() == "porcupine" ? 10 : 5, "general cleaning", animal);
@@ -127,6 +135,10 @@ public class Main implements ActionListener {
         return newTaskObject;
     }
 
+    /**
+     * Needs to be implemented but is not yet
+     * @param event     The event that triggers the action
+     */
     public void actionPerformed(ActionEvent event) {
 
         // Here call the method that will initiate the schedule building process
@@ -161,6 +173,9 @@ public class Main implements ActionListener {
         myButton.setVisible(false);
     }
 
+    /**
+     * creates a connection to the database, this will be different for each user
+     */
     public void createConnection() {
 
         try {
@@ -173,6 +188,9 @@ public class Main implements ActionListener {
 
     }
 
+    /**
+     * Reads in and instantiates the animals from the database
+     */
     public void animalsReadIn() {
         StringBuffer treatmentsReader = new StringBuffer();
 
@@ -225,7 +243,9 @@ public class Main implements ActionListener {
         }
     }
 
-    /** This method reads-in and parses the data, and instantiates new Task objects accordingly **/
+    /** 
+     * This method reads-in and parses the data, and instantiates new Task objects accordingly 
+     */
     public void TasksReadIn() {
         StringBuffer treatmentsReader = new StringBuffer();
 
@@ -272,6 +292,10 @@ public class Main implements ActionListener {
         addGeneralFeedingAndCleaning();
     }
 
+
+    /**
+     * This method closes the connection to the database
+     */
     public void close() {
         try {
             results.close();
@@ -311,6 +335,9 @@ public class Main implements ActionListener {
         */
     }
 
+    /**
+     * Performs the necessary calculations to determine whether or not a backup volunteer is required
+     */
     private static void addBackupVolunteer() {
         // iterate through the keys of the hashmap
         // look at the tasks
