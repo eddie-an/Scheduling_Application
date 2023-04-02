@@ -15,14 +15,14 @@ import java.time.LocalDate;
 
 public class Task {
     private final int TASK_ID;
-    private int startTime;
+    private int startHour;
     private int maxWindow;
-    private int taskTime;
+    private int duration;
     private String taskType;
     private Animal animalTaskFor;
     private boolean extraVolunteerStatus;
 
-    public Task(int TASK_ID, int startTime, int maxWindow, int taskTime, String taskType,
+    public Task(int TASK_ID, int startHour, int maxWindow, int duration, String taskType,
                 Animal animal) {
 
         // The above would essentially re-direct the task class to another class which
@@ -30,12 +30,10 @@ public class Task {
         // although this method seems a bit redundant...
 
         this.TASK_ID = TASK_ID;
-        Integer tempInt = 60;
         this.maxWindow = maxWindow;
-        this.startTime = startTime;
-        this.taskTime = taskTime;
+        this.startHour = startHour;
+        this.duration = duration;
         this.taskType = taskType;
-
         this.animalTaskFor = animal;
 
     }
@@ -54,22 +52,23 @@ public class Task {
     /**
      * @return The start time of the task.
      */
-    public int getStartTime() {
-        return this.startTime;
+    public int getStartHour() {
+        return this.startHour;
     }
 
+
     /**
-     * @return The preparation time of the task.
+     * @return The max window of the task.
      */
-    public int getPrepTime() {
-        return this.startTime;
+    public int getMaxWindow() {
+        return this.maxWindow;
     }
 
     /**
      * @return The time it takes to complete the task.
      */
-    public int getTaskTime() {
-        return this.taskTime;
+    public int getDuration() {
+        return this.duration;
     }
 
     /**

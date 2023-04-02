@@ -53,6 +53,9 @@ public class Main implements ActionListener {
         CreateObjects(databaseRecords);
 
         getTreatments.close();
+        addBackupVolunteer();
+        String data = PrintLog.dataToString(databaseRecords);
+        System.out.println(data);
 
         EventQueue.invokeLater(() -> {
             JFrame frame = new JFrame(" Example Wildlife Rescue Scheduler");
@@ -67,12 +70,11 @@ public class Main implements ActionListener {
             buttonsPanel.add(myButton);
             frame.getContentPane().add(BorderLayout.NORTH, buttonsPanel);
             frame.setVisible(true);
-
         });
 
     }
 
-    /** Helper Method **/
+    /** Helper Method **/ //Do we really need this? we figured out a logic to create objects inside TasksReadIn
     public Task helper(int TASK_ID, int maxWindow, int prepTime, int taskTime, String taskType, Animal animal) {
         Task newTaskObject = new Task(TASK_ID, maxWindow, prepTime, taskTime, taskType, animal);
         return newTaskObject;
@@ -136,37 +138,40 @@ public class Main implements ActionListener {
             {
                 String nickName = results.getString("AnimalNickname");
                 String typeOfAnimal = results.getString("AnimalSpecies");
-                int animalID = results.getInt("AnimalID");
-                Animal newAnimal = null;
-                if(typeOfAnimal=="Beaver") {
-                    newAnimal = new Beaver(animalID, nickName);
-                } else if (typeOfAnimal=="Raccoon") {
-                    newAnimal= new Raccoon(animalID, nickName);
-                } else if (typeOfAnimal=="Fox") {
-                    newAnimal= new Fox(animalID, nickName);
-                } else if (typeOfAnimal=="Coyote") {
-                    newAnimal= new Coyote(animalID, nickName);
-                } else if (typeOfAnimal=="Porcupine") {
-                    newAnimal= new Porcupine(animalID, nickName);
+                Integer animalID = Integer.parseInt(results.getString("AnimalID"));
+                //Integer key = Integer.parseInt(results.getString("StartHour"));
+                if(typeOfAnimal.equals("beaver")) {
+                    Beaver newAnimal = new Beaver(animalID, nickName);
+                    animalList.add(newAnimal);
+                } else if (typeOfAnimal.equals("raccoon")) {
+                    Raccoon newAnimal= new Raccoon(animalID, nickName);
+                    animalList.add(newAnimal);
+                } else if (typeOfAnimal.equals("fox")) {
+                    Fox newAnimal= new Fox(animalID, nickName);
+                    animalList.add(newAnimal);
+                } else if (typeOfAnimal.equals("coyote")) {
+                    Coyote newAnimal= new Coyote(animalID, nickName);
+                    animalList.add(newAnimal);
+                } else if (typeOfAnimal.equals("porcupine")) {
+                    Animal newAnimal= new Porcupine(animalID, nickName);
+                    animalList.add(newAnimal);
                 }
-                animalList.add(newAnimal);
+
 
             }
-            animalList.forEach((animal)-> {
-                System.out.println(animal);
-            });
-            /*
+
             myStmt = dbConnection.createStatement();
             results = myStmt.executeQuery("SELECT ANIMALS.*, TREATMENTS.TreatmentId\n" +
                     "FROM ANIMALS\n" +
-                    "JOIN TREATMENTS ON ANIMALS.AnimalID = TREATMENTS.AnimalID\n" +
-                    "WHERE TreatmentId = 1;");
-
-            int animalID = results.getInt("AnimalID");
-            animalList.get(animalID - 1).setOrphanStatus(true);
-            */
-
-
+                    "JOIN TREATMENTS ON ANIMALS.AnimalID = TREATMENTS.AnimalID;");
+            while (results.next()) {
+                int animalID = results.getInt("AnimalID");
+                int treatmentID = results.getInt("TreatmentID");
+                if (treatmentID == 1) // animals with treatmentID of 1 is always an orphan
+                {
+                    animalList.get(animalID - 1).setOrphanStatus(true);
+                }
+            }
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -175,8 +180,6 @@ public class Main implements ActionListener {
 
     /** This method reads-in and parses the data, and instantiates new Task objects accordingly **/
     public void TasksReadIn() {
-        int key;
-
         StringBuffer treatmentsReader = new StringBuffer();
 
         try {
@@ -186,21 +189,34 @@ public class Main implements ActionListener {
                     "JOIN ANIMALS ON ANIMALS.AnimalID = TREATMENTS.AnimalID\n" +
                     "JOIN TASKS ON TREATMENTS.TaskID = TASKS.TaskID\n" +
                     "ORDER BY TREATMENTS.StartHour ASC;");
+            Integer prevStartHour = -1;
 
             while (results.next()) {
+
                 System.out.println("\n ---- \n");
-                Animal newAnimal = null;
+                Integer startHour = Integer.parseInt(results.getString("StartHour"));
+                int animalID = results.getInt("AnimalID");
                 String nickName = results.getString("AnimalNickname");
                 String typeOfAnimal = results.getString("AnimalSpecies");
-                int animalID = results.getInt("AnimalID");
+                int taskID = results.getInt("TaskID");
+                String taskDescription = results.getString("Description");
+                int duration = results.getInt("Duration");
+                int maxWindow = results.getInt("MaxWindow");
+                Animal newAnimal = animalList.get(animalID - 1);
+                Task newTask = new Task(taskID, startHour, maxWindow, duration, taskDescription, newAnimal);
 
-                key = Integer.parseInt(results.getString("StartHour"));
-                Task instantiatedTask = helper(Integer.parseInt(results.getString("TaskID")), Integer.parseInt(results.getString("StartHour")) , Integer.parseInt(results.getString("MaxWindow")),
-                        Integer.parseInt(results.getString("Duration")), results.getString("Description"), newAnimal);
+                if (!(prevStartHour.equals(startHour))) { // start hour on current row is different from previous row
+                    prevStartHour = startHour;
+                    ArrayList<Task> taskArrayList = new ArrayList<>();
+                    taskArrayList.add(newTask);
+                    this.databaseRecords.put(startHour, taskArrayList);
+                }
+                else { // start hour on current row is the same as previous row
+                    this.databaseRecords.get(startHour).add(newTask);
+                }
+
+                //Task instantiatedTask = helper(taskID, startHour, maxWindow, duration, taskDescription, newAnimal);
                 System.out.println("Results: " + results.getString("AnimalNickname") + ", " + results.getString("AnimalSpecies") + "\n");
-                ArrayList<Task> tempArrayList = this.databaseRecords.get(key);
-                this.databaseRecords.put(key, tempArrayList);
-
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -217,7 +233,7 @@ public class Main implements ActionListener {
     }
 
 
-
+    // do we really need this?
     public static void CreateObjects(HashMap<Integer, ArrayList<Task>> databaseAllRecords) {
 
         /*
@@ -246,12 +262,28 @@ public class Main implements ActionListener {
         */
     }
 
-    private static void createDemoSchedule() {
+    private static void addBackupVolunteer() {
         // iterate through the keys of the hashmap
         // look at the tasks
         // then apply the correct math to get the time of each task and if backup is
         // required
-
+        databaseRecords.forEach((startHour, tasks)-> {
+            int totalTime = 0;
+            for (Task task: tasks)
+            {
+                totalTime += task.getDuration();
+                if (totalTime > 60) {
+                    break;
+                }
+            }
+            if (totalTime > 60) // At this point of the function,
+                // the user should confirm whether or not they want to add another volunteer
+            {
+                tasks.forEach((task)-> {
+                    task.setExtraVolunteerStatus(true);
+                });
+            }
+        });
     }
 
 }
