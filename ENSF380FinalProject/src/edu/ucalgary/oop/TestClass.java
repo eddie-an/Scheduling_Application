@@ -3,7 +3,6 @@ package edu.ucalgary.oop;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import java.time.LocalDate;
 
 public class TestClass {
 
@@ -15,8 +14,8 @@ public class TestClass {
         int expectedResult1 = 1;
         int expectedResult2 = 202;
         int expectedResult3 = 13;
-        int expectedResult4 = 10;
-        int expectedResult5 = 100;
+        int expectedResult4 = 103423523;
+        int expectedResult5 = -100;
 
         Beaver animal1 = new Beaver(expectedResult1, "ExampleName");
         Coyote animal2 = new Coyote(expectedResult2, "ExampleName");
@@ -30,11 +29,11 @@ public class TestClass {
         int result4 = animal4.getAnimalID();
         int result5 = animal5.getAnimalID();
 
-        assertEquals(expectedResult1, result1);
-        assertEquals(expectedResult2, result2);
-        assertEquals(expectedResult3, result3);
-        assertEquals(expectedResult4, result4);
-        assertEquals(expectedResult5, result5);
+        assertEquals("The getAnimalID() method in the Beaver class doesn't work as expected", expectedResult1, result1);
+        assertEquals("The getAnimalID() method in the Coyote class doesn't work as expected", expectedResult2, result2);
+        assertEquals("The getAnimalID() method in the Fox class doesn't work as expected", expectedResult3, result3);
+        assertEquals("The getAnimalID() method in the Porcupine class doesn't work as expected", expectedResult4, result4);
+        assertEquals("The getAnimalID() method in the Raccoon class doesn't work as expected", expectedResult5, result5);
 
     }
 
@@ -58,11 +57,11 @@ public class TestClass {
         String result4 = animal4.getName();
         String result5 = animal5.getName();
 
-        assertEquals(expectedResult1, result1);
-        assertEquals(expectedResult2, result2);
-        assertEquals(expectedResult3, result3);
-        assertEquals(expectedResult4, result4);
-        assertEquals(expectedResult5, result5);
+        assertEquals("The getName() method in the Beaver class doesn't work as expected", expectedResult1, result1);
+        assertEquals("The getName() method in the Coyote class doesn't work as expected", expectedResult2, result2);
+        assertEquals("The getName() method in the Fox class doesn't work as expected", expectedResult3, result3);
+        assertEquals("The getName() method in the Porcupine class doesn't work as expected", expectedResult4, result4);
+        assertEquals("The getName() method in the Raccoon class doesn't work as expected", expectedResult5, result5);
     }
 
     @Test
@@ -91,11 +90,11 @@ public class TestClass {
         boolean result4 = animal4.getOrphanStatus();
         boolean result5 = animal5.getOrphanStatus();
 
-        assertEquals(expectedResult1, result1);
-        assertEquals(expectedResult2, result2);
-        assertEquals(expectedResult3, result3);
-        assertEquals(expectedResult4, result4);
-        assertEquals(expectedResult5, result5);
+        assertEquals("The getOrphanStatus() method in the Beaver class doesn't work as expected", expectedResult1, result1);
+        assertEquals("The getOrphanStatus() method in the Coyote class doesn't work as expected", expectedResult2, result2);
+        assertEquals("The getOrphanStatus() method in the Fox class doesn't work as expected", expectedResult3, result3);
+        assertEquals("The getOrphanStatus() method in the Porcupine class doesn't work as expected", expectedResult4, result4);
+        assertEquals("The getOrphanStatus() method in the Raccoon class doesn't work as expected", expectedResult5, result5);
 
         //Changing values
         expectedResult1 = false;
@@ -116,11 +115,11 @@ public class TestClass {
         result4 = animal4.getOrphanStatus();
         result5 = animal5.getOrphanStatus();
 
-        assertEquals(expectedResult1, result1);
-        assertEquals(expectedResult2, result2);
-        assertEquals(expectedResult3, result3);
-        assertEquals(expectedResult4, result4);
-        assertEquals(expectedResult5, result5);
+        assertEquals("The getOrphanStatus() method in the Beaver class doesn't work as expected", expectedResult1, result1);
+        assertEquals("The getOrphanStatus() method in the Coyote class doesn't work as expected", expectedResult2, result2);
+        assertEquals("The getOrphanStatus() method in the Fox class doesn't work as expected", expectedResult3, result3);
+        assertEquals("The getOrphanStatus() method in the Porcupine class doesn't work as expected", expectedResult4, result4);
+        assertEquals("The getOrphanStatus() method in the Raccoon class doesn't work as expected", expectedResult5, result5);
     }
 
     @Test
@@ -143,11 +142,11 @@ public class TestClass {
         String result4 = animal4.getActiveTime();
         String result5 = animal5.getActiveTime();
 
-        assertEquals(expectedResult1, result1);
-        assertEquals(expectedResult2, result2);
-        assertEquals(expectedResult3, result3);
-        assertEquals(expectedResult4, result4);
-        assertEquals(expectedResult5, result5);
+        assertEquals("The getActiveTime() method in the Beaver class doesn't work as expected", expectedResult1, result1);
+        assertEquals("The getActiveTime() method in the Coyote class doesn't work as expected", expectedResult2, result2);
+        assertEquals("The getActiveTime() method in the Fox class doesn't work as expected", expectedResult3, result3);
+        assertEquals("The getActiveTime() method in the Porcupine class doesn't work as expected", expectedResult4, result4);
+        assertEquals("The getActiveTime() method in the Raccoon class doesn't work as expected", expectedResult5, result5);
     }
 
     @Test
@@ -170,20 +169,16 @@ public class TestClass {
         String result4 = animal4.getSpecies();
         String result5 = animal5.getSpecies();
 
-        assertEquals(expectedResult1, result1);
-        assertEquals(expectedResult2, result2);
-        assertEquals(expectedResult3, result3);
-        assertEquals(expectedResult4, result4);
-        assertEquals(expectedResult5, result5);
+        assertEquals("The getSpecies() method in the Beaver class doesn't work as expected", expectedResult1, result1);
+        assertEquals("The getSpecies() method in the Coyote class doesn't work as expected", expectedResult2, result2);
+        assertEquals("The getSpecies() method in the Fox class doesn't work as expected", expectedResult3, result3);
+        assertEquals("The getSpecies() method in the Porcupine class doesn't work as expected", expectedResult4, result4);
+        assertEquals("The getSpecies() method in the Raccoon class doesn't work as expected", expectedResult5, result5);
     }
 
     @Test
     public void testAnimalSetName() {
-        String expectedResult1 = "Spike";
-        String expectedResult2 = "Twilight";
-        String expectedResult3 = "Spike";
-        String expectedResult4 = "Eraser";
-        String expectedResult5 = "Sunshine";
+        String originalResult = "ExampleName";
 
         Beaver animal1 = new Beaver(1, "ExampleName");
         Coyote animal2 = new Coyote(1, "ExampleName");
@@ -191,6 +186,11 @@ public class TestClass {
         Porcupine animal4 = new Porcupine(1, "ExampleName");
         Raccoon animal5 = new Raccoon(1, "ExampleName");
 
+        String expectedResult1 = "Spike";
+        String expectedResult2 = "Twilight";
+        String expectedResult3 = "Spike";
+        String expectedResult4 = "Eraser";
+        String expectedResult5 = "Sunshine";
         animal1.setName(expectedResult1);
         animal2.setName(expectedResult2);
         animal3.setName(expectedResult3);
@@ -203,11 +203,22 @@ public class TestClass {
         String result4 = animal4.getName();
         String result5 = animal5.getName();
 
-        assertEquals(expectedResult1, result1);
-        assertEquals(expectedResult2, result2);
-        assertEquals(expectedResult3, result3);
-        assertEquals(expectedResult4, result4);
-        assertEquals(expectedResult5, result5);
+        if (result1 == originalResult) {
+            assertTrue("The setName() method in the Beaver class doesn't change the name", false);
+        } if (result2 == originalResult) {
+            assertTrue("The setName() method in the Coyote class doesn't change the name", false);
+        } if (result3 == originalResult) {
+            assertTrue("The setName() method in the Fox class doesn't change the name", false);
+        } if (result4 == originalResult) {
+            assertTrue("The setName() method in the Porcupine class doesn't change the name", false);
+        } if (result5 == originalResult) {
+            assertTrue("The setName() method in the Raccoon class doesn't change the name", false);
+        }
+        assertEquals("The setName() method in the Beaver class doesn't work as expected", expectedResult1, result1);
+        assertEquals("The setName() method in the Coyote class doesn't work as expected", expectedResult2, result2);
+        assertEquals("The setName() method in the Fox class doesn't work as expected", expectedResult3, result3);
+        assertEquals("The setName() method in the Porcupine class doesn't work as expected", expectedResult4, result4);
+        assertEquals("The setName() method in the Raccoon class doesn't work as expected", expectedResult5, result5);
     }
 
     @Test
