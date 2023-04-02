@@ -15,7 +15,6 @@ public abstract class Animal {
     private final int ANIMAL_ID;
     private String name;
     private boolean isOrphaned;
-    private String nickName;
 
 
     /**
