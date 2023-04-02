@@ -38,7 +38,7 @@ public class Main implements ActionListener {
 
     private static HashMap<Integer, ArrayList<Task>> databaseRecords = new HashMap<>();
     private static ArrayList<Animal> animalList = new ArrayList<Animal>();
-
+ 
     private Connection dbConnection;
     private ResultSet results;
 
@@ -50,7 +50,7 @@ public class Main implements ActionListener {
         getTreatments.animalsReadIn();
         getTreatments.TasksReadIn();
 
-        CreateObjects(databaseRecords);
+        // CreateObjects(databaseRecords);
 
         getTreatments.close();
         addBackupVolunteer();
@@ -72,6 +72,53 @@ public class Main implements ActionListener {
             frame.setVisible(true);
         });
 
+    }
+
+
+    //TaskID = -1 for general feeding
+    //TaskID = -2 for general cleaning
+    //so it doesn't conflict with the actual taskID's in the database
+    public void addGeneralFeedingAndCleaning() {
+        for(Animal animal : animalList) {
+
+            Task cleaning = new Task(-2, 0, 24, animal.getSpecies() == "porcupine" ? 10 : 5, "general cleaning", animal);
+            Task feeding = null;
+
+            if(animal.getOrphanStatus() == false) {
+
+                if(animal.getActiveTime() == "diurnal") {
+
+                    feeding = new Task(-1, 8, 3, 5, "general feeding", animal);
+                } 
+                else if(animal.getActiveTime() == "crepuscular") {
+                    feeding = new Task(-1, 19, 3, 5, "general feeding", animal);
+                }
+                //only thing left is nocturnal
+                else {
+                    feeding = new Task(-1, 0, 3, 5, "general feeding", animal);
+                }
+
+                if(databaseRecords.containsKey(feeding.getStartHour())) {
+                    this.databaseRecords.get(feeding.getStartHour()).add(feeding);
+                }
+                else {
+                    ArrayList<Task> taskArrayList = new ArrayList<>();
+                    taskArrayList.add(feeding);
+                    this.databaseRecords.put(feeding.getStartHour(), taskArrayList);
+                }
+            }
+
+
+
+            if(databaseRecords.containsKey(cleaning.getStartHour())) {
+                this.databaseRecords.get(cleaning.getStartHour()).add(cleaning);
+            }
+            else {
+                ArrayList<Task> taskArrayList = new ArrayList<>();
+                taskArrayList.add(cleaning);
+                this.databaseRecords.put(cleaning.getStartHour(), taskArrayList);
+            }
+        }
     }
 
     /** Helper Method **/ //Do we really need this? we figured out a logic to create objects inside TasksReadIn
@@ -119,7 +166,7 @@ public class Main implements ActionListener {
         try {
             // this connection is going to be different for every user change the url user
             // and password for each user
-            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "SQL123456");
+            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "password");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -221,6 +268,8 @@ public class Main implements ActionListener {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+
+        addGeneralFeedingAndCleaning();
     }
 
     public void close() {
