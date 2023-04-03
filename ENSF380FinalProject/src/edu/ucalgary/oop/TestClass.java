@@ -2,6 +2,12 @@ package edu.ucalgary.oop;
 
 import org.junit.Test;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.TreeMap;
+
 import static org.junit.Assert.*;
 
 public class TestClass {
@@ -425,6 +431,140 @@ public class TestClass {
         newTask.setExtraVolunteerStatus(expectedResult);
         result = newTask.getExtraVolunteerStatus();
         assertEquals("The setExtraVolunteerStatus() method doesn't work as intended", expectedResult, result);
+    }
+
+    @Test
+    public void testTaskThrowIllegalArgumentException() {
+        Beaver newBeaver = new Beaver(21, "DamBuilder");
+        boolean pass = false;
+        try {
+            Task newTask = new Task(2, -1, 5, 10, "Cage cleaning", newBeaver);
+        }
+        catch (IllegalArgumentException e) {
+            pass = true;
+        }
+        catch (Exception e) {}
+        assertTrue("The constructor in the Task class doesn't throw an exception when the startHour is less than 0", pass);
+
+        pass = false;
+        try {
+            Task newTask = new Task(2, 24, 5, 10, "Cage cleaning", newBeaver);
+        }
+        catch (IllegalArgumentException e) {
+            pass = true;
+        }
+        catch (Exception e) {}
+        assertTrue("The constructor in the Task class doesn't throw an exception when the startHour is greater than 23", pass);
+
+        Task newTask = new Task(10, 23, 12, 50, "Eyedrops", newBeaver);
+        pass = false;
+        try {
+            newTask.setStartHour(-1);
+        }
+        catch (IllegalArgumentException e) {
+            pass = true;
+        }
+        catch (Exception e) {}
+        assertTrue("The setStartHour() method in the Task class doesn't throw an exception when the startHour is less than 0", pass);
+
+        pass = false;
+        try {
+            newTask.setStartHour(24);
+        }
+        catch (IllegalArgumentException e) {
+            pass = true;
+        }
+        catch (Exception e) {}
+        assertTrue("The setStartHour() method in the Task class doesn't throw an exception when the startHour is greater than 23", pass);
+        }
+
+    @Test
+    public void testPrintLogDataToString() {
+        TreeMap<Integer, ArrayList<Task>> data = populateHashMap();
+
+        String expectedResult = "Schedule for " + LocalDate.now().toString() + "\n\n" +
+                                "0:00\n" +
+                                "* Kit feeding - beaver (Justin Beaver)\n" +
+                                "* Give vitamin injections - raccoon (Spotter)\n\n" +
+                                "1:00\n" +
+                                "* Treat wound - raccoon (Racer)\n\n" +
+                                "2:00 [+ backup volunteer]\n" +
+                                "* Rebandage leg wound - beaver (Boots)\n" +
+                                "* Feed fox - fox (Hunter)\n" +
+                                "* Cage cleaning - porcupine (Porky)\n" +
+                                "* Administer antibiotics - fox (Bob)\n\n" +
+                                "5:00\n" +
+                                "* Sample task - coyote (Shadow)\n\n" +
+                                "12:00\n" +
+                                "* Eyedrops - porcupine (Spiky)\n" +
+                                "* This is a task - coyote (Annie, Oliver and Mowgli)\n\n" +
+                                "22:00\n" +
+                                "* Last task - raccoon (Racer)\n\n";
+        String actualResult = PrintLog.dataToString(data);
+        assertEquals(expectedResult, actualResult);
+
+    }
+
+    //Helper function for one of the tests
+    private TreeMap<Integer, ArrayList<Task>> populateHashMap() {
+        TreeMap<Integer, ArrayList<Task>> mapToReturn = new TreeMap<Integer, ArrayList<Task>>();
+        Animal animal1 = new Beaver(1, "Justin Beaver");
+        Animal animal2 = new Fox(2, "Bob");
+        Animal animal3 = new Coyote(3, "Shadow");
+        Animal animal4 = new Porcupine(4, "Spiky");
+        Animal animal5 = new Raccoon(5, "Spotter");
+        Animal animal6 = new Beaver(6, "Boots");
+        Animal animal7 = new Fox(7, "Hunter");
+        Animal animal8 = new Coyote(8, "Annie, Oliver and Mowgli");
+        animal8.setOrphanStatus(true);
+        Animal animal9 = new Porcupine(9, "Porky");
+        Animal animal10 = new Raccoon(10, "Racer");
+        ArrayList<Task> hour0 = new ArrayList<>();
+        Task task1 = new Task(1, 0, 5, 20, "Kit feeding", animal1);
+        Task task2 = new Task(2, 0, 10, 25, "Give vitamin injections", animal5);
+        hour0.add(task1);
+        hour0.add(task2);
+
+        ArrayList<Task> hour1 = new ArrayList<>();
+        Task task3 = new Task(19, 1, 15, 40, "Treat wound", animal10);
+        hour1.add(task3);
+
+        ArrayList<Task> hour2 = new ArrayList<>();
+        Task task4 = new Task(5, 2, 5, 10, "Rebandage leg wound", animal6);
+        Task task5 = new Task(6, 2, 3, 20, "Feed fox", animal7);
+        Task task6 = new Task(9, 2, 5, 5, "Cage cleaning", animal9);
+        Task task7 = new Task(15, 2, 5, 20, "Administer antibiotics", animal2);
+        task4.setExtraVolunteerStatus(true);
+        task5.setExtraVolunteerStatus(true);
+        task6.setExtraVolunteerStatus(true);
+        task7.setExtraVolunteerStatus(true);
+        hour2.add(task4);
+        hour2.add(task5);
+        hour2.add(task6);
+        hour2.add(task7);
+
+        ArrayList<Task> hour5 = new ArrayList<>();
+        Task task8 = new Task(3, 5, 5, 40, "Sample task", animal3);
+        hour5.add(task8);
+
+        ArrayList<Task> hour12 = new ArrayList<>();
+        Task task9 = new Task(8, 12, 10, 25, "Eyedrops", animal4);
+        Task task10 = new Task(11, 12, 15, 40, "This is a task", animal8);
+        hour12.add(task9);
+        hour12.add(task10);
+
+        ArrayList<Task> hour22 = new ArrayList<>();
+        Task task11 = new Task(19, 22, 10, 20, "Last task", animal10);
+        hour22.add(task11);
+
+        mapToReturn.put(new Integer(12), hour12);;
+        mapToReturn.put(new Integer(22), hour22);
+        mapToReturn.put(new Integer(0), hour0);
+        mapToReturn.put(new Integer(1), hour1);
+        mapToReturn.put(new Integer(2), hour2);
+        mapToReturn.put(new Integer(5), hour5);
+
+        return mapToReturn;
     }
 
 

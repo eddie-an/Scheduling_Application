@@ -51,7 +51,11 @@ public class Task {
     /**
      * @param startHour The start time of the task.
      */
-    public void setStartHour(int startHour) {
+    public void setStartHour(int startHour) throws IllegalArgumentException {
+        if (startHour < 0 || startHour > 23)
+        {
+            throw new IllegalArgumentException();
+        }
         this.startHour = startHour;
     }
 

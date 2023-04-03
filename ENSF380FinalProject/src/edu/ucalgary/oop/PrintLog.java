@@ -28,7 +28,7 @@ public class PrintLog {
      * @param finalizedData
      * @return The formatted string to be written to the file.
      */
-    public static String dataToString(HashMap<Integer, ArrayList<Task>> finalizedData) {
+    public static String dataToString(TreeMap<Integer, ArrayList<Task>> finalizedData) {
         StringBuilder str = new StringBuilder();
         str.append("Schedule for ");
         LocalDate today = LocalDate.now();
@@ -37,9 +37,9 @@ public class PrintLog {
 
         finalizedData.forEach((startHour, tasks) -> {
             str.append(startHour);
-            str.append(":00 ");
+            str.append(":00");
             if (tasks.get(0).getExtraVolunteerStatus() == true) {
-                str.append("[+ backup volunteer]");
+                str.append(" [+ backup volunteer]");
             }
             str.append("\n");
             tasks.forEach((task)-> {
