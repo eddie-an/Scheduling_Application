@@ -36,7 +36,7 @@ import java.util.Arrays.*;
 
 public class Main implements ActionListener {
 
-    private static HashMap<Integer, ArrayList<Task>> databaseRecords = new HashMap<>();
+    private static TreeMap<Integer, ArrayList<Task>> databaseRecords = new TreeMap<>();
     private static ArrayList<Animal> animalList = new ArrayList<Animal>();
  
     private Connection dbConnection;
@@ -58,10 +58,11 @@ public class Main implements ActionListener {
         // CreateObjects(databaseRecords);
 
         getTreatments.close();
-
+        String data = PrintLog.dataToString(databaseRecords);
+        System.out.println(data);
 
         rearrangeTasks(0);
-        String data = PrintLog.dataToString(databaseRecords);
+        data = PrintLog.dataToString(databaseRecords);
         System.out.println(data);
 
 
@@ -266,8 +267,6 @@ public class Main implements ActionListener {
             Integer prevStartHour = -1;
 
             while (results.next()) {
-
-                System.out.println("\n ---- \n");
                 Integer startHour = Integer.parseInt(results.getString("StartHour"));
                 int animalID = results.getInt("AnimalID");
                 String nickName = results.getString("AnimalNickname");
@@ -289,8 +288,6 @@ public class Main implements ActionListener {
                     this.databaseRecords.get(startHour).add(newTask);
                 }
 
-                //Task instantiatedTask = helper(taskID, startHour, maxWindow, duration, taskDescription, newAnimal);
-                System.out.println("Results: " + results.getString("AnimalNickname") + ", " + results.getString("AnimalSpecies") + "\n");
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
