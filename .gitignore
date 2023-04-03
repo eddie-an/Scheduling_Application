@@ -28,3 +28,4 @@ lib/
 .vscode
 .idea
 out/
+*.iml
