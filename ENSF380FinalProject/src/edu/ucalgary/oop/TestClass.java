@@ -434,6 +434,51 @@ public class TestClass {
     }
 
     @Test
+    public void testTaskThrowIllegalArgumentException() {
+        Beaver newBeaver = new Beaver(21, "DamBuilder");
+        boolean pass = false;
+        try {
+            Task newTask = new Task(2, -1, 5, 10, "Cage cleaning", newBeaver);
+        }
+        catch (IllegalArgumentException e) {
+            pass = true;
+        }
+        catch (Exception e) {}
+        assertTrue("The constructor in the Task class doesn't throw an exception when the startHour is less than 0", pass);
+
+        pass = false;
+        try {
+            Task newTask = new Task(2, 24, 5, 10, "Cage cleaning", newBeaver);
+        }
+        catch (IllegalArgumentException e) {
+            pass = true;
+        }
+        catch (Exception e) {}
+        assertTrue("The constructor in the Task class doesn't throw an exception when the startHour is greater than 23", pass);
+
+        Task newTask = new Task(10, 23, 12, 50, "Eyedrops", newBeaver);
+        pass = false;
+        try {
+            newTask.setStartHour(-1);
+        }
+        catch (IllegalArgumentException e) {
+            pass = true;
+        }
+        catch (Exception e) {}
+        assertTrue("The setStartHour() method in the Task class doesn't throw an exception when the startHour is less than 0", pass);
+
+        pass = false;
+        try {
+            newTask.setStartHour(24);
+        }
+        catch (IllegalArgumentException e) {
+            pass = true;
+        }
+        catch (Exception e) {}
+        assertTrue("The setStartHour() method in the Task class doesn't throw an exception when the startHour is greater than 23", pass);
+        }
+
+    @Test
     public void testPrintLogDataToString() {
         TreeMap<Integer, ArrayList<Task>> data = populateHashMap();
 
