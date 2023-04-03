@@ -38,12 +38,14 @@ public class Main implements ActionListener {
 
     private static TreeMap<Integer, ArrayList<Task>> databaseRecords = new TreeMap<>();
     private static ArrayList<Animal> animalList = new ArrayList<Animal>();
- 
+    private static String data; // created a static variable that will contain schedule String
+
     private Connection dbConnection;
     private ResultSet results;
 
     /**
      * The main method which connects to the database and creates the GUI
+     * 
      * @param args
      * @throws Exception
      */
@@ -55,17 +57,13 @@ public class Main implements ActionListener {
         getTreatments.animalsReadIn();
         getTreatments.TasksReadIn();
 
-        // CreateObjects(databaseRecords);
-
         getTreatments.close();
-        String data = PrintLog.dataToString(databaseRecords);
-        System.out.println(data);
-
+        data = PrintLog.dataToString(databaseRecords);
+        // System.out.println(data);
         rearrangeTasks(0);
-
         addBackupVolunteer();
         data = PrintLog.dataToString(databaseRecords);
-        System.out.println(data);
+        // System.out.println(data);
 
         EventQueue.invokeLater(() -> {
             JFrame frame = new JFrame(" Example Wildlife Rescue Scheduler");
@@ -84,49 +82,50 @@ public class Main implements ActionListener {
 
     }
 
+    public static void CreateScheduleOnClick() {
+
+        // System.out.println(data);
+        PrintLog.writeToSchedule(data);
+    }
 
     /**
      * adds general feeding for non-orphaned animals, and cleaning tasks as well
      */
     public void addGeneralFeedingAndCleaning() {
-    //TaskID = -1 for general feeding
-    //TaskID = -2 for general cleaning
-    //so it doesn't conflict with the actual taskID's in the database
-        for(Animal animal : animalList) {
+        // TaskID = -1 for general feeding
+        // TaskID = -2 for general cleaning
+        // so it doesn't conflict with the actual taskID's in the database
+        for (Animal animal : animalList) {
 
-            Task cleaning = new Task(-2, 0, 24, animal.getSpecies() == "porcupine" ? 10 : 5, "general cleaning", animal);
+            Task cleaning = new Task(-2, 0, 24, animal.getSpecies() == "porcupine" ? 10 : 5, "general cleaning",
+                    animal);
             Task feeding = null;
 
-            if(animal.getOrphanStatus() == false) {
+            if (animal.getOrphanStatus() == false) {
 
-                if(animal.getActiveTime() == "diurnal") {
+                if (animal.getActiveTime() == "diurnal") {
 
                     feeding = new Task(-1, 8, 3, 5, "general feeding", animal);
-                } 
-                else if(animal.getActiveTime() == "crepuscular") {
+                } else if (animal.getActiveTime() == "crepuscular") {
                     feeding = new Task(-1, 19, 3, 5, "general feeding", animal);
                 }
-                //only thing left is nocturnal
+                // only thing left is nocturnal
                 else {
                     feeding = new Task(-1, 0, 3, 5, "general feeding", animal);
                 }
 
-                if(databaseRecords.containsKey(feeding.getStartHour())) {
+                if (databaseRecords.containsKey(feeding.getStartHour())) {
                     this.databaseRecords.get(feeding.getStartHour()).add(feeding);
-                }
-                else {
+                } else {
                     ArrayList<Task> taskArrayList = new ArrayList<>();
                     taskArrayList.add(feeding);
                     this.databaseRecords.put(feeding.getStartHour(), taskArrayList);
                 }
             }
 
-
-
-            if(databaseRecords.containsKey(cleaning.getStartHour())) {
+            if (databaseRecords.containsKey(cleaning.getStartHour())) {
                 this.databaseRecords.get(cleaning.getStartHour()).add(cleaning);
-            }
-            else {
+            } else {
                 ArrayList<Task> taskArrayList = new ArrayList<>();
                 taskArrayList.add(cleaning);
                 this.databaseRecords.put(cleaning.getStartHour(), taskArrayList);
@@ -134,7 +133,8 @@ public class Main implements ActionListener {
         }
     }
 
-    /** Helper Method **/ //Do we really need this? we figured out a logic to create objects inside TasksReadIn
+    /** Helper Method **/ // Do we really need this? we figured out a logic to create objects inside
+                          // TasksReadIn
     public Task helper(int TASK_ID, int maxWindow, int prepTime, int taskTime, String taskType, Animal animal) {
         Task newTaskObject = new Task(TASK_ID, maxWindow, prepTime, taskTime, taskType, animal);
         return newTaskObject;
@@ -142,7 +142,8 @@ public class Main implements ActionListener {
 
     /**
      * Needs to be implemented but is not yet
-     * @param event     The event that triggers the action
+     * 
+     * @param event The event that triggers the action
      */
     public void actionPerformed(ActionEvent event) {
 
@@ -153,6 +154,9 @@ public class Main implements ActionListener {
 
         // add catch block that confirms backup volunteer and makes changes accordingly
         // to the schedule
+
+        // System.out.println(data);
+        CreateScheduleOnClick();
 
         JPanel backupPanel = new JPanel();
         JButton backupButton = new JButton("Confirm Backup Volunteer");
@@ -186,7 +190,7 @@ public class Main implements ActionListener {
         try {
             // this connection is going to be different for every user change the url user
             // and password for each user
-            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "password");
+            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "Fuckemail");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -204,29 +208,27 @@ public class Main implements ActionListener {
             results = myStmt.executeQuery("SELECT ANIMALS.*\n" +
                     "FROM ANIMALS\n" +
                     "ORDER BY ANIMALS.AnimalID ASC;");
-            while (results.next())
-            {
+            while (results.next()) {
                 String nickName = results.getString("AnimalNickname");
                 String typeOfAnimal = results.getString("AnimalSpecies");
                 Integer animalID = Integer.parseInt(results.getString("AnimalID"));
-                //Integer key = Integer.parseInt(results.getString("StartHour"));
-                if(typeOfAnimal.equals("beaver")) {
+                // Integer key = Integer.parseInt(results.getString("StartHour"));
+                if (typeOfAnimal.equals("beaver")) {
                     Beaver newAnimal = new Beaver(animalID, nickName);
                     animalList.add(newAnimal);
                 } else if (typeOfAnimal.equals("raccoon")) {
-                    Raccoon newAnimal= new Raccoon(animalID, nickName);
+                    Raccoon newAnimal = new Raccoon(animalID, nickName);
                     animalList.add(newAnimal);
                 } else if (typeOfAnimal.equals("fox")) {
-                    Fox newAnimal= new Fox(animalID, nickName);
+                    Fox newAnimal = new Fox(animalID, nickName);
                     animalList.add(newAnimal);
                 } else if (typeOfAnimal.equals("coyote")) {
-                    Coyote newAnimal= new Coyote(animalID, nickName);
+                    Coyote newAnimal = new Coyote(animalID, nickName);
                     animalList.add(newAnimal);
                 } else if (typeOfAnimal.equals("porcupine")) {
-                    Animal newAnimal= new Porcupine(animalID, nickName);
+                    Animal newAnimal = new Porcupine(animalID, nickName);
                     animalList.add(newAnimal);
                 }
-
 
             }
 
@@ -242,14 +244,14 @@ public class Main implements ActionListener {
                     animalList.get(animalID - 1).setOrphanStatus(true);
                 }
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    /** 
-     * This method reads-in and parses the data, and instantiates new Task objects accordingly 
+    /**
+     * This method reads-in and parses the data, and instantiates new Task objects
+     * accordingly
      */
     public void TasksReadIn() {
         StringBuffer treatmentsReader = new StringBuffer();
@@ -280,8 +282,7 @@ public class Main implements ActionListener {
                     ArrayList<Task> taskArrayList = new ArrayList<>();
                     taskArrayList.add(newTask);
                     this.databaseRecords.put(startHour, taskArrayList);
-                }
-                else { // start hour on current row is the same as previous row
+                } else { // start hour on current row is the same as previous row
                     this.databaseRecords.get(startHour).add(newTask);
                 }
 
@@ -292,7 +293,6 @@ public class Main implements ActionListener {
 
         addGeneralFeedingAndCleaning();
     }
-
 
     /**
      * This method closes the connection to the database
@@ -306,8 +306,6 @@ public class Main implements ActionListener {
         }
     }
 
-
-
     public static void rearrangeTasks(int key) throws TooManyEventsException {
         // iterate through the keys of the hashmap
         // look at the tasks
@@ -320,13 +318,13 @@ public class Main implements ActionListener {
         // if the next hour is not empty, check if the time is greater than 60
         // if it is, move the task to the next hour
 
-        // NEEDS TO BE ABLE ACCOUNT FOR 22 -> 23 -> 0 
+        // NEEDS TO BE ABLE ACCOUNT FOR 22 -> 23 -> 0
         // NEEDS TO THROW AN EXCEPTION IF ALL HOURS WITHIN THE MAXWINDOW ARE FULL
 
         ArrayList<Task> tasks = databaseRecords.get(key);
         int totalTime = 0;
 
-        if(tasks != null) {
+        if (tasks != null) {
 
             Iterator<Task> it = tasks.iterator();
 
@@ -344,21 +342,19 @@ public class Main implements ActionListener {
                         if (databaseRecords.containsKey(j)) {
                             ArrayList<Task> temp = databaseRecords.get(j);
                             int time = 0;
-                            for(Task t : temp) {
+                            for (Task t : temp) {
                                 time += t.getDuration();
                             }
 
                             if (time + task.getDuration() <= 60) {
                                 temp.add(task);
                                 databaseRecords.put(j, temp);
-                                exceptionBool = false;      
+                                exceptionBool = false;
                                 break;
-                            }
-                            else {
+                            } else {
                                 exceptionBool = true;
                             }
-                        }
-                        else {
+                        } else {
                             ArrayList<Task> temp = new ArrayList<>();
                             temp.add(task);
                             databaseRecords.put(j, temp);
@@ -368,12 +364,11 @@ public class Main implements ActionListener {
 
                         j = (j + 1) % 24;
                     }
-                    
-                    if(exceptionBool) {
-                        //implies that no rearrangement could be made
+
+                    if (exceptionBool) {
+                        // implies that no rearrangement could be made
                         throw new TooManyEventsException("Task could not be placed any time within its given window");
-                    }
-                    else {
+                    } else {
                         tasks.remove(task);
                         break;
                     }
@@ -381,37 +376,36 @@ public class Main implements ActionListener {
             }
             databaseRecords.put(key, tasks);
         }
-        
+
         if (totalTime > 60) {
             rearrangeTasks(key);
-        }
-        else if (key < 23) {
+        } else if (key < 23) {
             rearrangeTasks(key + 1);
         }
 
     }
 
     /**
-     * Performs the necessary calculations to determine whether or not a backup volunteer is required
+     * Performs the necessary calculations to determine whether or not a backup
+     * volunteer is required
      */
     private static void addBackupVolunteer() {
         // iterate through the keys of the hashmap
         // look at the tasks
         // then apply the correct math to get the time of each task and if backup is
         // required
-        databaseRecords.forEach((startHour, tasks)-> {
+        databaseRecords.forEach((startHour, tasks) -> {
             int totalTime = 0;
-            for (Task task: tasks)
-            {
+            for (Task task : tasks) {
                 totalTime += task.getDuration();
                 if (totalTime > 60) {
                     break;
                 }
             }
             if (totalTime > 60) // At this point of the function,
-                // the user should confirm whether or not they want to add another volunteer
+            // the user should confirm whether or not they want to add another volunteer
             {
-                tasks.forEach((task)-> {
+                tasks.forEach((task) -> {
                     task.setExtraVolunteerStatus(true);
                 });
             }
