@@ -62,9 +62,6 @@ public class Main implements ActionListener {
         System.out.println(data);
 
         rearrangeTasks(0);
-        data = PrintLog.dataToString(databaseRecords);
-        System.out.println(data);
-
 
         addBackupVolunteer();
         data = PrintLog.dataToString(databaseRecords);
@@ -189,7 +186,7 @@ public class Main implements ActionListener {
         try {
             // this connection is going to be different for every user change the url user
             // and password for each user
-            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "SQL123456");
+            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "password");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -339,7 +336,7 @@ public class Main implements ActionListener {
         */
     }
 
-    public static void rearrangeTasks(int key) {
+    public static void rearrangeTasks(int key) throws TooManyEventsException {
         // iterate through the keys of the hashmap
         // look at the tasks
         // then apply the correct math to get the time of each task and if backup is
@@ -367,7 +364,11 @@ public class Main implements ActionListener {
 
                 if (totalTime > 60) {
                     // what if it goes 22, 23, 24? should go 22, 23, 0, maybe modulo
-                    for(int j = task.getStartHour() + 1; j < task.getStartHour() + task.getMaxWindow(); j++) {
+
+                    int j = (task.getStartHour() + 1) % 24;
+                    boolean exceptionBool = false;
+
+                    while (j != task.getStartHour() + task.getMaxWindow()) {
                         if (databaseRecords.containsKey(j)) {
                             ArrayList<Task> temp = databaseRecords.get(j);
                             int time = 0;
@@ -377,25 +378,39 @@ public class Main implements ActionListener {
 
                             if (time + task.getDuration() <= 60) {
                                 temp.add(task);
-                                databaseRecords.put(j, temp);      
+                                databaseRecords.put(j, temp);
+                                exceptionBool = false;      
                                 break;
+                            }
+                            else {
+                                exceptionBool = true;
                             }
                         }
                         else {
                             ArrayList<Task> temp = new ArrayList<>();
                             temp.add(task);
                             databaseRecords.put(j, temp);
+                            exceptionBool = false;
                             break;
                         }
+
+                        j = (j + 1) % 24;
                     }
-                    tasks.remove(task);
-                    break;
+                    
+                    if(exceptionBool) {
+                        //implies that no rearrangement could be made
+                        throw new TooManyEventsException("Task could not be placed any time within its given window");
+                    }
+                    else {
+                        tasks.remove(task);
+                        break;
+                    }
                 }
             }
             databaseRecords.put(key, tasks);
         }
         
-        if (totalTime > 60 ) {
+        if (totalTime > 60) {
             rearrangeTasks(key);
         }
         else if (key < 23) {
