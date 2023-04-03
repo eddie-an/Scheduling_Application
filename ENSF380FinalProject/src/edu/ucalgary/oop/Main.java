@@ -307,34 +307,6 @@ public class Main implements ActionListener {
     }
 
 
-    // do we really need this?
-    public static void CreateObjects(HashMap<Integer, ArrayList<Task>> databaseAllRecords) {
-
-        /*
-        ArrayList<String> tmp = new ArrayList<String>();
-        ArrayList<String> toInsert = new ArrayList<>();
-
-        tmp = databaseAllRecords.get(0);
-        String prevH = tmp.get(0);
-        toInsert.addAll(tmp.subList(0, 6));
-        String hour = "";
-
-        for (int i = 1; i < databaseAllRecords.size(); i++) {
-
-            hour = tmp.get(5);
-
-            if (hour != prevH) {
-                fullArray.put(hour, toInsert);
-                toInsert.clear();
-            }
-            toInsert.addAll(tmp.subList(0, 6));
-            prevH = hour;
-
-        }
-
-        fullArray.put(hour, toInsert);
-        */
-    }
 
     public static void rearrangeTasks(int key) throws TooManyEventsException {
         // iterate through the keys of the hashmap
