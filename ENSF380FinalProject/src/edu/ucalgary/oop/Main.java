@@ -62,8 +62,12 @@ public class Main implements ActionListener {
         addBackupVolunteer();
         data = PrintLog.dataToString(databaseRecords);
         System.out.println(data);
-        data = PrintLog.dataToString(databaseRecords);
-        System.out.println(data);
+
+//        modifyStartHour(0, 0, 1);
+//        data = PrintLog.dataToString(databaseRecords);
+//        System.out.println(data);
+//        System.out.println("Is this a valid schedule: " + isValidSchedule());
+//        System.out.println("Here are the tasks that must be moved " + showTasksToBeMoved());
 
         EventQueue.invokeLater(() -> {
             JFrame frame = new JFrame(" Example Wildlife Rescue Scheduler");
@@ -311,7 +315,7 @@ public class Main implements ActionListener {
             int totalTaskTime = 0;
             for (Task task: taskList)
             {
-                totalTaskTime += task.getDuration();
+                totalTaskTime += task.getDuration(); // + task.getPrepTime();
             }
             if (taskList.get(0).getExtraVolunteerStatus() == true && totalTaskTime > 120) {
                 isValid = false; // if there is an extra volunteer the total duration can be up to 120 minutes
@@ -323,30 +327,72 @@ public class Main implements ActionListener {
     }
 
 
-    public static TreeMap<Integer, ArrayList<Integer>> showTasksToBeMoved() { //TODO
+    /**
+     * This method shows all the tasks that exceed 60 or 120 combined minutes (based on volunteer status)
+     * in a given hour.
+     * It only adds tasks that aren't general feeding, and have a max window greater than 1.
+     * @return TreeMap of (key: startHour, value: ArrayList of task index)
+     */
+    public static TreeMap<Integer, ArrayList<Integer>> showTasksToBeMoved() {
         TreeMap<Integer, ArrayList<Integer>> tasksToBeMoved = new TreeMap<>();
         databaseRecords.forEach((startHour, taskList)-> {
             int totalTaskTime = 0;
             for (Task task: taskList)
             {
-                totalTaskTime += task.getDuration();
+                totalTaskTime += task.getDuration(); // + task.getPrepTime(); add up all the task time
             }
             if ((totalTaskTime > 60 && taskList.get(0).getExtraVolunteerStatus() == false) ||
                 (totalTaskTime > 120 && taskList.get(0).getExtraVolunteerStatus() == true))
-            {
-                for (int i=0; i<taskList.size(); i++) {
-                    if (taskList.get(i).getMaxWindow() > 1) {
-
+            { //If total task time exceeds 60 or 120 (depending on volunteer status)
+                ArrayList<Integer> taskIndexList = new ArrayList<>();
+                for (int i = 0; i < taskList.size(); i++) {
+                    if ((taskList.get(i).getTaskID() != -1 ) && (taskList.get(i).getMaxWindow() > 1))
+                    {
+                        taskIndexList.add(i); // adds index of the task
                     }
+                }
+                if (taskIndexList.size() > 0)
+                { // put the task start hour and the index array into the new treemap
+                    tasksToBeMoved.put(startHour, taskIndexList);
                 }
             }
         });
-
-
         return tasksToBeMoved;
     }
 
+    /**
+     * For a given task at a specified startHour, return a list of empty time slots the task can be placed in
+     * It takes the task's max window into consideration and finds a list of startHours that will fit the constraints
+     * @param startHour
+     * @param taskIndex
+     * @return
+     */
+    public static ArrayList<Integer> showEmptyTimeSlots(int startHour, int taskIndex) {
+        ArrayList<Integer> emptyTimeSlots = new ArrayList<>();
+        Task taskToModify = databaseRecords.get(startHour).get(taskIndex);
+        int maxWindow = taskToModify.getMaxWindow(); // max window of task to modify
+        int duration = taskToModify.getDuration(); // + taskToModify.getPrepTime(); duration of task to modify
 
+        for (int i=1; i<maxWindow; i++) {
+            int hour = (startHour + i) % 24;
+            if (databaseRecords.containsKey(hour)) {
+                ArrayList<Task> taskList = databaseRecords.get(hour);
+                int totalTime = duration;
+                for (Task task: taskList)
+                {
+                    totalTime += task.getDuration(); // + task.getPrepTime();
+                }
+                if ((totalTime <= 60 && taskList.get(0).getExtraVolunteerStatus() == false) ||
+                (totalTime <= 120 && taskList.get(0).getExtraVolunteerStatus() == true)) {
+                    emptyTimeSlots.add(hour);
+                }
+            }
+            else { // if there are no tasks in the current hour
+                emptyTimeSlots.add(hour);
+            }
+        }
+        return emptyTimeSlots;
+    }
 
     /**
      * This method moves the given task from its old start hour to the new start hour
