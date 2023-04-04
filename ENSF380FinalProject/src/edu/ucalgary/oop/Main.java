@@ -188,7 +188,7 @@ public class Main implements ActionListener {
         try {
             // this connection is going to be different for every user change the url user
             // and password for each user
-            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "SQL123456");
+            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "password");
         } catch (SQLException e) {
             e.printStackTrace();
         }
