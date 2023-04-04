@@ -68,7 +68,7 @@ public class PrintLog {
         char[] charArray = segment.toCharArray();
 
         try {
-            schedule = new FileWriter(fileName, true);
+            schedule = new FileWriter(fileName);
 
             for (char c : charArray) {
                 schedule.write(c);

@@ -190,7 +190,7 @@ public class Main implements ActionListener {
         try {
             // this connection is going to be different for every user change the url user
             // and password for each user
-            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "Fuckemail");
+            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "password");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -318,15 +318,38 @@ public class Main implements ActionListener {
         // if the next hour is not empty, check if the time is greater than 60
         // if it is, move the task to the next hour
 
-        // NEEDS TO BE ABLE ACCOUNT FOR 22 -> 23 -> 0
+        // NEEDS TO BE ABLE ACCOUNT FOR 22 -> 23 -> 0 
         // NEEDS TO THROW AN EXCEPTION IF ALL HOURS WITHIN THE MAXWINDOW ARE FULL
 
+         //add preptimes for fox and coyote
+        // fix rearrangeTasks, look at comments
+
         ArrayList<Task> tasks = databaseRecords.get(key);
+
+
+
+        // System.out.println("printing tasks kfmkjfnjkngjkdfnjdnj");
+        // for (Task task : tasks) {
+        //     System.out.println(task.getTaskType() + " " + task.getMaxWindow() + " " + task.getStartHour());
+        // }
+
         int totalTime = 0;
 
-        if (tasks != null) {
+        if(tasks != null) {
+
+            Collections.sort(tasks, new Comparator<Task>() {
+                @Override
+                public int compare(Task o1, Task o2) {
+                    return o1.getMaxWindow() - o2.getMaxWindow();
+                }
+            });
 
             Iterator<Task> it = tasks.iterator();
+            // order the tasks from greatest max window to smallest max window
+
+            // if volunteer status is true, check less than 120 minutes instead of 60
+
+
 
             while (it.hasNext()) {
                 Task task = it.next();
@@ -335,54 +358,68 @@ public class Main implements ActionListener {
                 if (totalTime > 60) {
                     // what if it goes 22, 23, 24? should go 22, 23, 0, maybe modulo
 
-                    int j = (task.getStartHour() + 1) % 24;
-                    boolean exceptionBool = false;
+                    //check for task with largest max window
 
-                    while (j != task.getStartHour() + task.getMaxWindow()) {
-                        if (databaseRecords.containsKey(j)) {
-                            ArrayList<Task> temp = databaseRecords.get(j);
-                            int time = 0;
-                            for (Task t : temp) {
-                                time += t.getDuration();
+                    // logic is flawed for 1 hour max window, while loop is skipped entirely
+                    // maybe implement in a way so that tasks that have an empty hour in their max window are moved to those empty hours first
+
+                    if (task.getMaxWindow() == 1) {
+                        throw new TooManyEventsException("Too many events in one hour: " + task.getTaskType() + "which starts at " + task.getStartHour()); 
+                    }
+                    else {
+
+                        int j = (task.getStartHour() + 1) % 24;
+                        boolean exceptionBool = false;
+
+                        while (j != (task.getStartHour() + task.getMaxWindow()) % 24) {
+                            if (databaseRecords.containsKey(j)) {
+                                ArrayList<Task> temp = databaseRecords.get(j);
+                                int time = 0;
+                                for(Task t : temp) {
+                                    time += t.getDuration();
+                                }
+
+                                if (time + task.getDuration() <= 60) {
+                                    temp.add(task);
+                                    databaseRecords.put(j, temp);
+                                    exceptionBool = false;      
+                                    break;
+                                }
+                                else {
+                                    exceptionBool = true;
+                                }
                             }
-
-                            if (time + task.getDuration() <= 60) {
+                            else {
+                                ArrayList<Task> temp = new ArrayList<>();
                                 temp.add(task);
                                 databaseRecords.put(j, temp);
                                 exceptionBool = false;
                                 break;
-                            } else {
-                                exceptionBool = true;
                             }
-                        } else {
-                            ArrayList<Task> temp = new ArrayList<>();
-                            temp.add(task);
-                            databaseRecords.put(j, temp);
-                            exceptionBool = false;
+
+                            j = (j + 1) % 24;
+                        }
+                    
+                        if(exceptionBool) {
+                            //implies that no rearrangement could be made
+                            throw new TooManyEventsException("Task could not be placed any time within its given window");
+                        }
+                        else {
+                            tasks.remove(task);
                             break;
                         }
-
-                        j = (j + 1) % 24;
-                    }
-
-                    if (exceptionBool) {
-                        // implies that no rearrangement could be made
-                        throw new TooManyEventsException("Task could not be placed any time within its given window");
-                    } else {
-                        tasks.remove(task);
-                        break;
                     }
                 }
             }
             databaseRecords.put(key, tasks);
         }
-
+        
         if (totalTime > 60) {
             rearrangeTasks(key);
-        } else if (key < 23) {
+        }
+        else if (key < 23) {
             rearrangeTasks(key + 1);
         }
-
     }
 
     /**
