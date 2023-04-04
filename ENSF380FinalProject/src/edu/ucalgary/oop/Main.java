@@ -58,12 +58,12 @@ public class Main implements ActionListener {
         getTreatments.TasksReadIn();
 
         getTreatments.close();
-        data = PrintLog.dataToString(databaseRecords);
-        // System.out.println(data);
         rearrangeTasks(0);
         addBackupVolunteer();
         data = PrintLog.dataToString(databaseRecords);
-        // System.out.println(data);
+        System.out.println(data);
+        data = PrintLog.dataToString(databaseRecords);
+        System.out.println(data);
 
         EventQueue.invokeLater(() -> {
             JFrame frame = new JFrame(" Example Wildlife Rescue Scheduler");
@@ -133,12 +133,6 @@ public class Main implements ActionListener {
         }
     }
 
-    /** Helper Method **/ // Do we really need this? we figured out a logic to create objects inside
-                          // TasksReadIn
-    public Task helper(int TASK_ID, int maxWindow, int prepTime, int taskTime, String taskType, Animal animal) {
-        Task newTaskObject = new Task(TASK_ID, maxWindow, prepTime, taskTime, taskType, animal);
-        return newTaskObject;
-    }
 
     /**
      * Needs to be implemented but is not yet
@@ -320,13 +314,79 @@ public class Main implements ActionListener {
                 totalTaskTime += task.getDuration();
             }
             if (taskList.get(0).getExtraVolunteerStatus() == true && totalTaskTime > 120) {
-                isValid = false;
+                isValid = false; // if there is an extra volunteer the total duration can be up to 120 minutes
             } else if (taskList.get(0).getExtraVolunteerStatus() == false && totalTaskTime > 60) {
-                isValid = false;
+                isValid = false; // if there is no extra volunteer the total duration can be up to 60 minutes
             }
         }
         return isValid;
     }
+
+
+    public static TreeMap<Integer, ArrayList<Integer>> showTasksToBeMoved() { //TODO
+        TreeMap<Integer, ArrayList<Integer>> tasksToBeMoved = new TreeMap<>();
+        databaseRecords.forEach((startHour, taskList)-> {
+            int totalTaskTime = 0;
+            for (Task task: taskList)
+            {
+                totalTaskTime += task.getDuration();
+            }
+            if ((totalTaskTime > 60 && taskList.get(0).getExtraVolunteerStatus() == false) ||
+                (totalTaskTime > 120 && taskList.get(0).getExtraVolunteerStatus() == true))
+            {
+                for (int i=0; i<taskList.size(); i++) {
+                    if (taskList.get(i).getMaxWindow() > 1) {
+
+                    }
+                }
+            }
+        });
+
+
+        return tasksToBeMoved;
+    }
+
+
+
+    /**
+     * This method moves the given task from its old start hour to the new start hour
+     * It doesn't check whether moving the task makes the schedule more efficient. All it does is move the task
+     * @param oldStartHour
+     * @param taskIndex
+     * @param newStartHour
+     * @throws IllegalArgumentException
+     */
+    public static void modifyStartHour(int oldStartHour, int taskIndex, int newStartHour)
+    throws IllegalArgumentException{
+        if (!databaseRecords.containsKey(oldStartHour) || taskIndex >= databaseRecords.get(oldStartHour).size()
+            || oldStartHour > 23 || oldStartHour < 0 || newStartHour > 23 || oldStartHour < 0)
+        {
+            throw new IllegalArgumentException();
+        }
+        Task taskToModify = databaseRecords.get(oldStartHour).get(taskIndex);
+        databaseRecords.get(oldStartHour).remove(taskToModify); // remove task from old start hour
+        if (databaseRecords.get(oldStartHour).size() == 0)
+        {
+            databaseRecords.remove(oldStartHour); // if there are no more tasks from that hour, remove task
+        }
+
+        taskToModify.setStartHour(newStartHour); // set start hour
+        if (databaseRecords.containsKey(newStartHour)) // If there are existing tasks in the new start hour
+        {
+            boolean extraVolunteerStatus = databaseRecords.get(newStartHour).get(0).getExtraVolunteerStatus();
+            taskToModify.setExtraVolunteerStatus(extraVolunteerStatus); // update volunteer status
+            databaseRecords.get(newStartHour).add(taskToModify); // add the task
+        }
+        else { // If there are no tasks in the new start hour
+            ArrayList<Task> newList = new ArrayList<>();
+            taskToModify.setExtraVolunteerStatus(false); // update volunteer status
+            newList.add(taskToModify);
+            databaseRecords.put(newStartHour, newList); // add the task
+        }
+
+    }
+
+
 
     public static void rearrangeTasks(int key) throws TooManyEventsException {
         // iterate through the keys of the hashmap
@@ -408,8 +468,8 @@ public class Main implements ActionListener {
     }
 
     /**
-     * Performs the necessary calculations to determine whether or not a backup
-     * volunteer is required
+     * Iterates through the schedule hashmap and assigns a backup volunteer to every group of tasks in the same
+     * start hour if the total duration exceeds 60 minutes
      */
     private static void addBackupVolunteer() {
         // iterate through the keys of the hashmap

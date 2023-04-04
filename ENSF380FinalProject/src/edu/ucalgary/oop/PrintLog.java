@@ -36,23 +36,21 @@ public class PrintLog {
         str.append("\n\n");
 
         finalizedData.forEach((startHour, tasks) -> {
-            str.append(startHour);
-            str.append(":00");
-            if (tasks.get(0).getExtraVolunteerStatus() == true) {
-                str.append(" [+ backup volunteer]");
-            }
-            str.append("\n");
-            tasks.forEach((task)-> {
-                str.append("* ");
-                str.append(task.getTaskType());
-                str.append(" - ");
-                str.append(task.getAnimal().getSpecies());
-                str.append(" (");
-                str.append(task.getAnimal().getName());
-                str.append(")");
+            if (tasks.size() > 0) {
+                str.append(startHour);
+                str.append(":00");
+                if (tasks.get(0).getExtraVolunteerStatus() == true) {
+                    str.append(" [+ backup volunteer]");
+                }
                 str.append("\n");
-            });
-            str.append("\n");
+                tasks.forEach((task) -> {
+                    str.append("* " + task.getTaskType() + " - ");
+                    str.append(task.getAnimal().getSpecies() + " (" + task.getAnimal().getName() + ")");
+                    str.append(" --- duration: " + task.getDuration() + " minutes");
+                    str.append("\n");
+                });
+                str.append("\n");
+            }
         });
         String returnVal = str.toString();
         return returnVal;
