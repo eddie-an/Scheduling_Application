@@ -21,6 +21,7 @@ public class Task {
     private String taskType;
     private Animal animal;
     private boolean extraVolunteerStatus;
+    private int prepTime;
 
 
     /**
@@ -46,7 +47,36 @@ public class Task {
         this.taskType = taskType;
         this.animal = animal;
         this.extraVolunteerStatus = false; // false by default
+        this.prepTime = 0; // 0 minutes by default
     }
+
+    /**
+     * Constructor for the Task class.
+     * @param TASK_ID   The ID of the task.
+     * @param startHour The start hour of the task.
+     * @param maxWindow The max window that the task can be completed in.
+     * @param duration  The time it takes to complete the task.
+     * @param taskType  The description of the task.
+     * @param animal    The animal that the task is for.
+     * @param prepTime  The time it takes to prepare for a feeding task
+     */
+    public Task(int TASK_ID, int startHour, int maxWindow, int duration, String taskType,
+                Animal animal, int prepTime) throws IllegalArgumentException{
+
+        if (startHour < 0 || startHour > 23)
+        {
+            throw new IllegalArgumentException();
+        }
+        this.TASK_ID = TASK_ID;
+        this.startHour = startHour;
+        this.maxWindow = maxWindow;
+        this.duration = duration;
+        this.taskType = taskType;
+        this.animal = animal;
+        this.extraVolunteerStatus = false; // false by default
+        this.prepTime = prepTime;
+    }
+
 
     /**
      * @param startHour The start time of the task.
@@ -95,6 +125,13 @@ public class Task {
     }
 
     /**
+     * @param prepTime The time it takes to prepare for the feeding task.
+     */
+    public void setPrepTime(int prepTime) throws IllegalArgumentException {
+        this.prepTime = prepTime;
+    }
+
+    /**
      * @return The id of the task.
      */
     public int getTaskID() {
@@ -131,6 +168,11 @@ public class Task {
     }
 
     /**
+     * @return The animal the task is for.
+     */
+    public Animal getAnimal() { return this.animal;}
+
+    /**
      * @return The status of extra volunteer
      */
     public boolean getExtraVolunteerStatus() {
@@ -138,11 +180,9 @@ public class Task {
     }
 
     /**
-     * @return The animal the task is for.
+     * @return The time it takes to prepare for the feeding task.
      */
-    public Animal getAnimal() {
-        return this.animal;
-    }
+    public int getPrepTime() { return prepTime; }
 
 }
 
