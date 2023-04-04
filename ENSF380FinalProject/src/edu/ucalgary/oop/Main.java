@@ -1,4 +1,4 @@
-edu.ucalgary.oop;
+package edu.ucalgary.oop;
 /**
  @author     Group5
  @version    1.1
@@ -188,22 +188,28 @@ public class Main implements ActionListener {
                     allInCount += storeForNow.size();
                 } catch(NullPointerException e) {
                     toStart++;
+                    newFlag = false;
                 }
                 try {
                     for(Task newTask : storeForNow) {
                         if(!newFlag){newFlag=true; myTempStringArray[justBeforeAllInCount][0] = toStart.toString();}
                         else{myTempStringArray[justBeforeAllInCount][0] = " ";}
                         myTempStringArray[justBeforeAllInCount][1] = newTask.getTaskType();
-                        myTempStringArray[justBeforeAllInCount][2] = "1";
+                        if(newTask.getTaskType()=="Feed kits" || newTask.getTaskType()=="Rebandage fox leg wound") {
+                            myTempStringArray[justBeforeAllInCount][2] = "-";
+                        } else {
+                            myTempStringArray[justBeforeAllInCount][2] = "1";
+                        }
                         myTempStringArray[justBeforeAllInCount][3] = String.valueOf(newTask.getDuration());
                         myTempStringArray[justBeforeAllInCount][4] = "cool";
                         justBeforeAllInCount++;
                     }
                 } catch( NullPointerException e) {
                     toStart++;
+                    newFlag = false;
                 }
-
                 toStart++;
+                newFlag = false;
             }
 
             String[][] data2 = {
