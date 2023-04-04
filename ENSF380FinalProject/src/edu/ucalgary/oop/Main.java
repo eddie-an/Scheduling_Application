@@ -58,6 +58,10 @@ public class Main implements ActionListener {
         getTreatments.TasksReadIn();
 
         getTreatments.close();
+
+        // data = PrintLog.dataToString(databaseRecords);
+        // System.out.println(data);
+
         rearrangeTasks();
         addBackupVolunteer();
         data = PrintLog.dataToString(databaseRecords);
@@ -471,8 +475,6 @@ public class Main implements ActionListener {
          //add preptimes for fox and coyote
         // fix rearrangeTasks, look at comments
 
-        //recursion doesn't work anymore, causes stack overflow error, try and switch to loop
-
         int key = 0;
 
         while(key < 24) {
@@ -481,6 +483,9 @@ public class Main implements ActionListener {
             int totalTime = 0;
 
             if(tasks != null) {
+
+                //order tasks based on animal species, mainly puts coyotes together so that the preptime is as optimized as possible
+                Collections.sort(tasks, (o1, o2) -> (o1.getAnimal().getSpecies().compareTo(o2.getAnimal().getSpecies())));
 
                 //order the tasks from greatest smallest max window to greatest max window
                 // so that the tasks with the largest max window are moved first
@@ -493,7 +498,6 @@ public class Main implements ActionListener {
 
                 for(Task task : tasks) {
                     if (task.getTaskType().equals("Coyote feeding") || task.getTaskType().equals("Fox feeding")) {
-                        System.out.println(task.getAnimal().getName());
                         totalTime += task.getPrepTime();
                         break;
                     }
@@ -508,19 +512,6 @@ public class Main implements ActionListener {
                     // Only include preptime in totalTime if the task is a fox feeding or coyote feeding
                     // Only add the preptime once for each hour that contains a fox feeding or coyote feeding
 
-                    // if (task.getTaskType().equals("Coyote feeding") && !coyotePrep) {
-                    // }
-
-
-                    // if (!foxPrep) {
-                    //     if (task.getTaskType().equals("Fox feeding") && !foxPrep) {
-                    //         foxPrep = true;
-                    //     }
-                    //     else if(!task.getTaskType().equals("Fox feeding")) {
-                    //         foxPrep = false;
-                    //     }
-                    // }
-
                     totalTime += task.getDuration();
 
                     if (totalTime > 60) {
@@ -532,7 +523,8 @@ public class Main implements ActionListener {
                         }
                         else {
 
-                            int j = (task.getStartHour() + 1) % 24;
+                            //maybe get current hour instead
+                            int j = (key + 1) % 24;
                             boolean exceptionBool = false;
 
                             while (j != (task.getStartHour() + task.getMaxWindow()) % 24) {
