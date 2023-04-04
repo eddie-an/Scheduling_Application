@@ -190,7 +190,7 @@ public class Main implements ActionListener {
         try {
             // this connection is going to be different for every user change the url user
             // and password for each user
-            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "Fuckemail");
+            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "SQL123456");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -304,6 +304,28 @@ public class Main implements ActionListener {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * This method checks to see if the current schedule is valid or not based on total task duration for every hour
+     * @return the boolean value indicating the validity of the schedule
+     */
+    public static boolean isValidSchedule() {
+        boolean isValid = true;
+        for(Map.Entry<Integer, ArrayList<Task>> entry : databaseRecords.entrySet()){
+            ArrayList<Task> taskList = entry.getValue();
+            int totalTaskTime = 0;
+            for (Task task: taskList)
+            {
+                totalTaskTime += task.getDuration();
+            }
+            if (taskList.get(0).getExtraVolunteerStatus() == true && totalTaskTime > 120) {
+                isValid = false;
+            } else if (taskList.get(0).getExtraVolunteerStatus() == false && totalTaskTime > 60) {
+                isValid = false;
+            }
+        }
+        return isValid;
     }
 
     public static void rearrangeTasks(int key) throws TooManyEventsException {
