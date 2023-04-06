@@ -229,247 +229,142 @@ public class TestClass {
 
     @Test
     public void testTaskGetTaskID() {
+        int expectedResult = 20;
         Fox newFox = new Fox(6, "Kanye");
-
-        int expectedResult1 = 20;
-        Task newTask1 = new Task(expectedResult1, 1, 5, 20, "Kit Feeding", newFox);
-        int result1 = newTask1.getTaskID();
-        assertEquals(expectedResult1, result1);
-
-        int expectedResult2 = 45;
-        Task newTask2 = new Task(expectedResult2, 1, 5, 20, "Kit Feeding", newFox, 10);
-        int result2 = newTask2.getTaskID();
-        assertEquals(expectedResult2, result2);
+        Task newTask = new Task(expectedResult, 1, 5, 20, "Kit Feeding", newFox);
+        int result = newTask.getTaskID();
+        assertEquals(expectedResult, result);
     }
 
     @Test
     public void testTaskGetStartHour() {
+        int expectedResult = 12;
         Porcupine newPorcupine = new Porcupine(69, "Jesus");
-
-        int expectedResult1 = 12;
-        Task newTask1 = new Task(1, expectedResult1, 10, 30, "Flush Neck Wound", newPorcupine);
-        int result1 = newTask1.getStartHour();
-        assertEquals(expectedResult1, result1);
-
-        int expectedResult2 = 3;
-        Task newTask2 = new Task(1, expectedResult2, 10, 30, "Flush Neck Wound", newPorcupine, 12);
-        int result2 = newTask2.getStartHour();
-        assertEquals(expectedResult2, result2);
+        Task newTask = new Task(1, expectedResult, 10, 30, "Flush Neck Wound", newPorcupine);
+        int result = newTask.getStartHour();
+        assertEquals(expectedResult, result);
     }
 
 
     @Test
     public void testTaskGetMaxWindow() {
+        int expectedResult = 3;
         Coyote newCoyote = new Coyote(6, "Kanye");
+        Task newTask = new Task(2, 11, expectedResult, 45, "Cleaning Cage", newCoyote);
 
-        int expectedResult1 = 3;
-        Task newTask1 = new Task(2, 11, expectedResult1, 45, "Cleaning Cage", newCoyote);
-        int result1 = newTask1.getMaxWindow();
-        assertEquals(expectedResult1, result1);
-
-        int expectedResult2 = 1;
-        Task newTask2 = new Task(2, 11, expectedResult2, 45, "Cleaning Cage", newCoyote, 15);
-        int result2 = newTask2.getMaxWindow();
-        assertEquals(expectedResult2, result2);
+        int result = newTask.getMaxWindow();
+        assertEquals(expectedResult, result);
     }
 
     @Test
     public void testTaskGetDuration() {
+        int expectedResult = 25;
         Raccoon newRaccoon = new Raccoon(6, "Bob The Builder");
+        Task newTask = new Task(2, 0, 5, expectedResult, "Administer antibiotics", newRaccoon);
 
-        int expectedResult1 = 25;
-        Task newTask1 = new Task(2, 0, 5, expectedResult1, "Administer antibiotics", newRaccoon);
-        int result1 = newTask1.getDuration();
-        assertEquals(expectedResult1, result1);
-
-        int expectedResult2 = 30;
-        Task newTask2 = new Task(2, 0, 5, expectedResult2, "Administer antibiotics", newRaccoon, 5);
-        int result2 = newTask2.getDuration();
-        assertEquals(expectedResult2, result2);
+        int result = newTask.getDuration();
+        assertEquals(expectedResult, result);
     }
 
     @Test
     public void testTaskGetTaskType() {
+        String expectedResult = "Eyedrops";
         Beaver newBeaver = new Beaver(31, "Justin Beaver");
+        Task newTask = new Task(2, 6, 5, 10, expectedResult, newBeaver);
 
-        String expectedResult1 = "Eyedrops";
-        Task newTask1 = new Task(2, 6, 5, 10, expectedResult1, newBeaver);
-        String result1 = newTask1.getTaskType();
-        assertEquals(expectedResult1, result1);
-
-        String expectedResult2 = "Clean cage";
-        Task newTask2 = new Task(2, 6, 5, 10, expectedResult2, newBeaver, 3);
-        String result2 = newTask2.getTaskType();
-        assertEquals(expectedResult2, result2);
+        String result = newTask.getTaskType();
+        assertEquals(expectedResult, result);
     }
 
     @Test
     public void testTaskGetAnimal() {
-        Coyote expectedResult1 = new Coyote(305, "Pitbull");
-        Task newTask1 = new Task(2, 7, 5, 10, "Kit feeding", expectedResult1);
-        Animal result1 = newTask1.getAnimal();
-        assertEquals(expectedResult1, result1);
+        Coyote expectedResult = new Coyote(305, "Pitbull");
+        Task newTask = new Task(2, 7, 5, 10, "Kit feeding", expectedResult);
 
-        Porcupine expectedResult2 = new Porcupine(15, "Spiky");
-        Task newTask2 = new Task(2, 7, 5, 10, "Kit feeding", expectedResult2, 0);
-        Animal result2 = newTask2.getAnimal();
-        assertEquals(expectedResult2, result2);
+        Animal result = newTask.getAnimal();
+        assertEquals(expectedResult, result);
     }
 
     @Test
     public void testTaskGetExtraVolunteerStatus() {
         Raccoon newRaccoon = new Raccoon(305, "blue");
+        Task newTask = new Task(2, 7, 5, 10, "Kit feeding", newRaccoon);
 
-        Task newTask1 = new Task(2, 7, 5, 10, "Kit feeding", newRaccoon);
-        boolean expectedResult1 = false;
-        boolean result1 = newTask1.getExtraVolunteerStatus();
-        assertEquals("The value should be false by default when instantiated", expectedResult1, result1);
-
-        Task newTask2 = new Task(2, 7, 5, 10, "Kit feeding", newRaccoon, 10);
-        boolean expectedResult2 = false;
-        boolean result2 = newTask2.getExtraVolunteerStatus();
-        assertEquals("The value should be false by default when instantiated", expectedResult2, result2);
-    }
-
-    @Test
-    public void testTaskGetPrepTime() {
-        Fox newFox = new Fox(305, "Megan Fox");
-
-        Task newTask1 = new Task(2, 7, 5, 10, "Kit feeding", newFox);
-        int expectedResult1 = 0;
-        int result1 = newTask1.getPrepTime();
-        assertEquals("The value should be 0 by default when instantiated using the 6 argument constructor", expectedResult1, result1);
-
-        int expectedResult2 = 15;
-        Task newTask2 = new Task(2, 7, 5, 10, "Kit feeding", newFox, expectedResult2);
-
-        int result2 = newTask2.getPrepTime();
-        assertEquals(expectedResult2, result2);
+        boolean expectedResult = false;
+        boolean result = newTask.getExtraVolunteerStatus();
+        assertEquals("The value should be false by default when instantiated", expectedResult, result);
     }
 
     @Test
     public void testTaskSetStartHour() {
+        int originalVal = 15;
         Porcupine newPorcupine = new Porcupine(111, "Porky");
+        Task newTask = new Task(2, originalVal, 5, 10, "Kit feeding", newPorcupine);
 
-        int originalVal1 = 15;
-        Task newTask1 = new Task(2, originalVal1, 5, 10, "Kit feeding", newPorcupine);
-        int expectedResult1 = 20;
-        newTask1.setStartHour(expectedResult1);
-        int result1 = newTask1.getStartHour();
+        int expectedResult = 20;
+        newTask.setStartHour(expectedResult);
+        int result = newTask.getStartHour();
         boolean pass = true;
-        if (originalVal1 == result1)
+        if (originalVal == result)
         {
             pass = false;
         }
         assertTrue("The setStartHour() method in the Task class doesn't change the startHour", pass);
-        assertEquals("The setStartHour() method doesn't work as intended", expectedResult1, result1);
-
-        int originalVal2 = 1;
-        Task newTask2 = new Task(2, originalVal2, 5, 10, "Kit feeding", newPorcupine, 2);
-        int expectedResult2 = 3;
-        newTask2.setStartHour(expectedResult2);
-        int result2 = newTask2.getStartHour();
-        pass = true;
-        if (originalVal2 == result2)
-        {
-            pass = false;
-        }
-        assertTrue("The setStartHour() method in the Task class doesn't change the startHour", pass);
-        assertEquals("The setStartHour() method doesn't work as intended", expectedResult2, result2);
+        assertEquals("The setStartHour() method doesn't work as intended", expectedResult, result);
     }
 
     @Test
     public void testTaskSetMaxWindow() {
+        int originalVal = 15;
         Fox newFox = new Fox(10, "What does the fox say");
+        Task newTask = new Task(2, 3, originalVal, 10, "Kit feeding", newFox);
 
-        int originalVal1 = 15;
-        Task newTask1 = new Task(2, 3, originalVal1, 10, "Kit feeding", newFox);
-        int expectedResult1 = 5;
-        newTask1.setMaxWindow(expectedResult1);
-        int result1 = newTask1.getMaxWindow();
+        int expectedResult = 5;
+        newTask.setMaxWindow(expectedResult);
+        int result = newTask.getMaxWindow();
         boolean pass = true;
-        if (originalVal1 == result1)
+        if (originalVal == result)
         {
             pass = false;
         }
         assertTrue("The setMaxWindow() method in the Task class doesn't change the maxWindow", pass);
-        assertEquals("The setMaxWindow() method doesn't work as intended", expectedResult1, result1);
-
-        int originalVal2 = 1;
-        Task newTask2 = new Task(2, 3, originalVal2, 10, "Kit feeding", newFox, 20);
-        int expectedResult2 = 3;
-        newTask2.setMaxWindow(expectedResult2);
-        int result2 = newTask2.getMaxWindow();
-        pass = true;
-        if (originalVal2 == result2)
-        {
-            pass = false;
-        }
-        assertTrue("The setMaxWindow() method in the Task class doesn't change the maxWindow", pass);
-        assertEquals("The setMaxWindow() method doesn't work as intended", expectedResult2, result2);
+        assertEquals("The setMaxWindow() method doesn't work as intended", expectedResult, result);
     }
 
     @Test
     public void testTaskSetDuration() {
+        int originalVal = 15;
         Raccoon newRaccoon = new Raccoon(10, "Spiky");
+        Task newTask = new Task(1, 3, 10, originalVal, "Kit feeding", newRaccoon);
 
-        int originalVal1 = 15;
-        Task newTask1 = new Task(1, 3, 10, originalVal1, "Kit feeding", newRaccoon);
-        int expectedResult1 = 30;
-        newTask1.setDuration(expectedResult1);
-        int result1 = newTask1.getDuration();
+        int expectedResult = 30;
+        newTask.setDuration(expectedResult);
+        int result = newTask.getDuration();
         boolean pass = true;
-        if (originalVal1 == result1)
+        if (originalVal == result)
         {
             pass = false;
         }
         assertTrue("The setDuration() method in the Task class doesn't change the duration", pass);
-        assertEquals("The setDuration() method doesn't work as intended", expectedResult1, result1);
-
-        int originalVal2 = 45;
-        Task newTask2 = new Task(1, 3, 10, originalVal2, "Kit feeding", newRaccoon, 2);
-        int expectedResult2 = 10;
-        newTask2.setDuration(expectedResult2);
-        int result2 = newTask2.getDuration();
-        pass = true;
-        if (originalVal2 == result2)
-        {
-            pass = false;
-        }
-        assertTrue("The setDuration() method in the Task class doesn't change the duration", pass);
-        assertEquals("The setDuration() method doesn't work as intended", expectedResult2, result2);
+        assertEquals("The setDuration() method doesn't work as intended", expectedResult, result);
     }
 
     @Test
     public void testTaskSetTaskType() {
+        String originalVal = "Give vitamin injection";
         Beaver newBeaver = new Beaver(21, "DamBuilder");
+        Task newTask = new Task(2, 6, 5, 10, originalVal, newBeaver);
 
-        String originalVal1 = "Give vitamin injection";
-        Task newTask1 = new Task(2, 6, 5, 10, originalVal1, newBeaver);
-        String expectedResult1 = "Apply burn ointment back";
-        newTask1.setTaskType(expectedResult1);
-        String result1 = newTask1.getTaskType();
+        String expectedResult = "Apply burn ointment back";
+        newTask.setTaskType(expectedResult);
+        String result = newTask.getTaskType();
         boolean pass = true;
-        if (originalVal1 == result1)
+        if (originalVal == result)
         {
             pass = false;
         }
         assertTrue("The setTaskType() method in the Task class doesn't change the taskType", pass);
-        assertEquals("The setTaskType() method doesn't work as intended", expectedResult1, result1);
-
-        String originalVal2 = "Bandage wound";
-        Task newTask2 = new Task(2, 6, 5, 10, originalVal2, newBeaver, 0 );
-
-        String expectedResult2 = "Cage Cleaning";
-        newTask2.setTaskType(expectedResult2);
-        String result2 = newTask2.getTaskType();
-        pass = true;
-        if (originalVal2 == result2)
-        {
-            pass = false;
-        }
-        assertTrue("The setTaskType() method in the Task class doesn't change the taskType", pass);
-        assertEquals("The setTaskType() method doesn't work as intended", expectedResult2, result2);
+        assertEquals("The setTaskType() method doesn't work as intended", expectedResult, result);
     }
 
     @Test
@@ -501,7 +396,7 @@ public class TestClass {
         assertEquals("The setAnimal() method doesn't work as intended", expectedResult2, result2);
 
         Fox originalVal3 = new Fox(1, "Fernie");
-        Task newTask3 = new Task(5, 23, 10, 25, "Inspect broken leg", originalVal3, 10);
+        Task newTask3 = new Task(5, 23, 10, 25, "Inspect broken leg", originalVal3);
         Fox expectedResult3 = new Fox(1, "Fernie");
         newTask3.setAnimal(expectedResult3);
         Animal result3 = newTask3.getAnimal();
@@ -536,36 +431,6 @@ public class TestClass {
         newTask.setExtraVolunteerStatus(expectedResult);
         result = newTask.getExtraVolunteerStatus();
         assertEquals("The setExtraVolunteerStatus() method doesn't work as intended", expectedResult, result);
-    }
-
-    @Test
-    public void testTaskSetPrepTime() {
-        Raccoon newRaccoon = new Raccoon(21, "Stripes");
-
-        Task newTask1 = new Task(2, 6, 5, 10, "kit feeding", newRaccoon);
-        int expectedResult1 = 10;
-        newTask1.setPrepTime(expectedResult1);
-        int result1= newTask1.getPrepTime();
-        boolean pass = true;
-        if (0 == result1)
-        {
-            pass = false;
-        }
-        assertTrue("The setPrepTime() method in the Task class doesn't change the prepTime", pass);
-        assertEquals("The setPrepTime() method doesn't work as intended", expectedResult1, result1);
-
-        int originalVal2 = 5;
-        Task newTask2 = new Task(2, 6, 5, 10, "kit feeding", newRaccoon, originalVal2);
-        int expectedResult2 = 0;
-        newTask2.setPrepTime(expectedResult2);
-        int result2= newTask2.getPrepTime();
-        pass = true;
-        if (originalVal2 == result2)
-        {
-            pass = false;
-        }
-        assertTrue("The setPrepTime() method in the Task class doesn't change the prepTime", pass);
-        assertEquals("The setPrepTime() method doesn't work as intended", expectedResult2, result2);
     }
 
     @Test
@@ -619,23 +484,22 @@ public class TestClass {
 
         String expectedResult = "Schedule for " + LocalDate.now().toString() + "\n\n" +
                                 "0:00\n" +
-                                "* Kit feeding - beaver (Justin Beaver) --- Duration: 20 minutes\n" +
-                                "* Give vitamin injections - raccoon (Spotter) --- Duration: 25 minutes\n\n" +
+                                "* Kit feeding - beaver (Justin Beaver)\n" +
+                                "* Give vitamin injections - raccoon (Spotter)\n\n" +
                                 "1:00\n" +
-                                "* Treat wound - raccoon (Racer) --- Duration: 40 minutes\n\n" +
+                                "* Treat wound - raccoon (Racer)\n\n" +
                                 "2:00 [+ backup volunteer]\n" +
-                                "* Rebandage leg wound - beaver (Boots) --- Duration: 10 minutes\n" +
-                                "* Feed fox - fox (Hunter) --- Duration: 20 minutes\n" +
-                                "* Cage cleaning - porcupine (Porky) --- Duration: 5 minutes\n" +
-                                "* Administer antibiotics - fox (Bob) --- Duration: 20 minutes\n\n" +
+                                "* Rebandage leg wound - beaver (Boots)\n" +
+                                "* Feed fox - fox (Hunter)\n" +
+                                "* Cage cleaning - porcupine (Porky)\n" +
+                                "* Administer antibiotics - fox (Bob)\n\n" +
                                 "5:00\n" +
-                                "* Sample task - coyote (Shadow) --- Duration: 40 minutes\n\n" +
+                                "* Sample task - coyote (Shadow)\n\n" +
                                 "12:00\n" +
-                                "* Eyedrops - porcupine (Spiky) --- Duration: 25 minutes\n" +
-                                "* This is a task - coyote (Annie, Oliver and Mowgli) --- Duration: 40 minutes\n\n" +
+                                "* Eyedrops - porcupine (Spiky)\n" +
+                                "* This is a task - coyote (Annie, Oliver and Mowgli)\n\n" +
                                 "22:00\n" +
-                                "* Feeding fox - fox (Hunter) --- Duration: 10 minutes --- Prep time: 5 minutes\n"+
-                                "* Last task - raccoon (Racer) --- Duration: 20 minutes\n\n";
+                                "* Last task - raccoon (Racer)\n\n";
         String actualResult = PrintLog.dataToString(data);
         assertEquals(expectedResult, actualResult);
 
@@ -690,20 +554,40 @@ public class TestClass {
         hour12.add(task10);
 
         ArrayList<Task> hour22 = new ArrayList<>();
-        Task task11 = new Task(21, 22, 2, 10, "Feeding fox", animal7, 5);
-        Task task12 = new Task(19, 22, 10, 20, "Last task", animal10);
+        Task task11 = new Task(19, 22, 10, 20, "Last task", animal10);
         hour22.add(task11);
-        hour22.add(task12);
 
+        mapToReturn.put(new Integer(12), hour12);;
+        mapToReturn.put(new Integer(22), hour22);
         mapToReturn.put(new Integer(0), hour0);
         mapToReturn.put(new Integer(1), hour1);
         mapToReturn.put(new Integer(2), hour2);
         mapToReturn.put(new Integer(5), hour5);
-        mapToReturn.put(new Integer(12), hour12);
-        mapToReturn.put(new Integer(22), hour22);
 
         return mapToReturn;
     }
+
+    @Test
+    public void testAddBackupVolunteer() {
+        Schedule.populateTreeMap();
+        for(int i=0; i<23; i++) {  // add a backup volunteer for each hour.
+            Schedule.addBackupVolunteer(i);
+        }
+        Schedule.isValidSchedule();
+    }
+
+    @Test
+    public void testModifyTestHour() {
+        Schedule.populateTreeMap();
+        for(int i=0; i<24; i++){
+            for(int j=0; j<24; j++) {
+                Schedule.modifyStartHour(i, 1, j);
+            }
+        }
+        Schedule.isValidSchedule();
+    }
+
+
 
 
     /*
