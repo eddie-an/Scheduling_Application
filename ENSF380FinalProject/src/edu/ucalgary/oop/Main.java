@@ -83,13 +83,13 @@ public class Main implements ActionListener {
         else {
             // buttonsPanel.add(addVolunteerPrompt);
 
-            tasksToChange = showTasksToBeMoved(); //this is what should be called
-            //ArrayList<Integer> newTask = new ArrayList<>(); // delete everything here fro actual code
-            //newTask.add(3);
-            //tasksToChange.put(1, newTask);
-            //tasksToChange.put(2, newTask);
+            tasksToChange = showTasksToBeMoved(); // this is what should be called
+            // ArrayList<Integer> newTask = new ArrayList<>(); // delete everything here fro
+            // actual code
+            // newTask.add(3);
+            // tasksToChange.put(1, newTask);
+            // tasksToChange.put(2, newTask);
             // tasksToChange.put(3, newTask);
-
 
             StringBuilder temp = new StringBuilder();
 
@@ -160,6 +160,10 @@ public class Main implements ActionListener {
         data = PrintLog.dataToString(databaseRecords);
         System.out.println(data);
 
+        Main gui = new Main();
+        gui.InitGUI();
+        gui.showGUI();
+
     }
 
     public static void CreateScheduleOnClick() {
@@ -183,17 +187,13 @@ public class Main implements ActionListener {
 
                 if (animal.getSpecies().equals("coyote")) {
                     feeding = new Task(-1, 19, 3, 5, "Coyote feeding", animal, 10);
-                }
-                else if(animal.getSpecies().equals("fox")) {
+                } else if (animal.getSpecies().equals("fox")) {
                     feeding = new Task(-1, 0, 3, 5, "Fox feeding", animal, 5);
-                }
-                else if(animal.getSpecies().equals("beaver")) {
+                } else if (animal.getSpecies().equals("beaver")) {
                     feeding = new Task(-1, 8, 3, 5, "Beaver feeding", animal);
-                }
-                else if(animal.getSpecies().equals("porcupine")) {
+                } else if (animal.getSpecies().equals("porcupine")) {
                     feeding = new Task(-1, 19, 3, 5, "Porcupine feeding", animal);
-                }
-                else { //must be a raccoon
+                } else { // must be a raccoon
                     feeding = new Task(-1, 0, 3, 5, "Raccoon feeding", animal);
                 }
                 if (databaseRecords.containsKey(feeding.getStartHour())) {
@@ -416,7 +416,8 @@ public class Main implements ActionListener {
                             myTempStringArray[justBeforeAllInCount][0] = " ";
                         }
                         myTempStringArray[justBeforeAllInCount][1] = newTask.getTaskType();
-                        if (newTask.getTaskType().equals("Kit feeding") || newTask.getTaskType().equals("Flush neck wound")) {
+                        if (newTask.getTaskType().equals("Kit feeding")
+                                || newTask.getTaskType().equals("Flush neck wound")) {
                             myTempStringArray[justBeforeAllInCount][2] = "-";
                         } else {
                             myTempStringArray[justBeforeAllInCount][2] = "1";
@@ -711,13 +712,13 @@ public class Main implements ActionListener {
 
     }
 
-
     /**
      * This method recursively rearranges the tasks in the databaseRecords TreeMap.
      * It checks if the total time of the tasks in a given hour exceeds 60 minutes.
      * If it does, it moves the task to another hour within its MaxWindow.
-     * @param key                       the key of the TreeMap corresponding to the start hour
-     * @throws TooManyEventsException   if there are too many events in the schedule
+     * 
+     * @param key the key of the TreeMap corresponding to the start hour
+     * @throws TooManyEventsException if there are too many events in the schedule
      */
     public static void rearrangeTasks() throws TooManyEventsException {
         // iterate through the keys of the treemap
@@ -731,22 +732,24 @@ public class Main implements ActionListener {
         // Throws an exception when trying to move a task which has a max window of 1
         // Throws an exception when a task is not able to be moved within its max window
 
-        //add preptimes for fox and coyote
+        // add preptimes for fox and coyote
         // fix rearrangeTasks, look at comments
 
         int key = 0;
 
-        while(key < 24) {
+        while (key < 24) {
 
             ArrayList<Task> tasks = databaseRecords.get(key);
             int totalTime = 0;
 
-            if(tasks != null) {
+            if (tasks != null) {
 
-                //order tasks based on animal species, mainly puts coyotes together so that the preptime is as optimized as possible
-                Collections.sort(tasks, (o1, o2) -> (o1.getAnimal().getSpecies().compareTo(o2.getAnimal().getSpecies())));
+                // order tasks based on animal species, mainly puts coyotes together so that the
+                // preptime is as optimized as possible
+                Collections.sort(tasks,
+                        (o1, o2) -> (o1.getAnimal().getSpecies().compareTo(o2.getAnimal().getSpecies())));
 
-                //order the tasks from greatest smallest max window to greatest max window
+                // order the tasks from greatest smallest max window to greatest max window
                 // so that the tasks with the largest max window are moved first
                 Collections.sort(tasks, new Comparator<Task>() {
                     @Override
@@ -755,7 +758,7 @@ public class Main implements ActionListener {
                     }
                 });
 
-                for(Task task : tasks) {
+                for (Task task : tasks) {
                     if (task.getTaskType().equals("Coyote feeding") || task.getTaskType().equals("Fox feeding")) {
                         totalTime += task.getPrepTime();
                         break;
@@ -768,21 +771,23 @@ public class Main implements ActionListener {
 
                 while (it.hasNext()) {
                     Task task = it.next();
-                    // Only include preptime in totalTime if the task is a fox feeding or coyote feeding
-                    // Only add the preptime once for each hour that contains a fox feeding or coyote feeding
+                    // Only include preptime in totalTime if the task is a fox feeding or coyote
+                    // feeding
+                    // Only add the preptime once for each hour that contains a fox feeding or
+                    // coyote feeding
 
                     totalTime += task.getDuration();
 
                     if (totalTime > 60) {
-                        // maybe implement in a way so that tasks that have an empty hour in their max window are moved to those empty hours first
+                        // maybe implement in a way so that tasks that have an empty hour in their max
+                        // window are moved to those empty hours first
 
                         if (task.getMaxWindow() == 1) {
                             // if the task has a max window of 1, it cannot be moved
                             throw new TooManyEventsException("Attempting to move a task with a max window of 1");
-                        }
-                        else {
+                        } else {
 
-                            //maybe get current hour instead
+                            // maybe get current hour instead
                             int j = (key + 1) % 24;
                             boolean exceptionBool = false;
 
@@ -790,7 +795,7 @@ public class Main implements ActionListener {
                                 if (databaseRecords.containsKey(j)) {
                                     ArrayList<Task> temp = databaseRecords.get(j);
                                     int time = 0;
-                                    for(Task t : temp) {
+                                    for (Task t : temp) {
                                         time += t.getDuration();
                                     }
 
@@ -799,12 +804,10 @@ public class Main implements ActionListener {
                                         databaseRecords.put(j, temp);
                                         exceptionBool = false;
                                         break;
-                                    }
-                                    else {
+                                    } else {
                                         exceptionBool = true;
                                     }
-                                }
-                                else {
+                                } else {
                                     ArrayList<Task> temp = new ArrayList<>();
                                     temp.add(task);
                                     databaseRecords.put(j, temp);
@@ -815,11 +818,11 @@ public class Main implements ActionListener {
                                 j = (j + 1) % 24;
                             }
 
-                            if(exceptionBool) {
-                                //implies that no rearrangement could be made
-                                throw new TooManyEventsException("Task could not be placed any time within its given window");
-                            }
-                            else {
+                            if (exceptionBool) {
+                                // implies that no rearrangement could be made
+                                throw new TooManyEventsException(
+                                        "Task could not be placed any time within its given window");
+                            } else {
                                 tasks.remove(task);
                                 break;
                             }
@@ -835,9 +838,8 @@ public class Main implements ActionListener {
 
         }
 
-
         // else if (key < 23) {
-        //     rearrangeTasks(key + 1);
+        // rearrangeTasks(key + 1);
         // }
     }
 
