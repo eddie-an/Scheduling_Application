@@ -79,9 +79,13 @@ public class GUI {
              }
 
          });
-
-
-
+        JButton backButton = new JButton("Back to Menu");
+        backButton.addActionListener(e -> {
+            volunteerOrRescheduleFrame = createVolunteerOrRescheduleFrame();
+            addVolunteersFrame.dispose();
+            volunteerOrRescheduleFrame.setVisible(true);
+        });
+        buttonPanel.add(backButton);
         frame.getContentPane().add(titlePanel, BorderLayout.PAGE_START);
         frame.getContentPane().add(buttonPanel, BorderLayout.CENTER);
         return frame;
@@ -116,6 +120,13 @@ public class GUI {
             });
             buttonPanel.add(button);
         }
+        JButton backButton = new JButton("Back to Menu");
+        backButton.addActionListener(e -> {
+            volunteerOrRescheduleFrame = createVolunteerOrRescheduleFrame();
+            selectHoursFrame.dispose();
+            volunteerOrRescheduleFrame.setVisible(true);
+        });
+        buttonPanel.add(backButton);
         frame.getContentPane().add(titlePanel, BorderLayout.PAGE_START);
         frame.getContentPane().add(buttonPanel, BorderLayout.CENTER);
         return frame;
@@ -125,6 +136,7 @@ public class GUI {
     public static JFrame createSelectTaskFrame() {
         JFrame frame = new JFrame();
         frame.setSize(800, 500);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel titlePanel = new JPanel(new FlowLayout());
         JLabel title = new JLabel("Select one of the tasks to move");
         titlePanel.add(title);
@@ -151,6 +163,13 @@ public class GUI {
                 buttonPanel.add(button);
             }
         }
+        JButton button = new JButton("Back to Menu");
+        button.addActionListener(e -> {
+            volunteerOrRescheduleFrame = createVolunteerOrRescheduleFrame();
+            selectTaskFrame.dispose();
+            volunteerOrRescheduleFrame.setVisible(true);
+        });
+        buttonPanel.add(button);
         frame.getContentPane().add(titlePanel, BorderLayout.PAGE_START);
         frame.getContentPane().add(buttonPanel, BorderLayout.CENTER);
         return frame;
@@ -180,8 +199,20 @@ public class GUI {
             volunteerOrRescheduleFrame.dispose();
             selectTaskFrame.setVisible(true);
         });
+
+        JButton createSchedule = new JButton("Create schedule anyways");
+        createSchedule.addActionListener(e -> {
+            int userChoice = JOptionPane.showConfirmDialog(createSchedule,"Are you sure? The current schedule is not optimized");
+            if (userChoice == JOptionPane.YES_OPTION) {
+                PrintLog.writeToSchedule(PrintLog.dataToString(Schedule.getSchedule()));
+                JOptionPane.showMessageDialog(null, "Schedule is printed");
+                System.exit(0);
+            }
+
+        });
         buttonPanel.add(volunteerButton);
         buttonPanel.add(rescheduleButton);
+        buttonPanel.add(createSchedule);
         frame.add(titlePanel, BorderLayout.PAGE_START);
         frame.add(buttonPanel, BorderLayout.CENTER);
         return frame;
