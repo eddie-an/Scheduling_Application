@@ -224,7 +224,7 @@ public class Schedule {
         int maxWindow = taskToModify.getMaxWindow(); // max window of task to modify
         int duration = taskToModify.getDuration() + taskToModify.getPrepTime(); // duration of task to modify
 
-        for (int i = 1; i < maxWindow; i++) {
+        for (int i = 1; i < 24; i++) {
             int hour = (startHour + i) % 24;
             if (scheduleTreeMap.containsKey(hour)) {
                 ArrayList<Task> taskList = scheduleTreeMap.get(hour);
@@ -238,6 +238,7 @@ public class Schedule {
                 }
             } else { // if there are no tasks in the current hour
                 emptyTimeSlots.add(hour);
+                Collections.sort(emptyTimeSlots);
             }
         }
         return emptyTimeSlots;
