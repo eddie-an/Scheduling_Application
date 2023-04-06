@@ -619,22 +619,23 @@ public class TestClass {
 
         String expectedResult = "Schedule for " + LocalDate.now().toString() + "\n\n" +
                                 "0:00\n" +
-                                "* Kit feeding - beaver (Justin Beaver) --- duration: 20 minutes\n" +
-                                "* Give vitamin injections - raccoon (Spotter) --- duration: 25 minutes\n\n" +
+                                "* Kit feeding - beaver (Justin Beaver) --- Duration: 20 minutes\n" +
+                                "* Give vitamin injections - raccoon (Spotter) --- Duration: 25 minutes\n\n" +
                                 "1:00\n" +
-                                "* Treat wound - raccoon (Racer) --- duration: 40 minutes\n\n" +
+                                "* Treat wound - raccoon (Racer) --- Duration: 40 minutes\n\n" +
                                 "2:00 [+ backup volunteer]\n" +
-                                "* Rebandage leg wound - beaver (Boots) --- duration: 10 minutes\n" +
-                                "* Feed fox - fox (Hunter) --- duration: 20 minutes\n" +
-                                "* Cage cleaning - porcupine (Porky) --- duration: 5 minutes\n" +
-                                "* Administer antibiotics - fox (Bob) --- duration: 20 minutes\n\n" +
+                                "* Rebandage leg wound - beaver (Boots) --- Duration: 10 minutes\n" +
+                                "* Feed fox - fox (Hunter) --- Duration: 20 minutes\n" +
+                                "* Cage cleaning - porcupine (Porky) --- Duration: 5 minutes\n" +
+                                "* Administer antibiotics - fox (Bob) --- Duration: 20 minutes\n\n" +
                                 "5:00\n" +
-                                "* Sample task - coyote (Shadow) --- duration: 40 minutes\n\n" +
+                                "* Sample task - coyote (Shadow) --- Duration: 40 minutes\n\n" +
                                 "12:00\n" +
-                                "* Eyedrops - porcupine (Spiky) --- duration: 25 minutes\n" +
-                                "* This is a task - coyote (Annie, Oliver and Mowgli) --- duration: 40 minutes\n\n" +
+                                "* Eyedrops - porcupine (Spiky) --- Duration: 25 minutes\n" +
+                                "* This is a task - coyote (Annie, Oliver and Mowgli) --- Duration: 40 minutes\n\n" +
                                 "22:00\n" +
-                                "* Last task - raccoon (Racer) --- duration: 20 minutes\n\n";
+                                "* Feeding fox - fox (Hunter) --- Duration: 10 minutes --- Prep time: 5 minutes\n"+
+                                "* Last task - raccoon (Racer) --- Duration: 20 minutes\n\n";
         String actualResult = PrintLog.dataToString(data);
         assertEquals(expectedResult, actualResult);
 
@@ -689,15 +690,17 @@ public class TestClass {
         hour12.add(task10);
 
         ArrayList<Task> hour22 = new ArrayList<>();
-        Task task11 = new Task(19, 22, 10, 20, "Last task", animal10);
+        Task task11 = new Task(21, 22, 2, 10, "Feeding fox", animal7, 5);
+        Task task12 = new Task(19, 22, 10, 20, "Last task", animal10);
         hour22.add(task11);
+        hour22.add(task12);
 
-        mapToReturn.put(new Integer(12), hour12);;
-        mapToReturn.put(new Integer(22), hour22);
         mapToReturn.put(new Integer(0), hour0);
         mapToReturn.put(new Integer(1), hour1);
         mapToReturn.put(new Integer(2), hour2);
         mapToReturn.put(new Integer(5), hour5);
+        mapToReturn.put(new Integer(12), hour12);
+        mapToReturn.put(new Integer(22), hour22);
 
         return mapToReturn;
     }

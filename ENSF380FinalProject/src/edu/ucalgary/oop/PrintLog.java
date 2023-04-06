@@ -46,7 +46,12 @@ public class PrintLog {
                 tasks.forEach((task) -> {
                     str.append("* " + task.getTaskType() + " - ");
                     str.append(task.getAnimal().getSpecies() + " (" + task.getAnimal().getName() + ")");
-                    str.append(" --- duration: " + task.getDuration() + " minutes\t prep time: " + task.getPrepTime());
+                    str.append(" --- Duration: " + task.getDuration() + " minutes");
+
+                    if (task.getPrepTime() > 0)
+                    {
+                        str.append(" --- Prep time: " + task.getPrepTime() + " minutes");
+                    }
                     str.append("\n");
                 });
                 str.append("\n");
