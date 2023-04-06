@@ -43,8 +43,8 @@ public class Main implements ActionListener {
     private Connection dbConnection;
     private ResultSet results;
 
-
-    // had to make alot of global varialbes it may look ugly but its the only way >:(
+    // had to make alot of global varialbes it may look ugly but its the only way
+    // >:(
     private JFrame frame;
     private JButton backupVolenteerButton, generateSchedule;
     private JButton refactorSchedule;
@@ -54,9 +54,8 @@ public class Main implements ActionListener {
 
     // used for the modify schedule button
     TreeMap<Integer, ArrayList<Integer>> tasksToChange = new TreeMap<>();
-    //ArrayList<JTextField> textFieldIn = new ArrayList<JTextField>();
+    // ArrayList<JTextField> textFieldIn = new ArrayList<JTextField>();
     HashMap<JTextField, ArrayList<Integer>> textFieldIn = new HashMap<JTextField, ArrayList<Integer>>();
-
 
     private JButton submit = new JButton("submit modified hours"); // used to submit the modified hours
 
@@ -72,28 +71,26 @@ public class Main implements ActionListener {
 
         JButton addVolunteerPrompt = new JButton("add Volunteer");
 
-        //buttonsPanel.add(submit);
+        // buttonsPanel.add(submit);
         submit.addActionListener(this);
 
         Main buttonListener = new Main();
         display.addActionListener(buttonListener);
         addVolunteerPrompt.addActionListener(buttonListener);
 
-        if (addVolunteerFinal == false)
+        if (addVolunteerFinal == true)
             buttonsPanel.add(display);
         else {
-            //buttonsPanel.add(addVolunteerPrompt);
+            // buttonsPanel.add(addVolunteerPrompt);
+
+            tasksToChange = showTasksToBeMoved(); //this is what should be called
+            //ArrayList<Integer> newTask = new ArrayList<>(); // delete everything here fro actual code
+            //newTask.add(3);
+            //tasksToChange.put(1, newTask);
+            //tasksToChange.put(2, newTask);
+            // tasksToChange.put(3, newTask);
 
 
-            //tasksToChange = showTasksToBeMoved(); this is what should be called
-            ArrayList<Integer> newTask = new ArrayList<>(); // delete everything here fro actual code
-            newTask.add(3);
-            tasksToChange.put(1, newTask);
-            tasksToChange.put(2, newTask);
-            //tasksToChange.put(3, newTask);
-
-            ArrayList<String> textPrompt = new ArrayList<String>();
-            int i = 0;
             StringBuilder temp = new StringBuilder();
 
             if (tasksToChange.size() == 1) {
@@ -104,7 +101,8 @@ public class Main implements ActionListener {
 
             frame.setLayout(new GridLayout());
 
-            // this loop will create a an array list of all the hourse that may require a backup volenteer
+            // this loop will create a an array list of all the hourse that may require a
+            // backup volenteer
             for (Map.Entry<Integer, ArrayList<Integer>> entry : tasksToChange.entrySet()) {
                 temp.append(entry.getKey() + " ");
             }
@@ -112,7 +110,6 @@ public class Main implements ActionListener {
             temp.append(" are overbooked call backup volenteer(s) ?");
             hoursBooked = new JLabel(temp.toString());
             backupVolenteerButton = new JButton("call backup volenteer(s)");
-
 
             buttonsPanel.add(hoursBooked);
             buttonsPanel.add(backupVolenteerButton);
@@ -127,16 +124,14 @@ public class Main implements ActionListener {
             generateSchedule.setVisible(false);
             buttonsPanel.add(generateSchedule, BorderLayout.NORTH);
 
-
             refactorSchedule = new JButton("Modify schedule ");
             refactorSchedule.addActionListener(this);
             buttonsPanel.add(refactorSchedule);
 
         }
         frame.getContentPane().add(BorderLayout.NORTH, buttonsPanel);
-        //frame.setVisible(true);
+        // frame.setVisible(true);
     }
-
 
     public void showGUI() {
         EventQueue.invokeLater(() -> {
@@ -145,7 +140,8 @@ public class Main implements ActionListener {
     }
 
     /**
-     * The main method which connects to the database and creates the edu.ucalgary.oop.GUI
+     * The main method which connects to the database and creates the
+     * edu.ucalgary.oop.GUI
      *
      * @param args
      * @throws Exception
@@ -163,24 +159,6 @@ public class Main implements ActionListener {
         addBackupVolunteer();
         data = PrintLog.dataToString(databaseRecords);
         System.out.println(data);
-
-
-
-
-//        modifyStartHour(0, 0, 1);
-//        data = PrintLog.dataToString(databaseRecords);
-//        System.out.println(data);
-//        System.out.println("Is this a valid schedule: " + isValidSchedule());
-//        System.out.println("Here are the tasks that must be moved " + showTasksToBeMoved());
-
-        Main Gui = new Main();
-        Gui.InitGUI();
-        Gui.showGUI();
-
-            final Boolean addVolunteerFinal = isValidSchedule();
-
-            //edu.ucalgary.oop.GUI InitializeGUI = new edu.ucalgary.oop.GUI();
-
 
     }
 
@@ -233,14 +211,12 @@ public class Main implements ActionListener {
         }
     }
 
-
     /**
      * Needs to be implemented but is not yet
      *
      * @param event The event that triggers the action
      */
     public void actionPerformed(ActionEvent event) {
-
 
         // Here call the method that will initiate the schedule building process
         // Exceptions which require calling in a backup volunteer should be handled here
@@ -251,7 +227,6 @@ public class Main implements ActionListener {
         // to the schedule
 
         // System.out.println(data);
-
 
         if (event.getSource() == backupVolenteerButton) {
             System.out.println("backup volenteers called");
@@ -285,27 +260,25 @@ public class Main implements ActionListener {
             StringBuilder taskToMove = new StringBuilder();
             Boolean unableToMove = false;
 
-
-
-            for(Map.Entry<Integer, ArrayList<Integer>> entry : tasksToChange.entrySet()) {
+            for (Map.Entry<Integer, ArrayList<Integer>> entry : tasksToChange.entrySet()) {
                 StrDisplay.append("hour " + entry.getKey() + " is overbooked and contains the following tasks: ");
 
-                for(int i = 0; i < entry.getValue().size(); i++) {
+                for (int i = 0; i < entry.getValue().size(); i++) {
                     StrDisplay.append(entry.getValue().get(i) + " ");
                 }
-
 
                 JLabel tasksToModify = new JLabel(StrDisplay.toString());
                 buttonsPanel.add(tasksToModify);
                 tasksToModify.setVisible(true);
 
-                for(int k = 0; k < entry.getValue().size(); k++) {
+                for (int k = 0; k < entry.getValue().size(); k++) {
 
                     ArrayList<Integer> taskCanBeMoved = new ArrayList<Integer>();
                     try {
                         taskCanBeMoved = showEmptyTimeSlots(entry.getKey(), entry.getValue().get(k));
                     } catch (NullPointerException e) {
-                        taskToMove.append("Task " + entry.getValue().get(k) + " does not have any valid places to move");
+                        taskToMove
+                                .append("Task " + entry.getValue().get(k) + " does not have any valid places to move");
                     }
 
                     if (taskCanBeMoved.size() != 0) {
@@ -316,18 +289,18 @@ public class Main implements ActionListener {
                         }
                     } else {
                         // if a task does not have any valid places to move a backup volenteer will
-                        // be required so this prompt will display saying x task at hour y NEEDS a backup volenteer
+                        // be required so this prompt will display saying x task at hour y NEEDS a
+                        // backup volenteer
                         // then the button will be pressed and generate schedule button will be pressed
                         buttonsPanel.removeAll();
                         taskToMove.setLength(0);
-                        taskToMove.append("Task " + entry.getValue().get(k) + " is overbooked at hour " + entry.getKey() + " and cannot be moved anywhere" +
+                        taskToMove.append("Task " + entry.getValue().get(k) + " is overbooked at hour " + entry.getKey()
+                                + " and cannot be moved anywhere" +
                                 "\n" + " Backup Volenteer is required");
                         unableToMove = true;
 
                         break;
                     }
-
-
 
                     JLabel whereToMoveTask = new JLabel(taskToMove.toString());
                     buttonsPanel.add(whereToMoveTask);
@@ -343,18 +316,17 @@ public class Main implements ActionListener {
                     temp.add(entry.getValue().get(k));
                     textFieldIn.put(textIn, temp);
 
-
                 }
 
                 if (unableToMove) {
-                        JLabel backupNeed = new JLabel(taskToMove.toString());
-                        buttonsPanel.add(backupNeed);
-                        backupNeed.setVisible(true);
-                        buttonsPanel.add(backupVolenteerButton);
-                        backupVolenteerButton.setVisible(true);
+                    JLabel backupNeed = new JLabel(taskToMove.toString());
+                    buttonsPanel.add(backupNeed);
+                    backupNeed.setVisible(true);
+                    buttonsPanel.add(backupVolenteerButton);
+                    backupVolenteerButton.setVisible(true);
 
                 }
-                //tasksToModify.add(frame);
+                // tasksToModify.add(frame);
 
                 StrDisplay.setLength(0);
 
@@ -362,17 +334,16 @@ public class Main implements ActionListener {
 
             if (!unableToMove) {
 
-                    buttonsPanel.add(submit);
+                buttonsPanel.add(submit);
 
-                    submit.setVisible(true);
+                submit.setVisible(true);
 
             }
 
-
-         }
+        }
         if (event.getSource() == submit) {
             System.out.println("submit pressed!");
-            for(Map.Entry<JTextField, ArrayList<Integer>> entry : textFieldIn.entrySet()) {
+            for (Map.Entry<JTextField, ArrayList<Integer>> entry : textFieldIn.entrySet()) {
                 int newH = Integer.parseInt(entry.getKey().getText());
                 // call each function
                 modifyStartHour(entry.getValue().get(0), entry.getValue().get(1), newH);
@@ -393,21 +364,22 @@ public class Main implements ActionListener {
 
         }
 
-        if(!isValidSchedule()) {
+        if (isValidSchedule()) {
             // Steps:
 
-            // 1) Attain all the tasks for each hour of the day; traverse through the dataBaseRecords Data structurer.
+            // 1) Attain all the tasks for each hour of the day; traverse through the
+            // dataBaseRecords Data structurer.
             Integer toStart = 0;
 
             int numRows = 0;
-            while(toStart <= 23) {
+            while (toStart <= 23) {
                 ArrayList<Task> storeForNow = databaseRecords.get(toStart);
                 System.out.println(storeForNow);
                 try {
-                    for(Task t : storeForNow) {
+                    for (Task t : storeForNow) {
                         numRows++;
                     }
-                } catch(NullPointerException e){
+                } catch (NullPointerException e) {
                     toStart++;
                 }
 
@@ -419,24 +391,28 @@ public class Main implements ActionListener {
             toStart = 0;
             boolean newFlag = false;
             int allInCount = 0;
-            while(toStart <= 23) {
+            while (toStart <= 23) {
                 ArrayList<Task> storeForNow = databaseRecords.get(toStart);
-                if (toStart==5) {
+                if (toStart == 5) {
                     System.out.println(storeForNow);
                 }
                 justBeforeAllInCount = allInCount;
                 try {
                     allInCount += storeForNow.size();
-                } catch(NullPointerException e) {
+                } catch (NullPointerException e) {
                     toStart++;
                     newFlag = false;
                 }
                 try {
-                    for(Task newTask : storeForNow) {
-                        if(!newFlag){newFlag=true; myTempStringArray[justBeforeAllInCount][0] = toStart.toString();}
-                        else{myTempStringArray[justBeforeAllInCount][0] = " ";}
+                    for (Task newTask : storeForNow) {
+                        if (!newFlag) {
+                            newFlag = true;
+                            myTempStringArray[justBeforeAllInCount][0] = toStart.toString();
+                        } else {
+                            myTempStringArray[justBeforeAllInCount][0] = " ";
+                        }
                         myTempStringArray[justBeforeAllInCount][1] = newTask.getTaskType();
-                        if(newTask.getTaskType()=="Kit feeding" || newTask.getTaskType()=="Flush neck wound") {
+                        if (newTask.getTaskType() == "Kit feeding" || newTask.getTaskType() == "Flush neck wound") {
                             myTempStringArray[justBeforeAllInCount][2] = "-";
                         } else {
                             myTempStringArray[justBeforeAllInCount][2] = "1";
@@ -445,7 +421,7 @@ public class Main implements ActionListener {
                         myTempStringArray[justBeforeAllInCount][4] = "cool";
                         justBeforeAllInCount++;
                     }
-                } catch( NullPointerException e) {
+                } catch (NullPointerException e) {
                     toStart++;
                     newFlag = false;
                 }
@@ -457,7 +433,7 @@ public class Main implements ActionListener {
                     { "Kundan Kumar Jha", "4031", "CSE", "Temp", "Temp" },
                     { "Anand Jha", "6014", "IT", "Temp", "Temp" }
             };
-            String[] columnNames = {"Time", "Task", "Qty", "Time Spent", "Time Available"};
+            String[] columnNames = { "Time", "Task", "Qty", "Time Spent", "Time Available" };
             // System.out.println(data);
 
             JFrame newFrame = new JFrame();
@@ -466,14 +442,12 @@ public class Main implements ActionListener {
             j.setBounds(30, 40, 200, 300);
             JScrollPane sp = new JScrollPane(j);
             newFrame.add(sp);
-            newFrame.setSize(500,500);
+            newFrame.setSize(500, 500);
             newFrame.setVisible(true);
 
         } else {
             // add text to the gui saying hours x, y, and z are overbooked
             // would you like to call a backup volenteer
-
-
 
         }
     }
@@ -603,16 +577,17 @@ public class Main implements ActionListener {
     }
 
     /**
-     * This method checks to see if the current schedule is valid or not based on total task duration for every hour
+     * This method checks to see if the current schedule is valid or not based on
+     * total task duration for every hour
+     * 
      * @return the boolean value indicating the validity of the schedule
      */
     public static boolean isValidSchedule() {
         boolean isValid = true;
-        for(Map.Entry<Integer, ArrayList<Task>> entry : databaseRecords.entrySet()){
+        for (Map.Entry<Integer, ArrayList<Task>> entry : databaseRecords.entrySet()) {
             ArrayList<Task> taskList = entry.getValue();
             int totalTaskTime = 0;
-            for (Task task: taskList)
-            {
+            for (Task task : taskList) {
                 totalTaskTime += task.getDuration(); // + task.getPrepTime();
             }
             if (taskList.get(0).getExtraVolunteerStatus() == true && totalTaskTime > 120) {
@@ -624,33 +599,34 @@ public class Main implements ActionListener {
         return isValid;
     }
 
-
     /**
-     * This method shows all the tasks that exceed 60 or 120 combined minutes (based on volunteer status)
+     * This method shows all the tasks that exceed 60 or 120 combined minutes (based
+     * on volunteer status)
      * in a given hour.
-     * It only adds tasks that aren't general feeding, and have a max window greater than 1.
+     * It only adds tasks that aren't general feeding, and have a max window greater
+     * than 1.
+     * 
      * @return TreeMap of (key: startHour, value: ArrayList of task index)
      */
     public static TreeMap<Integer, ArrayList<Integer>> showTasksToBeMoved() {
         TreeMap<Integer, ArrayList<Integer>> tasksToBeMoved = new TreeMap<>();
-        databaseRecords.forEach((startHour, taskList)-> {
+        databaseRecords.forEach((startHour, taskList) -> {
             int totalTaskTime = 0;
-            for (Task task: taskList)
-            {
+            for (Task task : taskList) {
                 totalTaskTime += task.getDuration(); // + task.getPrepTime(); add up all the task time
             }
             if ((totalTaskTime > 60 && taskList.get(0).getExtraVolunteerStatus() == false) ||
-                    (totalTaskTime > 120 && taskList.get(0).getExtraVolunteerStatus() == true))
-            { //If total task time exceeds 60 or 120 (depending on volunteer status)
+                    (totalTaskTime > 120 && taskList.get(0).getExtraVolunteerStatus() == true)) { // If total task time
+                                                                                                  // exceeds 60 or 120
+                                                                                                  // (depending on
+                                                                                                  // volunteer status)
                 ArrayList<Integer> taskIndexList = new ArrayList<>();
                 for (int i = 0; i < taskList.size(); i++) {
-                    if ((taskList.get(i).getTaskID() != -1 ) && (taskList.get(i).getMaxWindow() > 1))
-                    {
+                    if ((taskList.get(i).getTaskID() != -1) && (taskList.get(i).getMaxWindow() > 1)) {
                         taskIndexList.add(i); // adds index of the task
                     }
                 }
-                if (taskIndexList.size() > 0)
-                { // put the task start hour and the index array into the new treemap
+                if (taskIndexList.size() > 0) { // put the task start hour and the index array into the new treemap
                     tasksToBeMoved.put(startHour, taskIndexList);
                 }
             }
@@ -659,8 +635,11 @@ public class Main implements ActionListener {
     }
 
     /**
-     * For a given task at a specified startHour, return a list of empty time slots the task can be placed in
-     * It takes the task's max window into consideration and finds a list of startHours that will fit the constraints
+     * For a given task at a specified startHour, return a list of empty time slots
+     * the task can be placed in
+     * It takes the task's max window into consideration and finds a list of
+     * startHours that will fit the constraints
+     * 
      * @param startHour
      * @param taskIndex
      * @return
@@ -671,23 +650,200 @@ public class Main implements ActionListener {
         int maxWindow = taskToModify.getMaxWindow(); // max window of task to modify
         int duration = taskToModify.getDuration(); // + taskToModify.getPrepTime(); duration of task to modify
 
-        for (int i=1; i<maxWindow; i++) {
+        for (int i = 1; i < maxWindow; i++) {
             int hour = (startHour + i) % 24;
             if (databaseRecords.containsKey(hour)) {
                 ArrayList<Task> taskList = databaseRecords.get(hour);
                 int totalTime = duration;
-                for (Task task: taskList)
-                {
+                for (Task task : taskList) {
                     totalTime += task.getDuration(); // + task.getPrepTime();
                 }
                 if ((totalTime <= 60 && taskList.get(0).getExtraVolunteerStatus() == false) ||
                         (totalTime <= 120 && taskList.get(0).getExtraVolunteerStatus() == true)) {
                     emptyTimeSlots.add(hour);
                 }
-            }
-            else { // if there are no tasks in the current hour
+            } else { // if there are no tasks in the current hour
                 emptyTimeSlots.add(hour);
             }
         }
         return emptyTimeSlots;
     }
+
+    /**
+     * This method moves the given task from its old start hour to the new start
+     * hour
+     * It doesn't check whether moving the task makes the schedule more efficient.
+     * All it does is move the task
+     * 
+     * @param oldStartHour
+     * @param taskIndex
+     * @param newStartHour
+     * @throws IllegalArgumentException
+     */
+    public static void modifyStartHour(int oldStartHour, int taskIndex, int newStartHour)
+            throws IllegalArgumentException {
+        if (!databaseRecords.containsKey(oldStartHour) || taskIndex >= databaseRecords.get(oldStartHour).size()
+                || oldStartHour > 23 || oldStartHour < 0 || newStartHour > 23 || oldStartHour < 0) {
+            throw new IllegalArgumentException();
+        }
+        Task taskToModify = databaseRecords.get(oldStartHour).get(taskIndex);
+        databaseRecords.get(oldStartHour).remove(taskToModify); // remove task from old start hour
+        if (databaseRecords.get(oldStartHour).size() == 0) {
+            databaseRecords.remove(oldStartHour); // if there are no more tasks from that hour, remove task
+        }
+
+        taskToModify.setStartHour(newStartHour); // set start hour
+        if (databaseRecords.containsKey(newStartHour)) // If there are existing tasks in the new start hour
+        {
+            boolean extraVolunteerStatus = databaseRecords.get(newStartHour).get(0).getExtraVolunteerStatus();
+            taskToModify.setExtraVolunteerStatus(extraVolunteerStatus); // update volunteer status
+            databaseRecords.get(newStartHour).add(taskToModify); // add the task
+        } else { // If there are no tasks in the new start hour
+            ArrayList<Task> newList = new ArrayList<>();
+            taskToModify.setExtraVolunteerStatus(false); // update volunteer status
+            newList.add(taskToModify);
+            databaseRecords.put(newStartHour, newList); // add the task
+        }
+
+    }
+
+    public static void rearrangeTasks(int key) throws TooManyEventsException {
+        // iterate through the keys of the hashmap
+        // look at the tasks
+        // then apply the correct math to get the time of each task and if backup is
+        // required
+
+        // iterate through the keys of the hashmap
+        // check if the time is greater than 60
+        // if it is, move the task to the next hour
+        // if the next hour is not empty, check if the time is greater than 60
+        // if it is, move the task to the next hour
+
+        // NEEDS TO BE ABLE ACCOUNT FOR 22 -> 23 -> 0
+        // NEEDS TO THROW AN EXCEPTION IF ALL HOURS WITHIN THE MAXWINDOW ARE FULL
+
+        // add preptimes for fox and coyote
+        // fix rearrangeTasks, look at comments
+
+        ArrayList<Task> tasks = databaseRecords.get(key);
+
+        // System.out.println("printing tasks kfmkjfnjkngjkdfnjdnj");
+        // for (Task task : tasks) {
+        // System.out.println(task.getTaskType() + " " + task.getMaxWindow() + " " +
+        // task.getStartHour());
+        // }
+
+        int totalTime = 0;
+
+        if (tasks != null) {
+
+            Collections.sort(tasks, new Comparator<Task>() {
+                @Override
+                public int compare(Task o1, Task o2) {
+                    return o1.getMaxWindow() - o2.getMaxWindow();
+                }
+            });
+
+            Iterator<Task> it = tasks.iterator();
+            // order the tasks from greatest max window to smallest max window
+
+            // if volunteer status is true, check less than 120 minutes instead of 60
+
+            while (it.hasNext()) {
+                Task task = it.next();
+                totalTime += task.getDuration();
+
+                if (totalTime > 60) {
+                    // what if it goes 22, 23, 24? should go 22, 23, 0, maybe modulo
+
+                    // check for task with largest max window
+
+                    // logic is flawed for 1 hour max window, while loop is skipped entirely
+                    // maybe implement in a way so that tasks that have an empty hour in their max
+                    // window are moved to those empty hours first
+
+                    if (task.getMaxWindow() == 1) {
+                        throw new TooManyEventsException("Too many events in one hour: " + task.getTaskType()
+                                + "which starts at " + task.getStartHour());
+                    } else {
+
+                        int j = (task.getStartHour() + 1) % 24;
+                        boolean exceptionBool = false;
+
+                        while (j != (task.getStartHour() + task.getMaxWindow()) % 24) {
+                            if (databaseRecords.containsKey(j)) {
+                                ArrayList<Task> temp = databaseRecords.get(j);
+                                int time = 0;
+                                for (Task t : temp) {
+                                    time += t.getDuration();
+                                }
+
+                                if (time + task.getDuration() <= 60) {
+                                    temp.add(task);
+                                    databaseRecords.put(j, temp);
+                                    exceptionBool = false;
+                                    break;
+                                } else {
+                                    exceptionBool = true;
+                                }
+                            } else {
+                                ArrayList<Task> temp = new ArrayList<>();
+                                temp.add(task);
+                                databaseRecords.put(j, temp);
+                                exceptionBool = false;
+                                break;
+                            }
+
+                            j = (j + 1) % 24;
+                        }
+
+                        if (exceptionBool) {
+                            // implies that no rearrangement could be made
+                            throw new TooManyEventsException(
+                                    "Task could not be placed any time within its given window");
+                        } else {
+                            tasks.remove(task);
+                            break;
+                        }
+                    }
+                }
+            }
+            databaseRecords.put(key, tasks);
+        }
+
+        if (totalTime > 60) {
+            rearrangeTasks(key);
+        } else if (key < 23) {
+            rearrangeTasks(key + 1);
+        }
+    }
+
+    /**
+     * Iterates through the schedule hashmap and assigns a backup volunteer to every
+     * group of tasks in the same
+     * start hour if the total duration exceeds 60 minutes
+     */
+    private static void addBackupVolunteer() {
+        // iterate through the keys of the hashmap
+        // look at the tasks
+        // then apply the correct math to get the time of each task and if backup is
+        // required
+        databaseRecords.forEach((startHour, tasks) -> {
+            int totalTime = 0;
+            for (Task task : tasks) {
+                totalTime += task.getDuration();
+                if (totalTime > 60) {
+                    break;
+                }
+            }
+            if (totalTime > 60) // At this point of the function,
+            // the user should confirm whether or not they want to add another volunteer
+            {
+                tasks.forEach((task) -> {
+                    task.setExtraVolunteerStatus(true);
+                });
+            }
+        });
+    }
+
+}
