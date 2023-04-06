@@ -40,7 +40,7 @@ public class Schedule {
         try {
             // this connection is going to be different for every user change the url user
             // and password for each user
-            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "SQL123456");
+            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "password");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -283,7 +283,7 @@ public class Schedule {
 
 
     /**
-     * This method recursively rearranges the tasks in the databaseRecords TreeMap.
+     * This method rearranges the tasks in the databaseRecords TreeMap.
      * It checks if the total time of the tasks in a given hour exceeds 60 minutes.
      * If it does, it moves the task to another hour within its MaxWindow.
      * @throws TooManyEventsException   if there are too many events in the schedule
@@ -309,96 +309,130 @@ public class Schedule {
             ArrayList<Task> tasks = scheduleTreeMap.get(hour);
             int totalTime = 0;
 
-            if(tasks != null) {
+            try {
+                if(tasks != null) {
 
-                //order tasks based on animal species, mainly puts coyotes together so that the preptime is as optimized as possible
-                Collections.sort(tasks, (o1, o2) -> (o1.getAnimal().getSpecies().compareTo(o2.getAnimal().getSpecies())));
+                    //order tasks based on animal species, mainly puts coyotes together so that the preptime is as optimized as possible
+                    Collections.sort(tasks, (o1, o2) -> (o1.getAnimal().getSpecies().compareTo(o2.getAnimal().getSpecies())));
 
-                //order the tasks from greatest smallest max window to greatest max window
-                // so that the tasks with the largest max window are moved first
-                Collections.sort(tasks, new Comparator<Task>() {
-                    @Override
-                    public int compare(Task o1, Task o2) {
-                        return o1.getMaxWindow() - o2.getMaxWindow();
+                    //order the tasks from greatest smallest max window to greatest max window
+                    // so that the tasks with the largest max window are moved first
+                    Collections.sort(tasks, new Comparator<Task>() {
+                        @Override
+                        public int compare(Task o1, Task o2) {
+                            return o1.getMaxWindow() - o2.getMaxWindow();
+                        }
+                    });
+
+                    //these 2 for loops make it so that only one coyote/fox feeding task has a preptime, and the rest are set to 0
+                    //if a coyote/fox feeding task is moved to another hour and its preptime is set to 0, it will be reset to 10/5
+                    //to account for the new hour it is in
+                    Task prepTask = null;
+                    for(Task task : tasks) {
+                        if (task.getTaskType().equals("Coyote feeding")) {
+                            if (task.getPrepTime() == 0) {
+                                task.setPrepTime(10);
+                            }
+                            totalTime += task.getPrepTime();
+                            prepTask = task;
+                            break;
+
+                        }  
+                        else if (task.getTaskType().equals("Fox feeding")) {
+                            if (task.getPrepTime() == 0) {
+                                task.setPrepTime(5);
+                            }
+                            totalTime += task.getPrepTime();
+                            prepTask = task;
+                            break;
+                        }
                     }
-                });
-
-                for(Task task : tasks) {
-                    if (task.getTaskType().equals("Coyote feeding") || task.getTaskType().equals("Fox feeding")) {
-                        totalTime += task.getPrepTime();
-                        break;
-                    }
-                }
-
-                Iterator<Task> it = tasks.iterator();
-
-                // Maybe if volunteer status is true, check less than 120 minutes instead of 60
-
-                while (it.hasNext()) {
-                    Task task = it.next();
-                    // Only include preptime in totalTime if the task is a fox feeding or coyote feeding
-                    // Only add the preptime once for each hour that contains a fox feeding or coyote feeding
-
-                    totalTime += task.getDuration();
-
-                    if (totalTime > 60) {
-                        // maybe implement in a way so that tasks that have an empty hour in their max window are moved to those empty hours first
-
-                        if (task.getMaxWindow() == 1) {
-                            // if the task has a max window of 1, it cannot be moved
-                            throw new TooManyEventsException("Attempting to move a task with a max window of 1");
+                    for(Task otherTask : tasks) {
+                        if(prepTask == otherTask) {
+                            continue;
                         }
                         else {
+                            otherTask.setPrepTime(0);
+                        }
+                    }
 
-                            //maybe get current hour instead
-                            int j = (hour + 1) % 24;
-                            boolean exceptionBool = false;
+                    // task.getTaskType().equals("Coyote feeding") ? 10 : 5;
 
-                            while (j != (task.getStartHour() + task.getMaxWindow()) % 24) {
-                                if (scheduleTreeMap.containsKey(j)) {
-                                    ArrayList<Task> temp = scheduleTreeMap.get(j);
-                                    int time = 0;
-                                    for(Task t : temp) {
-                                        time += t.getDuration();
+                    Iterator<Task> it = tasks.iterator();
+
+                    // Maybe if volunteer status is true, check less than 120 minutes instead of 60
+
+                    while (it.hasNext()) {
+                        Task task = it.next();
+                        // Only include preptime in totalTime if the task is a fox feeding or coyote feeding
+                        // Only add the preptime once for each hour that contains a fox feeding or coyote feeding
+
+                        totalTime += task.getDuration();
+
+                        if (totalTime > 60) {
+                            // maybe implement in a way so that tasks that have an empty hour in their max window are moved to those empty hours first
+
+                            if (task.getMaxWindow() == 1) {
+                                // if the task has a max window of 1, it cannot be moved
+                                throw new TooManyEventsException("Attempting to move a task with a max window of 1");
+                            }
+                            else {
+
+                                //maybe get current hour instead
+                                int j = (hour + 1) % 24;
+                                boolean exceptionBool = false;
+
+                                while (j != (task.getStartHour() + task.getMaxWindow()) % 24) {
+                                    if (scheduleTreeMap.containsKey(j)) {
+                                        ArrayList<Task> temp = scheduleTreeMap.get(j);
+                                        int time = 0;
+                                        for(Task t : temp) {
+                                            time += t.getDuration();
+                                        }
+
+                                        if (time + task.getDuration() <= 60) {
+                                            temp.add(task);
+                                            scheduleTreeMap.put(j, temp);
+                                            exceptionBool = false;
+                                            break;
+                                        }
+                                        else {
+                                            exceptionBool = true;
+                                        }
                                     }
-
-                                    if (time + task.getDuration() <= 60) {
+                                    else {
+                                        ArrayList<Task> temp = new ArrayList<>();
                                         temp.add(task);
                                         scheduleTreeMap.put(j, temp);
                                         exceptionBool = false;
                                         break;
                                     }
-                                    else {
-                                        exceptionBool = true;
-                                    }
+
+                                    j = (j + 1) % 24;
+                                }
+
+                                if(exceptionBool) {
+                                    //implies that no rearrangement could be made
+                                    throw new TooManyEventsException("Task could not be placed any time within its given window");
                                 }
                                 else {
-                                    ArrayList<Task> temp = new ArrayList<>();
-                                    temp.add(task);
-                                    scheduleTreeMap.put(j, temp);
-                                    exceptionBool = false;
+                                    tasks.remove(task);
                                     break;
                                 }
-
-                                j = (j + 1) % 24;
-                            }
-
-                            if(exceptionBool) {
-                                //implies that no rearrangement could be made
-                                throw new TooManyEventsException("Task could not be placed any time within its given window");
-                            }
-                            else {
-                                tasks.remove(task);
-                                break;
                             }
                         }
                     }
+                    scheduleTreeMap.put(hour, tasks);
                 }
-                scheduleTreeMap.put(hour, tasks);
+                if (totalTime <= 60) {
+                    hour++;
+                }
             }
-            if (totalTime <= 60) {
+            catch (TooManyEventsException e) {
+                System.out.println(e.getMessage());
                 hour++;
             }
+
         }
     }
 
