@@ -15,7 +15,7 @@ There is a gitignore file which ignores the lib folder used for library dependen
 
 ---
 
-### App.java
+### GUI.java
 
-The App.java file is a java class with the method `public static void main (String[] args)`
-This is the entry point to the application and all the other classes can be instantiated within this method. Furthermore, it would make sense for the database connection to take place within this file.
+The GUI.java file is a java class with the method `public static void main (String[] args)`
+This is the Graphic User Interface of the Program. It uses information in the Schedule class to interact with the user.
