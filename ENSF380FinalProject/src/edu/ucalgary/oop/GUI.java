@@ -58,8 +58,8 @@ public class GUI {
              for (Task task: tasksArrayList) {
                  totalTime += task.getDuration() + task.getPrepTime();
              }
-             if ((totalTime > 60 && tasksArrayList.get(0).getExtraVolunteerStatus() == false) ||
-                     (totalTime > 120 && tasksArrayList.get(0).getExtraVolunteerStatus() == true)) {
+             if ((totalTime > 60 && tasksArrayList.get(0).getExtraVolunteerStatus() == false) /*||
+                     (totalTime > 120 && tasksArrayList.get(0).getExtraVolunteerStatus() == true)*/) {
                  JButton button = new JButton(startHour.toString() + ":00");
                  button.addActionListener(e -> {
                      Schedule.addBackupVolunteer(startHour);
