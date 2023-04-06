@@ -91,6 +91,8 @@ public class Main implements ActionListener {
             // tasksToChange.put(2, newTask);
             // tasksToChange.put(3, newTask);
 
+            ArrayList<String> textPrompt = new ArrayList<String>();
+            int i = 0;
             StringBuilder temp = new StringBuilder();
 
             if (tasksToChange.size() == 1) {
@@ -155,14 +157,23 @@ public class Main implements ActionListener {
         getTreatments.TasksReadIn();
 
         getTreatments.close();
-        rearrangeTasks();
+        rearrangeTasks(0);
         addBackupVolunteer();
         data = PrintLog.dataToString(databaseRecords);
         System.out.println(data);
 
-        Main gui = new Main();
-        gui.InitGUI();
-        gui.showGUI();
+        // modifyStartHour(0, 0, 1);
+        // data = PrintLog.dataToString(databaseRecords);
+        // System.out.println(data);
+        // System.out.println("Is this a valid schedule: " + isValidSchedule());
+        // System.out.println("Here are the tasks that must be moved " +
+        // showTasksToBeMoved());
+
+        Main Gui = new Main();
+        Gui.InitGUI();
+        Gui.showGUI();
+
+        final Boolean addVolunteerFinal = isValidSchedule();
 
     }
 
@@ -179,23 +190,23 @@ public class Main implements ActionListener {
         // so it doesn't conflict with the actual taskID's in the database
         for (Animal animal : animalList) {
 
-            Task cleaning = new Task(-2, 0, 24, animal.getSpecies().equals("porcupine") ? 10 : 5, "general cleaning",
+            Task cleaning = new Task(-2, 0, 24, animal.getSpecies() == "porcupine" ? 10 : 5, "general cleaning",
                     animal);
             Task feeding = null;
 
             if (animal.getOrphanStatus() == false) {
 
-                if (animal.getSpecies().equals("coyote")) {
-                    feeding = new Task(-1, 19, 3, 5, "Coyote feeding", animal, 10);
-                } else if (animal.getSpecies().equals("fox")) {
-                    feeding = new Task(-1, 0, 3, 5, "Fox feeding", animal, 5);
-                } else if (animal.getSpecies().equals("beaver")) {
-                    feeding = new Task(-1, 8, 3, 5, "Beaver feeding", animal);
-                } else if (animal.getSpecies().equals("porcupine")) {
-                    feeding = new Task(-1, 19, 3, 5, "Porcupine feeding", animal);
-                } else { // must be a raccoon
-                    feeding = new Task(-1, 0, 3, 5, "Raccoon feeding", animal);
+                if (animal.getActiveTime() == "diurnal") {
+
+                    feeding = new Task(-1, 8, 3, 5, "general feeding", animal);
+                } else if (animal.getActiveTime() == "crepuscular") {
+                    feeding = new Task(-1, 19, 3, 5, "general feeding", animal);
                 }
+                // only thing left is nocturnal
+                else {
+                    feeding = new Task(-1, 0, 3, 5, "general feeding", animal);
+                }
+
                 if (databaseRecords.containsKey(feeding.getStartHour())) {
                     this.databaseRecords.get(feeding.getStartHour()).add(feeding);
                 } else {
@@ -416,8 +427,7 @@ public class Main implements ActionListener {
                             myTempStringArray[justBeforeAllInCount][0] = " ";
                         }
                         myTempStringArray[justBeforeAllInCount][1] = newTask.getTaskType();
-                        if (newTask.getTaskType().equals("Kit feeding")
-                                || newTask.getTaskType().equals("Flush neck wound")) {
+                        if (newTask.getTaskType() == "Kit feeding" || newTask.getTaskType() == "Flush neck wound") {
                             myTempStringArray[justBeforeAllInCount][2] = "-";
                         } else {
                             myTempStringArray[justBeforeAllInCount][2] = "1";
@@ -465,7 +475,7 @@ public class Main implements ActionListener {
         try {
             // this connection is going to be different for every user change the url user
             // and password for each user
-            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "SQL123456");
+            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "Fuckemail");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -712,135 +722,115 @@ public class Main implements ActionListener {
 
     }
 
-    /**
-     * This method recursively rearranges the tasks in the databaseRecords TreeMap.
-     * It checks if the total time of the tasks in a given hour exceeds 60 minutes.
-     * If it does, it moves the task to another hour within its MaxWindow.
-     * 
-     * @param key the key of the TreeMap corresponding to the start hour
-     * @throws TooManyEventsException if there are too many events in the schedule
-     */
-    public static void rearrangeTasks() throws TooManyEventsException {
-        // iterate through the keys of the treemap
+    public static void rearrangeTasks(int key) throws TooManyEventsException {
+        // iterate through the keys of the hashmap
+        // look at the tasks
+        // then apply the correct math to get the time of each task and if backup is
+        // required
+
+        // iterate through the keys of the hashmap
         // check if the time is greater than 60
         // if it is, move the task to the next hour
         // if the next hour is not empty, check if the time is greater than 60
         // if it is, move the task to the next hour
-        // and so on
 
-        // Uses modulo to wrap around midnight
-        // Throws an exception when trying to move a task which has a max window of 1
-        // Throws an exception when a task is not able to be moved within its max window
+        // NEEDS TO BE ABLE ACCOUNT FOR 22 -> 23 -> 0
+        // NEEDS TO THROW AN EXCEPTION IF ALL HOURS WITHIN THE MAXWINDOW ARE FULL
 
         // add preptimes for fox and coyote
         // fix rearrangeTasks, look at comments
 
-        int key = 0;
+        ArrayList<Task> tasks = databaseRecords.get(key);
 
-        while (key < 24) {
+        // System.out.println("printing tasks kfmkjfnjkngjkdfnjdnj");
+        // for (Task task : tasks) {
+        // System.out.println(task.getTaskType() + " " + task.getMaxWindow() + " " +
+        // task.getStartHour());
+        // }
 
-            ArrayList<Task> tasks = databaseRecords.get(key);
-            int totalTime = 0;
+        int totalTime = 0;
 
-            if (tasks != null) {
+        if (tasks != null) {
 
-                // order tasks based on animal species, mainly puts coyotes together so that the
-                // preptime is as optimized as possible
-                Collections.sort(tasks,
-                        (o1, o2) -> (o1.getAnimal().getSpecies().compareTo(o2.getAnimal().getSpecies())));
-
-                // order the tasks from greatest smallest max window to greatest max window
-                // so that the tasks with the largest max window are moved first
-                Collections.sort(tasks, new Comparator<Task>() {
-                    @Override
-                    public int compare(Task o1, Task o2) {
-                        return o1.getMaxWindow() - o2.getMaxWindow();
-                    }
-                });
-
-                for (Task task : tasks) {
-                    if (task.getTaskType().equals("Coyote feeding") || task.getTaskType().equals("Fox feeding")) {
-                        totalTime += task.getPrepTime();
-                        break;
-                    }
+            Collections.sort(tasks, new Comparator<Task>() {
+                @Override
+                public int compare(Task o1, Task o2) {
+                    return o1.getMaxWindow() - o2.getMaxWindow();
                 }
+            });
 
-                Iterator<Task> it = tasks.iterator();
+            Iterator<Task> it = tasks.iterator();
+            // order the tasks from greatest max window to smallest max window
 
-                // Maybe if volunteer status is true, check less than 120 minutes instead of 60
+            // if volunteer status is true, check less than 120 minutes instead of 60
 
-                while (it.hasNext()) {
-                    Task task = it.next();
-                    // Only include preptime in totalTime if the task is a fox feeding or coyote
-                    // feeding
-                    // Only add the preptime once for each hour that contains a fox feeding or
-                    // coyote feeding
+            while (it.hasNext()) {
+                Task task = it.next();
+                totalTime += task.getDuration();
 
-                    totalTime += task.getDuration();
+                if (totalTime > 60) {
+                    // what if it goes 22, 23, 24? should go 22, 23, 0, maybe modulo
 
-                    if (totalTime > 60) {
-                        // maybe implement in a way so that tasks that have an empty hour in their max
-                        // window are moved to those empty hours first
+                    // check for task with largest max window
 
-                        if (task.getMaxWindow() == 1) {
-                            // if the task has a max window of 1, it cannot be moved
-                            throw new TooManyEventsException("Attempting to move a task with a max window of 1");
-                        } else {
+                    // logic is flawed for 1 hour max window, while loop is skipped entirely
+                    // maybe implement in a way so that tasks that have an empty hour in their max
+                    // window are moved to those empty hours first
 
-                            // maybe get current hour instead
-                            int j = (key + 1) % 24;
-                            boolean exceptionBool = false;
+                    if (task.getMaxWindow() == 1) {
+                        throw new TooManyEventsException("Too many events in one hour: " + task.getTaskType()
+                                + "which starts at " + task.getStartHour());
+                    } else {
 
-                            while (j != (task.getStartHour() + task.getMaxWindow()) % 24) {
-                                if (databaseRecords.containsKey(j)) {
-                                    ArrayList<Task> temp = databaseRecords.get(j);
-                                    int time = 0;
-                                    for (Task t : temp) {
-                                        time += t.getDuration();
-                                    }
+                        int j = (task.getStartHour() + 1) % 24;
+                        boolean exceptionBool = false;
 
-                                    if (time + task.getDuration() <= 60) {
-                                        temp.add(task);
-                                        databaseRecords.put(j, temp);
-                                        exceptionBool = false;
-                                        break;
-                                    } else {
-                                        exceptionBool = true;
-                                    }
-                                } else {
-                                    ArrayList<Task> temp = new ArrayList<>();
+                        while (j != (task.getStartHour() + task.getMaxWindow()) % 24) {
+                            if (databaseRecords.containsKey(j)) {
+                                ArrayList<Task> temp = databaseRecords.get(j);
+                                int time = 0;
+                                for (Task t : temp) {
+                                    time += t.getDuration();
+                                }
+
+                                if (time + task.getDuration() <= 60) {
                                     temp.add(task);
                                     databaseRecords.put(j, temp);
                                     exceptionBool = false;
                                     break;
+                                } else {
+                                    exceptionBool = true;
                                 }
-
-                                j = (j + 1) % 24;
-                            }
-
-                            if (exceptionBool) {
-                                // implies that no rearrangement could be made
-                                throw new TooManyEventsException(
-                                        "Task could not be placed any time within its given window");
                             } else {
-                                tasks.remove(task);
+                                ArrayList<Task> temp = new ArrayList<>();
+                                temp.add(task);
+                                databaseRecords.put(j, temp);
+                                exceptionBool = false;
                                 break;
                             }
+
+                            j = (j + 1) % 24;
+                        }
+
+                        if (exceptionBool) {
+                            // implies that no rearrangement could be made
+                            throw new TooManyEventsException(
+                                    "Task could not be placed any time within its given window");
+                        } else {
+                            tasks.remove(task);
+                            break;
                         }
                     }
                 }
-                databaseRecords.put(key, tasks);
             }
-
-            if (totalTime <= 60) {
-                key++;
-            }
-
+            databaseRecords.put(key, tasks);
         }
 
-        // else if (key < 23) {
-        // rearrangeTasks(key + 1);
-        // }
+        if (totalTime > 60) {
+            rearrangeTasks(key);
+        } else if (key < 23) {
+            rearrangeTasks(key + 1);
+        }
     }
 
     /**
