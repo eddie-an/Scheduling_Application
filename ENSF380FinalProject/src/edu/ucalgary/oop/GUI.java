@@ -19,7 +19,6 @@ public class GUI {
     public static void main(String[] args) {
         Schedule.populateTreeMap();
         TreeMap<Integer, ArrayList<Task>> schedule = Schedule.getSchedule();
-        System.out.println(PrintLog.dataToString(schedule));
         EventQueue.invokeLater(() -> {
             startGUI();
         });

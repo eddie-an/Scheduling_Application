@@ -40,7 +40,7 @@ public class Schedule {
         try {
             // this connection is going to be different for every user change the url user
             // and password for each user
-            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "password");
+            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "SQL123456");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -375,7 +375,7 @@ public class Schedule {
 
                             if (task.getMaxWindow() == 1) {
                                 // if the task has a max window of 1, it cannot be moved
-                                throw new TooManyEventsException("Attempting to move a task with a max window of 1");
+                                throw new TooManyEventsException("");
                             }
                             else {
 
@@ -414,7 +414,7 @@ public class Schedule {
 
                                 if(exceptionBool) {
                                     //implies that no rearrangement could be made
-                                    throw new TooManyEventsException("Task could not be placed any time within its given window");
+                                    throw new TooManyEventsException("");
                                 }
                                 else {
                                     tasks.remove(task);
