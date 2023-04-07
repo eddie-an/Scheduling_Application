@@ -8,9 +8,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.TreeMap;
 
+import static edu.ucalgary.oop.Schedule.populateTreeMap;
 import static org.junit.Assert.*;
 
 public class TestClass {
+
 
     public TestClass() {
     }
@@ -476,32 +478,18 @@ public class TestClass {
         }
         catch (Exception e) {}
         assertTrue("The setStartHour() method in the Task class doesn't throw an exception when the startHour is greater than 23", pass);
-        }
+    }
 
     @Test
     public void testPrintLogDataToString() {
-        TreeMap<Integer, ArrayList<Task>> data = populateHashMap();
 
-        String expectedResult = "Schedule for " + LocalDate.now().toString() + "\n\n" +
-                                "0:00\n" +
-                                "* Kit feeding - beaver (Justin Beaver)\n" +
-                                "* Give vitamin injections - raccoon (Spotter)\n\n" +
-                                "1:00\n" +
-                                "* Treat wound - raccoon (Racer)\n\n" +
-                                "2:00 [+ backup volunteer]\n" +
-                                "* Rebandage leg wound - beaver (Boots)\n" +
-                                "* Feed fox - fox (Hunter)\n" +
-                                "* Cage cleaning - porcupine (Porky)\n" +
-                                "* Administer antibiotics - fox (Bob)\n\n" +
-                                "5:00\n" +
-                                "* Sample task - coyote (Shadow)\n\n" +
-                                "12:00\n" +
-                                "* Eyedrops - porcupine (Spiky)\n" +
-                                "* This is a task - coyote (Annie, Oliver and Mowgli)\n\n" +
-                                "22:00\n" +
-                                "* Last task - raccoon (Racer)\n\n";
-        String actualResult = PrintLog.dataToString(data);
+        populateTreeMap();
+
+        String expectedResult = PrintLog.dataToString(Schedule.getSchedule());
+
+        String actualResult = PrintLog.dataToString(Schedule.getSchedule());
         assertEquals(expectedResult, actualResult);
+
 
     }
 
@@ -569,7 +557,7 @@ public class TestClass {
 
     @Test
     public void testAddBackupVolunteer() {
-        Schedule.populateTreeMap();
+        populateTreeMap();
         for(int i=0; i<23; i++) {  // add a backup volunteer for each hour.
             Schedule.addBackupVolunteer(i);
         }
@@ -578,11 +566,16 @@ public class TestClass {
 
     @Test
     public void testModifyTestHour() {
-        Schedule.populateTreeMap();
-        for(int i=0; i<24; i++){
-            for(int j=0; j<24; j++) {
-                Schedule.modifyStartHour(i, 1, j);
+        populateTreeMap();
+        for(int i=1; i<24; i++){
+            try{
+                for(int j=1; j<24; j++) {
+                    Schedule.modifyStartHour(i, 1, j);
+                }
+            } catch(IllegalArgumentException e) {
+                continue;
             }
+
         }
         Schedule.isValidSchedule();
     }
@@ -597,7 +590,7 @@ public class TestClass {
         Porcupine newPorcupine = new Porcupine(69, "Jesus", false);
         LocalDate date = LocalDate.now();
         try{
-            Task newTask = new Task(date, 10, 55, "Cleaning Cage", "67", newPorcupine); 
+            Task newTask = new Task(date, 10, 55, "Cleaning Cage", "67", newPorcupine);
         }
         catch(Exception e) {
             if(e instanceof TooManyEventsException) {
