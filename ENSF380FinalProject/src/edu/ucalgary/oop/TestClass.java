@@ -482,14 +482,28 @@ public class TestClass {
 
     @Test
     public void testPrintLogDataToString() {
+        TreeMap<Integer, ArrayList<Task>> data = populateHashMap();
 
-        populateTreeMap();
-
-        String expectedResult = PrintLog.dataToString(Schedule.getSchedule());
-
-        String actualResult = PrintLog.dataToString(Schedule.getSchedule());
+        String expectedResult = "Schedule for " + LocalDate.now().toString() + "\n\n" +
+                                "0:00\n" +
+                                "* Kit feeding - beaver (Justin Beaver) --- Duration: 20 minutes\n" +
+                                "* Give vitamin injections - raccoon (Spotter) --- Duration: 25 minutes\n\n" +
+                                "1:00\n" +
+                                "* Treat wound - raccoon (Racer) --- Duration: 40 minutes\n\n" +
+                                "2:00 [+ backup volunteer]\n" +
+                                "* Rebandage leg wound - beaver (Boots) --- Duration: 10 minutes\n" +
+                                "* Feed fox - fox (Hunter) --- Duration: 20 minutes\n" +
+                                "* Cage cleaning - porcupine (Porky) --- Duration: 5 minutes\n" +
+                                "* Administer antibiotics - fox (Bob) --- Duration: 20 minutes\n\n" +
+                                "5:00\n" +
+                                "* Sample task - coyote (Shadow) --- Duration: 40 minutes\n\n" +
+                                "12:00\n" +
+                                "* Eyedrops - porcupine (Spiky) --- Duration: 25 minutes\n" +
+                                "* This is a task - coyote (Annie, Oliver and Mowgli) --- Duration: 40 minutes\n\n" +
+                                "22:00\n" +
+                                "* Last task - raccoon (Racer) --- Duration: 20 minutes\n\n";
+        String actualResult = PrintLog.dataToString(data);
         assertEquals(expectedResult, actualResult);
-
 
     }
 
