@@ -64,7 +64,7 @@ public class Schedule {
             // This connection is going to be different for every user.
             // Make sure to change the url, user, and password.
             // For the purposes of this assignment, it is set to "oop" and "password"
-            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "password");
+            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "oop", "password");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -389,28 +389,21 @@ public class Schedule {
                         }
                     }
 
-                    // task.getTaskType().equals("Coyote feeding") ? 10 : 5;
-
                     Iterator<Task> it = tasks.iterator();
-
-                    // Maybe if volunteer status is true, check less than 120 minutes instead of 60
 
                     while (it.hasNext()) {
                         Task task = it.next();
-                        // Only include preptime in totalTime if the task is a fox feeding or coyote feeding
-                        // Only add the preptime once for each hour that contains a fox feeding or coyote feeding
+                        // Only include prep time in totalTime if the task is a fox feeding or coyote feeding
+                        // Only add the prep time once for each hour that contains a fox feeding or coyote feeding
 
                         totalTime += task.getDuration();
 
                         if (totalTime > 60) {
-                            // maybe implement in a way so that tasks that have an empty hour in their max window are moved to those empty hours first
-
                             if (task.getMaxWindow() == 1) {
                                 // if the task has a max window of 1, it cannot be moved
                                 throw new Exception();
                             }
                             else {
-
                                 //maybe get current hour instead
                                 int j = (hour + 1) % 24;
                                 boolean exceptionBool = false;
