@@ -13,7 +13,9 @@ import static org.junit.Assert.*;
 
 /**
  * Unit Test Class
- * Edward An, Karam Baroud, Evan Barker, Jad Khalil
+ * @author Edward An, Karam Baroud, Evan Barker, Jad Khalil
+ * @version 1.5
+ * @since 1.0
  */
 public class TestClass {
 
