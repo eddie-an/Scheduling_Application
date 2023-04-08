@@ -50,7 +50,7 @@ public class Schedule {
         try {
             rearrangeTasks();
         }
-        catch (TooManyEventsException e) {
+        catch (Exception e) {
 
         }
     }
@@ -64,7 +64,7 @@ public class Schedule {
             // This connection is going to be different for every user.
             // Make sure to change the url, user, and password.
             // For the purposes of this assignment, it is set to "oop" and "password"
-            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "oop", "password");
+            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "password");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -318,21 +318,29 @@ public class Schedule {
      * This method rearranges the tasks in the databaseRecords TreeMap.
      * It checks if the total time of the tasks in a given hour exceeds 60 minutes.
      * If it does, it moves the task to another hour within its MaxWindow.
-     * @throws TooManyEventsException   if there are too many events in the schedule
+     * @throws Exception   if there are too many events in the schedule at a given time
      */
-    public static void rearrangeTasks() throws TooManyEventsException {
-        // Iterate through the keys of the treemap and check if the time is greater than 60.
-        // If it is, move the task to the next hour.
-        // If the next hour is not empty, check if the time is greater than 60.
-        // If it is, move the task to the next hour. So on and so forth.
+    public static void rearrangeTasks() throws Exception {
+        // iterate through the keys of the treemap
+        // check if the time is greater than 60
+        // if it is, move the task to the next hour
+        // if the next hour is not empty, check if the time is greater than 60
+        // if it is, move the task to the next hour
+        // and so on
 
         // Uses modulo to wrap around midnight
         // Throws an exception when trying to move a task which has a max window of 1
         // Throws an exception when a task is not able to be moved within its max window
+
+        //add preptimes for fox and coyote
+        // fix rearrangeTasks, look at comments
+
         int hour = 0;
         while(hour < 24) {
+
             ArrayList<Task> tasks = scheduleTreeMap.get(hour);
             int totalTime = 0;
+
             try {
                 if(tasks != null) {
 
@@ -348,14 +356,14 @@ public class Schedule {
                         }
                     });
 
-                    // These 2 for loops make it so that only one coyote/fox feeding task has a prep time, and the rest are set to 0
-                    // If a coyote/fox feeding task is moved to another hour and its prep time is set to 0, it will be reset to 10/5
-                    // to account for the new hour it is in.
+                    //these 2 for loops make it so that only one coyote/fox feeding task has a preptime, and the rest are set to 0
+                    //if a coyote/fox feeding task is moved to another hour and its preptime is set to 0, it will be reset to 10/5
+                    //to account for the new hour it is in
                     Task prepTask = null;
                     for(Task task : tasks) {
                         if (task.getTaskType().equals("Coyote feeding")) {
                             if (task.getPrepTime() == 0) {
-                                task.setPrepTime(10); //add prep time coyote feeding
+                                task.setPrepTime(10);
                             }
                             totalTime += task.getPrepTime();
                             prepTask = task;
@@ -364,7 +372,7 @@ public class Schedule {
                         }  
                         else if (task.getTaskType().equals("Fox feeding")) {
                             if (task.getPrepTime() == 0) {
-                                task.setPrepTime(5); //add prep time fox feeding
+                                task.setPrepTime(5);
                             }
                             totalTime += task.getPrepTime();
                             prepTask = task;
@@ -380,22 +388,32 @@ public class Schedule {
                         }
                     }
 
+                    // task.getTaskType().equals("Coyote feeding") ? 10 : 5;
+
                     Iterator<Task> it = tasks.iterator();
+
+                    // Maybe if volunteer status is true, check less than 120 minutes instead of 60
+
                     while (it.hasNext()) {
                         Task task = it.next();
-                        // Only include prep time in totalTime if the task is a fox feeding or coyote feeding
-                        // Only add the prep time once for each hour that contains a fox feeding or coyote feeding
+                        // Only include preptime in totalTime if the task is a fox feeding or coyote feeding
+                        // Only add the preptime once for each hour that contains a fox feeding or coyote feeding
 
                         totalTime += task.getDuration();
 
                         if (totalTime > 60) {
+                            // maybe implement in a way so that tasks that have an empty hour in their max window are moved to those empty hours first
+
                             if (task.getMaxWindow() == 1) {
                                 // if the task has a max window of 1, it cannot be moved
-                                throw new TooManyEventsException("");
+                                throw new Exception();
                             }
                             else {
+
+                                //maybe get current hour instead
                                 int j = (hour + 1) % 24;
                                 boolean exceptionBool = false;
+
                                 while (j != (task.getStartHour() + task.getMaxWindow()) % 24) {
                                     if (scheduleTreeMap.containsKey(j)) {
                                         ArrayList<Task> temp = scheduleTreeMap.get(j);
@@ -403,6 +421,7 @@ public class Schedule {
                                         for(Task t : temp) {
                                             time += t.getDuration();
                                         }
+
                                         if (time + task.getDuration() <= 60) {
                                             temp.add(task);
                                             scheduleTreeMap.put(j, temp);
@@ -423,9 +442,10 @@ public class Schedule {
 
                                     j = (j + 1) % 24;
                                 }
+
                                 if(exceptionBool) {
                                     //implies that no rearrangement could be made
-                                    throw new TooManyEventsException("");
+                                    throw new Exception();
                                 }
                                 else {
                                     tasks.remove(task);
@@ -440,8 +460,7 @@ public class Schedule {
                     hour++;
                 }
             }
-            catch (TooManyEventsException e) {
-                System.out.println(e.getMessage());
+            catch (Exception e) {
                 hour++;
             }
 
