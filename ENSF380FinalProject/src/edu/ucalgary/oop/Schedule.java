@@ -285,6 +285,7 @@ public class Schedule {
      *
      * @param oldStartHour
      * @param taskIndex
+     * @exception IllegalArgumentException
      */
     public static void modifyStartHour(int oldStartHour, int taskIndex, int newStartHour)
             throws IllegalArgumentException {

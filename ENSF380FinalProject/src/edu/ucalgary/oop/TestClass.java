@@ -570,50 +570,50 @@ public class TestClass {
     }
 
     @Test
-    public void testAddBackupVolunteer() {
-        populateTreeMap();
-        for(int i=0; i<23; i++) {  // add a backup volunteer for each hour.
-            Schedule.addBackupVolunteer(i);
+    public void testModifyStartHourException()
+    {
+        boolean pass = false;
+        try {
+        Schedule.modifyStartHour(3, 2, -1);
         }
-        Schedule.isValidSchedule();
+        catch (IllegalArgumentException e) {
+            pass = true;
+        }
+        catch (Exception e) {}
+        assertTrue("modifyStartHour() method should throw an exception when newStartHour argument is less than 0", pass);
+
+        pass = false;
+            try {
+            Schedule.modifyStartHour(3, 2, 24);
+        }
+            catch (IllegalArgumentException e) {
+            pass = true;
+        }
+            catch (Exception e) {}
+        assertTrue("modifyStartHour() method should throw an exception when newStartHour argument is greater than 23", pass);
+
+            pass = false;
+        try {
+            Schedule.modifyStartHour(-1, 2, 15);
+        }
+        catch (IllegalArgumentException e) {
+            pass = true;
+        }
+        catch (Exception e) {}
+        assertTrue("modifyStartHour() method should throw an exception when oldStartHour argument is less than 0", pass);
+
+        pass = false;
+        try {
+            Schedule.modifyStartHour(24, 2, 3);
+        }
+        catch (IllegalArgumentException e) {
+            pass = true;
+        }
+        catch (Exception e) {}
+        assertTrue("modifyStartHour() method should throw an exception when oldStartHour argument is greater than 23", pass);
+
     }
 
-    @Test
-    public void testModifyTestHour() {
-        populateTreeMap();
-        for(int i=1; i<24; i++){
-            try{
-                for(int j=1; j<24; j++) {
-                    Schedule.modifyStartHour(i, 1, j);
-                }
-            } catch(IllegalArgumentException e) {
-                continue;
-            }
-
-        }
-        Schedule.isValidSchedule();
-    }
-
-
-
-
-    /*
-    @Test
-    public void testTooManyEventsException() {
-        boolean success = false;
-        Porcupine newPorcupine = new Porcupine(69, "Jesus", false);
-        LocalDate date = LocalDate.now();
-        try{
-            Task newTask = new Task(date, 10, 55, "Cleaning Cage", "67", newPorcupine);
-        }
-        catch(Exception e) {
-            if(e instanceof TooManyEventsException) {
-                success = true;
-            }
-        }
-        assertTrue("Wasn't able to use TooManyEventsException", success);
-    }
-    */
 
 
 }
