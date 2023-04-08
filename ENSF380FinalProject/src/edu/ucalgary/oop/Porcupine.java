@@ -1,16 +1,13 @@
-/**
- @author     Group5
- @version    1.4
- @since      1.0
- */
-
-/*
- * Porcupine is a class which extends the Animal class and represents a porcupine.
- * It has has a static field ACTIVE_TIME which is set to "crepescular".
- */
-
 package edu.ucalgary.oop;
 
+
+/**
+ * Porcupine is a class which extends the Animal class and represents a porcupine.
+ * It has a static field ACTIVE_TIME which is set to "crepuscular".
+ * @author     Edward An, Karam Baroud, Evan Barker, Jad Khalil
+ * @version    1.4
+ * @since      1.0
+ */
 public class Porcupine extends Animal {
     private final static String ACTIVE_TIME = "crepuscular";
     private final static String SPECIES = "porcupine";

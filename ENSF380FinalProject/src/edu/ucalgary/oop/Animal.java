@@ -1,16 +1,13 @@
-/**
- @author     Group5
- @version    1.4
- @since      1.0
- */
-
-/*
- * Animal is an abstract class for the subclasses Fox, Beaver, Porcupine, Coyote, Raccoon
- * with info about the Animal ID, animal name, and whether or not the animal is an orphan.
- */
-
 package edu.ucalgary.oop;
 
+
+/**
+ * Animal is an abstract class for the subclasses Fox, Beaver, Porcupine, Coyote, and Raccoon.
+ * It contains information that are common to all types of animals such as Animal ID, animal name, and its orphan status
+ * @author     Edward An, Karam Baroud, Evan Barker, Jad Khalil
+ * @version    1.4
+ * @since      1.0
+ */
 public abstract class Animal {
     private final int ANIMAL_ID;
     private String name;

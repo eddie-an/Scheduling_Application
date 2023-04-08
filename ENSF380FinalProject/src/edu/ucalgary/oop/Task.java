@@ -1,18 +1,13 @@
-/**
- @author     Group5
- @version    1.4
- @since      1.0
- */
-
-/*
- * Task is a class which represents a task that a volunteer can do.
- * VolunteerGeneric is a generic class which is used to bind a volunteer to a task.
- */
-
 package edu.ucalgary.oop;
 
-import java.time.LocalDate;
 
+/**
+ * Task is a class which represents an individual task.
+ * It contains information about the task which are provided in the database
+ * @author     Edward An, Karam Baroud, Evan Barker, Jad Khalil
+ * @version    1.7
+ * @since      1.0
+ */
 public class Task {
     private final int TASK_ID;
     private int startHour;
@@ -32,6 +27,7 @@ public class Task {
      * @param duration  The time it takes to complete the task.
      * @param taskType  The description of the task.
      * @param animal    The animal that the task is for.
+     * @exception IllegalArgumentException
      */
     public Task(int TASK_ID, int startHour, int maxWindow, int duration, String taskType,
                 Animal animal) throws IllegalArgumentException{
@@ -59,6 +55,7 @@ public class Task {
      * @param taskType  The description of the task.
      * @param animal    The animal that the task is for.
      * @param prepTime  The time it takes to prepare for a feeding task
+     * @exception IllegalArgumentException
      */
     public Task(int TASK_ID, int startHour, int maxWindow, int duration, String taskType,
                 Animal animal, int prepTime) throws IllegalArgumentException{
@@ -80,6 +77,7 @@ public class Task {
 
     /**
      * @param startHour The start time of the task.
+     * @exception IllegalArgumentException
      */
     public void setStartHour(int startHour) throws IllegalArgumentException {
         if (startHour < 0 || startHour > 23)
@@ -127,7 +125,7 @@ public class Task {
     /**
      * @param prepTime The time it takes to prepare for the feeding task.
      */
-    public void setPrepTime(int prepTime) throws IllegalArgumentException {
+    public void setPrepTime(int prepTime) {
         this.prepTime = prepTime;
     }
 

@@ -1,19 +1,15 @@
-/**
-@author     Group5
-@version    1.2
-@since      1.0
-*/
-
-/*
- * PrintLog is a class which writes to the schedule.txt file.
-*/
-
 package edu.ucalgary.oop;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 
+/**
+ * PrintLog is a class which formats data into a String and writes to the schedule.txt file.
+ * @author     Edward An, Karam Baroud, Evan Barker, Jad Khalil
+ * @version    1.3
+ * @since      1.0
+ */
 public class PrintLog {
 
     /**

@@ -7,16 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 
-/**
- * This is the GUI class.
- * @param emptyTimeSlotsArray      arrayList of time slots that are empty.
- * @param printScheduleFrame       frame for the printed schedule.
- * @param selectTaskFrame          frame for selected tasks.
- * @param volunteerOrRescheduleFrame    frame for the volunteer or reschedule display.
- * @param selectHoursFrame           frame for the user to select the hours they want to select.
- * @param addVolunteerFrame             frame for the user to add a volunteer.                                
- */
 
+/**
+ * GUI is a class which creates the GUI of the program.
+ *
+ * It contains information about the task which are provided in the database
+ * @author     Edward An, Karam Baroud, Evan Barker, Jad Khalil
+ * @version    1.7
+ * @since      1.0
+ */
 public class GUI {
         private static ArrayList<Integer> emptyTimeSlotsArray = new ArrayList<>();
         private static JFrame printScheduleFrame = new JFrame();
@@ -26,18 +25,21 @@ public class GUI {
         private static JFrame addVolunteersFrame = new JFrame();
 
 
-
+        /**
+         * The main method
+         * Reads from database then starts the GUI
+         */
         public static void main(String[] args) {
                 Schedule.populateTreeMap();
-                TreeMap<Integer, ArrayList<Task>> schedule = Schedule.getSchedule();
                 EventQueue.invokeLater(() -> {
                         startGUI();
                 });
-
-
-
         }
 
+        /**
+         * Starting point for the GUI.
+         * Creates one of two frames based on whether the schedule is valid or not
+         */
         public static void startGUI() {
                 boolean isValid = Schedule.isValidSchedule();
                 if (isValid) {
@@ -52,6 +54,10 @@ public class GUI {
                 }
         }
 
+        /**
+         * This method creates a frame for adding volunteers to the schedule
+         * @return addVolunteerFrame
+         */
         public static JFrame createAddVolunteersFrame() {
                 JFrame frame = new JFrame();
                 frame.setSize(800, 500);
@@ -100,6 +106,13 @@ public class GUI {
                 return frame;
         }
 
+        /**
+         * This method creates a frame for selecting an hour the selected task can be moved to.
+         * It utilizes a method from the Schedule class for the logic.
+         * @param oldStartHour
+         * @param taskIndex
+         * @return selectHoursFrame
+         */
         public static JFrame createSelectHoursFrame(int oldStartHour, int taskIndex) {
                 JFrame frame = new JFrame();
                 frame.setSize(800, 500);
@@ -141,7 +154,11 @@ public class GUI {
                 return frame;
         }
 
-
+        /**
+         * This method creates a frame for selecting a task to move.
+         * It utilizes a method from the Schedule class for the logic.
+         * @return selectTaskFrame
+         */
         public static JFrame createSelectTaskFrame() {
                 JFrame frame = new JFrame();
                 frame.setSize(800, 500);
@@ -185,6 +202,11 @@ public class GUI {
 
         }
 
+        /**
+         * This method creates a menu frame where the user gets to choose whether they want to
+         * add a volunteer or reschedule
+         * @return volunteerOrRescheduleFrame
+         */
         public static JFrame createVolunteerOrRescheduleFrame() {
                 JFrame frame = new JFrame();
                 frame.setSize(800, 500);
@@ -228,6 +250,11 @@ public class GUI {
         }
 
 
+        /**
+         * This method creates a frame that prompts the user to print the schedule.
+         * It utilizes a method from the PrintLog class to create a text file containing the schedule.
+         * @return printScheduleFrame
+         */
         public static JFrame createPrintScheduleFrame() {
                 JFrame frame = new JFrame();
                 frame.setSize(800, 500);

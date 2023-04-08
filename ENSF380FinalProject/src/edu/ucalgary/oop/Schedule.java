@@ -3,20 +3,42 @@ package edu.ucalgary.oop;
 import java.sql.*;
 import java.util.*;
 
+
+/**
+ * Schedule is a class which houses a group of Task and Animal objects.
+ * It contains a scheduleTreeMap that contains all the tasks which are ordered by the startHour
+ * It also contains an animalList which contains the animal objects
+ * This is where the database connection takes place
+ * @author     Edward An, Karam Baroud, Evan Barker, Jad Khalil
+ * @version    2.6
+ * @since      1.0
+ */
 public class Schedule {
     private static TreeMap<Integer, ArrayList<Task>> scheduleTreeMap = new TreeMap<>();
     private static ArrayList<Animal> animalList = new ArrayList<Animal>();
     private static Connection dbConnection;
     private static ResultSet results;
 
+    /**
+     * @return The schedule tree map
+     */
     public static TreeMap<Integer, ArrayList<Task>> getSchedule() {
         return scheduleTreeMap;
     }
 
+    /**
+     * @return The list of animal objects
+     */
     public static ArrayList<Animal> getAnimalList() {
         return animalList;
     }
 
+
+    /**
+     * This method populates the schedule tree map as well as the animal list.
+     * It creates a database connection to read information from the EWR database.
+     * Then tasks such as cage cleaning and feeding non-orphaned animals are assigned
+     */
     public static void populateTreeMap() {
         createConnection();
 
@@ -32,20 +54,23 @@ public class Schedule {
 
         }
     }
+
     /**
      * creates a connection to the database, this will be different for each user
      */
     public static void createConnection() {
 
         try {
-            // this connection is going to be different for every user change the url user
-            // and password for each user
-            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "oop", "password");
+            // This connection is going to be different for every user.
+            // Make sure to change the url, user, and password.
+            // For the purposes of this assignment, it is set to "oop" and "password"
+            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "SQL123456");
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
+
     /**
      * Reads in and instantiates the animals from the database
      */
@@ -151,6 +176,7 @@ public class Schedule {
     /**
      * This method checks to see if the current schedule is valid or not based on
      * total task duration for every hour
+     * This method is used by the GUI to check if the current schedule is valid
      *
      * @return the boolean value indicating the validity of the schedule
      */
@@ -177,6 +203,15 @@ public class Schedule {
      * in a given hour.
      * It only adds tasks that don't have preparation time, and have a max window greater
      * than 1.
+     *
+     * @return TreeMap of (key: startHour, value: ArrayList of task index)
+     */
+
+    /**
+     * This method shows all the tasks that exceed 60 or 120 combined minutes (based
+     * on volunteer status) in a given hour.
+     * It only adds tasks that don't have preparation time, and have a max window greater than 1.
+     * This method is used by the GUI to show the user all the tasks that must be moved
      *
      * @return TreeMap of (key: startHour, value: ArrayList of task index)
      */
@@ -209,14 +244,13 @@ public class Schedule {
     }
 
     /**
-     * For a given task at a specified startHour, return a list of empty time slots
-     * the task can be placed in
-     * It takes the task's max window into consideration and finds a list of
-     * startHours that will fit the constraints
+     * For a given task at a specified startHour, return a list of empty time slots the task can be placed in.
+     * It takes the task's duration into consideration and finds a list of startHours that will fit the constraints.
+     * This method is used by the GUI show all the start hours the selected task can be moved to.
      *
      * @param startHour
      * @param taskIndex
-     * @return
+     * @return arrayList of start hours that the specified task in the parameter can be moved to
      */
     public static ArrayList<Integer> showEmptyTimeSlots(int startHour, int taskIndex) {
         ArrayList<Integer> emptyTimeSlots = new ArrayList<>();
@@ -245,15 +279,12 @@ public class Schedule {
     }
 
     /**
-     * This method moves the given task from its old start hour to the new start
-     * hour
-     * It doesn't check whether moving the task makes the schedule more efficient.
-     * All it does is move the task
+     * This method moves the given task from its old start hour to the new start hour.
+     * It doesn't check whether moving the task makes the schedule more efficient. It just moves the task
+     * This method is used by the GUI to move the task to a different hour.
      *
      * @param oldStartHour
      * @param taskIndex
-     * @param newStartHour
-     * @throws IllegalArgumentException
      */
     public static void modifyStartHour(int oldStartHour, int taskIndex, int newStartHour)
             throws IllegalArgumentException {
@@ -290,26 +321,18 @@ public class Schedule {
      * @throws TooManyEventsException   if there are too many events in the schedule
      */
     public static void rearrangeTasks() throws TooManyEventsException {
-        // iterate through the keys of the treemap
-        // check if the time is greater than 60
-        // if it is, move the task to the next hour
-        // if the next hour is not empty, check if the time is greater than 60
-        // if it is, move the task to the next hour
-        // and so on
+        // Iterate through the keys of the treemap and check if the time is greater than 60.
+        // If it is, move the task to the next hour.
+        // If the next hour is not empty, check if the time is greater than 60.
+        // If it is, move the task to the next hour. So on and so forth.
 
         // Uses modulo to wrap around midnight
         // Throws an exception when trying to move a task which has a max window of 1
         // Throws an exception when a task is not able to be moved within its max window
-
-        //add preptimes for fox and coyote
-        // fix rearrangeTasks, look at comments
-
         int hour = 0;
         while(hour < 24) {
-
             ArrayList<Task> tasks = scheduleTreeMap.get(hour);
             int totalTime = 0;
-
             try {
                 if(tasks != null) {
 
@@ -325,14 +348,14 @@ public class Schedule {
                         }
                     });
 
-                    //these 2 for loops make it so that only one coyote/fox feeding task has a preptime, and the rest are set to 0
-                    //if a coyote/fox feeding task is moved to another hour and its preptime is set to 0, it will be reset to 10/5
-                    //to account for the new hour it is in
+                    // These 2 for loops make it so that only one coyote/fox feeding task has a prep time, and the rest are set to 0
+                    // If a coyote/fox feeding task is moved to another hour and its prep time is set to 0, it will be reset to 10/5
+                    // to account for the new hour it is in.
                     Task prepTask = null;
                     for(Task task : tasks) {
                         if (task.getTaskType().equals("Coyote feeding")) {
                             if (task.getPrepTime() == 0) {
-                                task.setPrepTime(10);
+                                task.setPrepTime(10); //add prep time coyote feeding
                             }
                             totalTime += task.getPrepTime();
                             prepTask = task;
@@ -341,7 +364,7 @@ public class Schedule {
                         }  
                         else if (task.getTaskType().equals("Fox feeding")) {
                             if (task.getPrepTime() == 0) {
-                                task.setPrepTime(5);
+                                task.setPrepTime(5); //add prep time fox feeding
                             }
                             totalTime += task.getPrepTime();
                             prepTask = task;
@@ -357,32 +380,22 @@ public class Schedule {
                         }
                     }
 
-                    // task.getTaskType().equals("Coyote feeding") ? 10 : 5;
-
                     Iterator<Task> it = tasks.iterator();
-
-                    // Maybe if volunteer status is true, check less than 120 minutes instead of 60
-
                     while (it.hasNext()) {
                         Task task = it.next();
-                        // Only include preptime in totalTime if the task is a fox feeding or coyote feeding
-                        // Only add the preptime once for each hour that contains a fox feeding or coyote feeding
+                        // Only include prep time in totalTime if the task is a fox feeding or coyote feeding
+                        // Only add the prep time once for each hour that contains a fox feeding or coyote feeding
 
                         totalTime += task.getDuration();
 
                         if (totalTime > 60) {
-                            // maybe implement in a way so that tasks that have an empty hour in their max window are moved to those empty hours first
-
                             if (task.getMaxWindow() == 1) {
                                 // if the task has a max window of 1, it cannot be moved
                                 throw new TooManyEventsException("");
                             }
                             else {
-
-                                //maybe get current hour instead
                                 int j = (hour + 1) % 24;
                                 boolean exceptionBool = false;
-
                                 while (j != (task.getStartHour() + task.getMaxWindow()) % 24) {
                                     if (scheduleTreeMap.containsKey(j)) {
                                         ArrayList<Task> temp = scheduleTreeMap.get(j);
@@ -390,7 +403,6 @@ public class Schedule {
                                         for(Task t : temp) {
                                             time += t.getDuration();
                                         }
-
                                         if (time + task.getDuration() <= 60) {
                                             temp.add(task);
                                             scheduleTreeMap.put(j, temp);
@@ -411,7 +423,6 @@ public class Schedule {
 
                                     j = (j + 1) % 24;
                                 }
-
                                 if(exceptionBool) {
                                     //implies that no rearrangement could be made
                                     throw new TooManyEventsException("");
@@ -438,9 +449,9 @@ public class Schedule {
     }
 
     /**
-     * Iterates through the schedule hashmap and assigns a backup volunteer to every
-     * group of tasks in the same
-     * start hour if the total duration exceeds 60 minutes
+     * Assigns a backup volunteer to the indicated start hour if the total duration exceeds 60 minutes.
+     * This method is used by the GUI to assign volunteers when indicated by the user.
+     * @param startHour
      */
     public static void addBackupVolunteer(int startHour) {
         // iterate through the keys of the hashmap
@@ -472,7 +483,7 @@ public class Schedule {
 
 
     /**
-     * adds general feeding for non-orphaned animals, and cleaning tasks as well
+     * adds general feeding tasks for non-orphaned animals, and cleaning tasks as well
      */
     public static void addGeneralFeedingAndCleaning() {
         // TaskID = -1 for general feeding

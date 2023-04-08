@@ -1,16 +1,13 @@
-/**
- @author     Group5
- @version    1.4
- @since      1.0
- */
-
-/*
- * Beaver is a class which extends the Animal class and represents a beaver.
- * It has has a static field ACTIVE_TIME which is set to "diurnal".
- */
-
 package edu.ucalgary.oop;
 
+
+/**
+ * Beaver is a class which extends the Animal class and represents a beaver.
+ * It has a static field ACTIVE_TIME which is set to "diurnal".
+ * @author     Edward An, Karam Baroud, Evan Barker, Jad Khalil
+ * @version    1.4
+ * @since      1.0
+ */
 public class Beaver extends Animal {
     private final static String ACTIVE_TIME = "diurnal";
     private final static String SPECIES = "beaver";
