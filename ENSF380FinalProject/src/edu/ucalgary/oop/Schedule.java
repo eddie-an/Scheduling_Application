@@ -64,7 +64,7 @@ public class Schedule {
             // This connection is going to be different for every user.
             // Make sure to change the url, user, and password.
             // For the purposes of this assignment, it is set to "oop" and "password"
-            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "root", "SQL123456");
+            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/ewr", "oop", "password");
         } catch (SQLException e) {
             e.printStackTrace();
         }
