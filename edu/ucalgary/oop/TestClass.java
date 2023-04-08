@@ -11,6 +11,10 @@ import java.util.TreeMap;
 import static edu.ucalgary.oop.Schedule.populateTreeMap;
 import static org.junit.Assert.*;
 
+/**
+ * Unit Test Class
+ * Edward An, Karam Baroud, Evan Barker, Jad Khalil
+ */
 public class TestClass {
 
 
