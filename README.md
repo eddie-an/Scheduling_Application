@@ -1,4 +1,4 @@
-# ENSF380_Final_Project
+# Scheduling_Application
 
 A GUI Application that reads from a database and rearranges tasks to meet specifications. The final schedule is printed in a text file.
 
