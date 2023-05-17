@@ -26,7 +26,7 @@ For the code to run properly, the `public static void createConnection()` method
 The MySQL connection is different for every user due to each local database on their local machine having different MySQL username and password.
 If the MySQL root user is being used, change the code from `oop` to `root`
 The code to change is highlighted in the image below:
-![Code to change](Code_to_change.png)
+![Code to change](/resources/Code_to_change.png)
 
 ###### To run the program on Windows
 
