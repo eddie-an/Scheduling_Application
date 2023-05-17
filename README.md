@@ -1,7 +1,16 @@
 # Scheduling_Application
-###### Final Group Project for a 2nd year course
+###### Final Group Project for a 2nd year software engineering course
 ###### Created by Edward An, Evan Barker, Karam Baroud, and Jad Khalil
-A GUI Application that reads from a database and rearranges tasks to meet specifications. The final schedule is printed in a text file.
+#### Description
+Wildlife rescue centres provide care and rehabilitation for injured and orphaned wild animals. The tasks
+associated with caring for the animals depends on the types of animals in residence (e.g., feeding times),
+as well as the individual animal's specific care needs (e.g., an open wound requires daily re-bandaging).
+Your client, Example Wildlife Rescue (EWR), needs a program which can be used to generate a daily list
+of tasks for volunteers to complete in order to support the animals in residence. EWR specializes in
+medium-sized animals and refers other cases to other centres. They have facilities to support coyotes,
+foxes, porcupines, beavers and raccoons.
+<br>
+To meet the client needs, a GUI Application is created to read all the tasks from a database and rearranges them according to specifications. If there are conflicts in the schedule, the user has the option to move tasks around. The final schedule is then printed in a text file.
 
 # What I learned
 
@@ -39,6 +48,9 @@ Run the application using the commands `java -cp .;mysql-connector-java-8.0.23.j
 Compile the application using the commands `javac -cp .:mysql-connector-java-8.0.23.jar edu/ucalgary/oop/GUI.java`
 Run the application using the commands `java -cp .:mysql-connector-java-8.0.23.jar edu.ucalgary.oop.GUI`
 
+# Class relationships
+
+This application follows an object
 ### .gitignore
 
 There is a gitignore file which ignores the lib folder used for library dependencies, bin folder used to store .class files. These files and folders do not need to be version controlled since it is not a part of the source code.
