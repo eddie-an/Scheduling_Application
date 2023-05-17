@@ -14,8 +14,8 @@ A GUI Application that reads from a database and rearranges tasks to meet specif
 
 # How to run the program
 
-Clone the repository on your local machine and run the treatments.sql file to create the SQL database.
-Creating the database is important as this program functionality depends on the database input.
+Clone the repository on your local machine and run the `treatments.sql` file to create the SQL database.
+Creating the database is important as this program's functionality depends on the database input.
 
 On the command line, use the `cd` command to navigate to the `Scheduling_Application` folder.
 
