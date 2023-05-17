@@ -1,5 +1,5 @@
 # ENSF380_Final_Project
-
+A GUI Application that reads from a database and rearranges tasks to meet specifications. The final schedule is printed in a text file.
 ---
 
 ### .gitignore
