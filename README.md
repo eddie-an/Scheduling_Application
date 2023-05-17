@@ -51,10 +51,10 @@ Run the application using the commands `java -cp .:mysql-connector-java-8.0.23.j
 # Class relationships
 
 This application implements object oriented programming principles. The relationship between all the classes are represented in a UML diagram as shown in the image below:
-![Code to change](/resources/Code_to_change.png)
+![UML-diagram](/resources/380-Final-Project-UML.jpg)
+
+---
 
 ### .gitignore
 
 There is a gitignore file which ignores the lib folder used for library dependencies, bin folder used to store .class files. These files and folders do not need to be version controlled since it is not a part of the source code.
-
----
