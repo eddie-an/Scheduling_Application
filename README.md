@@ -1,5 +1,5 @@
 # Scheduling_Application
-
+###### Final Group Project for a 2nd year course
 A GUI Application that reads from a database and rearranges tasks to meet specifications. The final schedule is printed in a text file.
 
 # What I learned
