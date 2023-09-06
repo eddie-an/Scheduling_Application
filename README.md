@@ -12,6 +12,8 @@ foxes, porcupines, beavers and raccoons.
 <br>
 To meet the client needs, a GUI Application is created to read all the tasks from a database and rearranges them according to specifications. If there are conflicts in the schedule, the user has the option to move tasks around. The final schedule is then printed in a text file.
 
+Link to video demonstration is [here](https://clipchamp.com/watch/S1Ls7iBcHfb)
+
 # What I learned
 
 - UML diagram design according to specifications defined by a client
